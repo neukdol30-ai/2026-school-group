@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siyan1234.group_project.member.dao.MemberDao">
+    <insert id="signup">
+        INSERT INTO MEMBER
+        (
+        MEMBER_ID,
+        PASSWORD,
+        NAME,
+        GENDER,
+        BIRTH_DATE,
+        PHONE,
+        ADDRESS,
+        ROLE
+        )
+        VALUES
+        (
+        #{memberId},
+        #{password},
+        #{name},
+        #{gender},
+        #{birthDate},
+        #{phone},
+        #{address},
+        'USER'
+        )
+    </insert>
+
+    <select id="login"
+            resultType="MemberDto"
+            parameterType="LoginDto">
+
+        SELECT *
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+        AND PASSWORD = #{password}
+    </select>
+
+    <select id="idCheck"
+            resultType="Integer"
+            parameterType="String">
+
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <delete id="deleteMember"
+            parameterType="Integer">
+
+        DELETE FROM MEMBER
+        WHERE NO = #{no}
+
+    </delete>
+
+    <update id="updateMember">
+
+        UPDATE MEMBER
+        SET
+        PASSWORD = #{password},
+        PHONE = #{phone},
+        ADDRESS = #{address}
+        WHERE NO = #{no}
+    </update>
+
+    <select id="findByNo"
+            resultType="MemberDto"
+            parameterType="Integer">
+
+        SELECT *
+        FROM MEMBER
+        WHERE NO = #{no}
+    </select>
+
+</mapper>
