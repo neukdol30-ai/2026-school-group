@@ -84,18 +84,28 @@ public class MemberController {
     }
 
     @PostMapping("/delete")
-    public String deleteMember(HttpSession session){
+    public String deleteMember(String password,HttpSession session){
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if (loginUser == null){
             return "redirect:/member/login";
         }
+        MemberDto member = memberService.findByNo(loginUser.getNo());
+        if (member == null){
+            session.invalidate();
+            return "redirect:/member/login";
+        }
+
+        if (!member.getPassword().equals(password)){
+            return "redirect:/member/withdraw";
+        }
+
         int result = memberService.deleteMember(loginUser.getNo());
 
         if (result > 0){
             session.invalidate();
             return "redirect:/";
         }
-        return "redirect:/memeber/mypage";
+        return "redirect:/member/mypage";
     }
 
     @GetMapping("/withdraw")

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     private final MemberDao memberDao;
 
-    public int signup(MemberDto memberDto){return memberDao.signup(memberDto);}
+    public int signup(MemberDto memberDto) {
+        return memberDao.signup(memberDto);
+    }
 
     public boolean idCheck(String memberId){
         Integer result = memberDao.idCheck(memberId);
