@@ -37,6 +37,8 @@ CREATE TABLE board (
                        CONSTRAINT board_rating_ck
                            CHECK (rating IS NULL OR rating BETWEEN 1 AND 5)
 );
+-- 머릿말 컬럼 추가. 예: 잡담, 질문, 정보 등
+ALTER TABLE board ADD category VARCHAR2(20);
 
 -- board 게시판 SEQUENCE
 CREATE SEQUENCE board_seq
