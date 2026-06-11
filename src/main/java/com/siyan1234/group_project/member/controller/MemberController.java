@@ -84,11 +84,12 @@ public class MemberController {
     }
 
     @PostMapping("/delete")
-    public String deleteMember(String password,HttpSession session){
+    public String deleteMember(String password,String reason,HttpSession session){
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if (loginUser == null){
             return "redirect:/member/login";
         }
+
         MemberDto member = memberService.findByNo(loginUser.getNo());
         if (member == null){
             session.invalidate();
@@ -98,6 +99,11 @@ public class MemberController {
         if (!member.getPassword().equals(password)){
             return "redirect:/member/withdraw";
         }
+        // 탈퇴사유 저장
+        memberService.insertWithdrawReason(
+                member.getMemberId(),
+                reason
+        );
 
         int result = memberService.deleteMember(loginUser.getNo());
 
@@ -111,5 +117,29 @@ public class MemberController {
     @GetMapping("/withdraw")
     public String withdraw(){
         return "member/withdraw";
+    }
+
+    @GetMapping("/admin")
+    public String adminPage(HttpSession session){
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null){
+            return "redirect:/member/login";
+        }
+        if (!"ADMIN".equals(loginUser.getRole())){
+            return "redirect:/";
+        }
+        return "admin/admin";
+    }
+
+    @GetMapping("/admin/member-list")
+    public String memberList(HttpSession session, Model model){
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null || !"ADMIN".equals(loginUser.getRole())){
+            return "redirect:/";
+        }
+        model.addAttribute("memberList", memberService.findAllMembers());
+        return "admin/member-list";
     }
 }

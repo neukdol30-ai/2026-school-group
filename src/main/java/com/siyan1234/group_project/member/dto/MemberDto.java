@@ -22,6 +22,8 @@ public class MemberDto {
     private LocalDate birthDate;
     private String phone;
     private String address;
+    private String detailAddress;
     private String role;
+    private String isDeleted;
     private LocalDateTime regDate;
 }

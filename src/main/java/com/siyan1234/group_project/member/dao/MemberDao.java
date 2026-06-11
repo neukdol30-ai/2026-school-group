@@ -4,6 +4,8 @@ import com.siyan1234.group_project.member.dto.LoginDto;
 import com.siyan1234.group_project.member.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface MemberDao {
 
@@ -13,10 +15,14 @@ public interface MemberDao {
 
     MemberDto findByNo(Integer no);
 
+    List<MemberDto> findAllMembers();
+
     Integer idCheck(String memberId);
 
     int deleteMember(Integer no);
 
     int updateMember(MemberDto memberDto);
+
+    int insertWithdrawReason(String memberId, String reason);
 
 }

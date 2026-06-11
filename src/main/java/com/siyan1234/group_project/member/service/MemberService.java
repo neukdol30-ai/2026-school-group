@@ -6,6 +6,8 @@ import com.siyan1234.group_project.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -31,4 +33,13 @@ public class MemberService {
     public MemberDto findByNo(Integer no){
         return memberDao.findByNo(no);
     }
+
+    public int insertWithdrawReason(String memberId, String reason){
+        return memberDao.insertWithdrawReason(memberId, reason);
+    }
+
+    public List<MemberDto> findAllMembers(){
+        return memberDao.findAllMembers();
+    }
+
 }
