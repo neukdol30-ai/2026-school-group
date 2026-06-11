@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록</title>
+
+    ```
+    <style>
+        table{
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td{
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th{
+            background-color: #f0f0f0;
+        }
+    </style>
+    ```
+
+</head>
+<body>
+
+<h2>회원 관리</h2>
+
+<table>
+
+    ```
+    <tr>
+        <th>회원번호</th>
+        <th>아이디</th>
+        <th>이름</th>
+        <th>권한</th>
+        <th>탈퇴여부</th>
+        <th>가입일</th>
+    </tr>
+
+    <tr th:each="member : ${memberList}">
+        <td th:text="${member.no}"></td>
+        <td th:text="${member.memberId}"></td>
+        <td th:text="${member.name}"></td>
+        <td th:text="${member.role}"></td>
+
+        <td>
+        <span th:if="${member.isDeleted == 'N'}">
+            정상회원
+        </span>
+
+            <span th:if="${member.isDeleted == 'Y'}">
+            탈퇴회원
+        </span>
+        </td>
+        <!--보드연동후 사용할 코드-->
+<!--        <td th:text="${member.boardCount}"></td>-->
+<!--        <td th:text="${member.commentCount}"></td>-->
+<!--        <td th:text="${member.likeCount}"></td>-->
+        <td th:text="${member.regDate}"></td>
+    </tr>
+    ```
+
+</table>
+
+<br>
+
+<a href="/admin">관리자 홈</a>
+
+</body>
+</html>

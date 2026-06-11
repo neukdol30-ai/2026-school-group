@@ -39,12 +39,17 @@ public class MemberService {
         return memberDao.insertWithdrawReason(memberId, reason);
     }
 
+    public int updateMember(MemberDto memberDto){
+        return memberDao.updateMember(memberDto);
+    }
+///보드 연동후 사용할 코드
+//    public List<MemberAdminDto> memberStatistics(){
+//        return memberDao.memberStatistics();
+//    }
+
+    ///보드 연동전 사용할 코드
     public List<MemberDto> findAllMembers(){
         return memberDao.findAllMembers();
-    }
-
-    public List<MemberAdminDto> memberStatistics(){
-        return memberDao.memberStatistics();
     }
 
 }

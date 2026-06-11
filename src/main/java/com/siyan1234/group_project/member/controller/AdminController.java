@@ -18,11 +18,18 @@ public class AdminController {
 
     @GetMapping("")
     public String adminPage(HttpSession session){
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
-        if (loginUser == null || !"ADMIN".equals(loginUser.getRole())){
-            return "redirect:/";
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if(loginUser == null){
+            return "redirect:/member/login";
         }
+
+        if(!"ADMIN".equals(loginUser.getRole())){
+            return "admin/access-denied";
+        }
+
         return "admin/admin";
     }
 
@@ -34,6 +41,8 @@ public class AdminController {
             return "redirect:/";
         }
         model.addAttribute("memberList", memberService.findAllMembers());
+        ///보드 연동후 사용할 코드 memberStatistics
+//        model.addAttribute("memberList", memberService.memberStatistics());
         return "admin/member-list";
     }
 }

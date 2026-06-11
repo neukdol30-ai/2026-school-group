@@ -95,14 +95,48 @@
         )
 
     </insert>
+    <!-- 보드 연동 후 memberStatistics 사용할 코드-->
+<!--    <select id="memberStatistics"-->
+<!--            resultType="MemberAdminDto">-->
 
-    <select id="findAllMembers"
-            resultType="MemberDto">
+<!--        SELECT-->
+<!--        M.NO,-->
+<!--        M.MEMBER_ID,-->
+<!--        M.NAME,-->
+<!--        M.ROLE,-->
+<!--        M.IS_DELETED,-->
 
-        SELECT *
-        FROM MEMBER
-        ORDER BY NO DESC
+<!--        (-->
+<!--        SELECT COUNT(*)-->
+<!--        FROM BOARD B-->
+<!--        WHERE B.MEMBER_NO = M.NO-->
+<!--        ) AS BOARD_COUNT,-->
 
-    </select>
+<!--        (-->
+<!--        SELECT COUNT(*)-->
+<!--        FROM BOARD_COMMENT C-->
+<!--        WHERE C.MEMBER_NO = M.NO-->
+<!--        ) AS COMMENT_COUNT,-->
+
+<!--        (-->
+<!--        SELECT COUNT(*)-->
+<!--        FROM BOARD_LIKE L-->
+<!--        WHERE L.MEMBER_NO = M.NO-->
+<!--        ) AS LIKE_COUNT-->
+
+<!--        FROM MEMBER M-->
+
+<!--        ORDER BY M.NO DESC-->
+<!--    </select>-->
+
+<!-- 보드 연동 전 사용할 코드-->
+        <select id="findAllMembers"
+                resultType="MemberDto">
+
+            SELECT *
+            FROM MEMBER
+            ORDER BY NO DESC
+
+        </select>
 
 </mapper>

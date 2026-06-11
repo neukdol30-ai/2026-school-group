@@ -123,4 +123,15 @@ public class MemberController {
     public String withdraw(){
         return "member/withdraw";
     }
+
+    @PostMapping("/update")
+    public String updateMember(MemberDto memberDto, HttpSession session){
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        if (loginUser == null){
+            return "redirect:/member/login";
+        }
+        memberDto.setNo(loginUser.getNo());
+        memberService.updateMember(memberDto);
+        return "redirect:/member/mypage";
+    }
 }

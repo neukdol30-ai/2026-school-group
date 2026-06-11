@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container{
+            width: 800px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th{
+            width: 150px;
+            background-color: #f8f8f8;
+        }
+
+        th, td{
+            border: 1px solid #ddd;
+            padding: 12px;
+        }
+
+        .form-group{
+            margin-bottom: 15px;
+        }
+
+        label{
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        input{
+            width: 250px;
+            padding: 8px;
+        }
+
+        .btn{
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-update{
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-logout{
+            background-color: #2196F3;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-withdraw{
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .button-area{
+            margin-top: 30px;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>마이페이지</h2>
+
+    <table>
+        <tr>
+            <th>가입일</th>
+            <td th:text="${member.regDate}"></td>
+        </tr>
+
+        <tr>
+            <th>아이디</th>
+            <td th:text="${member.memberId}"></td>
+        </tr>
+
+        <tr>
+            <th>이름</th>
+            <td th:text="${member.name}"></td>
+        </tr>
+
+        <tr>
+            <th>성별</th>
+            <td th:text="${member.gender}"></td>
+        </tr>
+
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${member.phone}"></td>
+        </tr>
+
+        <tr>
+            <th>주소</th>
+            <td>
+                <span th:text="${member.address}"></span>
+                <span th:text="${member.detailAddress}"></span>
+            </td>
+        </tr>
+
+        <tr>
+            <th>권한</th>
+            <td th:text="${member.role}"></td>
+        </tr>
+
+    </table>
+
+    <h3>회원정보 수정</h3>
+
+    <form action="/member/update" method="post">
+
+        <div class="form-group">
+            <label>새 비밀번호</label>
+            <input type="password" name="password">
+        </div>
+
+        <div class="form-group">
+            <label>전화번호</label>
+            <input type="text"
+                   name="phone"
+                   th:value="${member.phone}">
+        </div>
+
+        <div class="form-group">
+            <label>주소</label>
+            <input type="text"
+                   name="address"
+                   th:value="${member.address}">
+        </div>
+
+        <div class="form-group">
+            <label>상세주소</label>
+            <input type="text"
+                   name="detailAddress"
+                   th:value="${member.detailAddress}">
+        </div>
+
+        <button type="submit"
+                class="btn btn-update">
+            정보 수정
+        </button>
+
+    </form>
+
+    <div class="button-area">
+
+        <a href="/member/logout"
+           class="btn-logout">
+            로그아웃
+        </a>
+
+        &nbsp;
+
+        <a href="/member/withdraw"
+           class="btn-withdraw">
+            회원탈퇴
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

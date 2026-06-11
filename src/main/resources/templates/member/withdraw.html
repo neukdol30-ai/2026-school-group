@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원탈퇴</title>
+</head>
+<body>
+
+<h2>회원탈퇴</h2>
+
+<p>
+    비밀번호를 입력하면 회원탈퇴가 진행됩니다.
+</p>
+
+<form action="/member/delete" method="post">
+
+    <p>
+        <input type="password"
+               name="password"
+               placeholder="비밀번호 입력"
+               required>
+    </p>
+    <p>
+        탈퇴사유
+        <textarea name="reason"
+                  rows="5"></textarea>
+    </p>
+
+    <button type="submit">
+        회원탈퇴
+    </button>
+
+</form>
+
+<br>
+
+<a href="/member/mypage">
+    취소
+</a>
+
+</body>
+</html>

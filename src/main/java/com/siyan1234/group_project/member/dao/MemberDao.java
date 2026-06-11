@@ -17,8 +17,6 @@ public interface MemberDao {
 
     MemberDto findByNo(Integer no);
 
-    List<MemberDto> findAllMembers();
-
     Integer idCheck(String memberId);
 
     int deleteMember(Integer no);
@@ -26,7 +24,10 @@ public interface MemberDao {
     int updateMember(MemberDto memberDto);
 
     int insertWithdrawReason(@Param("memberId") String memberId, @Param("reason") String reason);
+/// 보드 연동후 사용할 코드
+//    List<MemberAdminDto> memberStatistics();
 
-    List<MemberAdminDto> memberStatistics();
+    ////보드 연동전 사용할 코드
+    List<MemberDto> findAllMembers();
 
 }
