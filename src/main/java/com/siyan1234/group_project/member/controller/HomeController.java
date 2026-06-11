@@ -1,4 +1,4 @@
-package com.siyan1234.group_project;
+package com.siyan1234.group_project.member.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
