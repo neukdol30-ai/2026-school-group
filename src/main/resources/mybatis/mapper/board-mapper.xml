@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siyan1234.group_project.board.dao.BoardDao">
+    <!-- 글 목록: 작성자 정보 위해 member와 JOIN -->
+    <select id="listBoard" resultType="BoardDto">
+        SELECT b.*, m.member_id, m.name
+        FROM board b
+        JOIN member m ON b.member_no = m.NO
+        WHERE b.board_type = 'FREE'
+        ORDER BY b.no DESC
+    </select>
+
+</mapper>

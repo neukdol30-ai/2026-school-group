@@ -8,17 +8,18 @@ spring:
     username: minipro
     password: 1234
 
-    thymeleaf:
-      cache: false
+  thymeleaf:
+    cache: false
 
-    devtools:
-      livereload:
-        enabled: true
-      restart:
-        enabled: true
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
 
-  mybatis:
-    mapper-locations: classpath:mybatis/mapper/**/*.xml
-    type-aliases-package: com.siyan1234.group_project.member.dto,com.siyan1234.group_project.board.dto
-    configuration:
-      map-underscore-to-camel-case: true
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
+  type-aliases-package: com.siyan1234.group_project.member.dto,com.siyan1234.group_project.board.dto
+  configuration:
+    map-underscore-to-camel-case: true
