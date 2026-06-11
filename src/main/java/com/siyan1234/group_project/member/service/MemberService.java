@@ -2,6 +2,7 @@ package com.siyan1234.group_project.member.service;
 
 import com.siyan1234.group_project.member.dao.MemberDao;
 import com.siyan1234.group_project.member.dto.LoginDto;
+import com.siyan1234.group_project.member.dto.MemberAdminDto;
 import com.siyan1234.group_project.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,10 @@ public class MemberService {
 
     public List<MemberDto> findAllMembers(){
         return memberDao.findAllMembers();
+    }
+
+    public List<MemberAdminDto> memberStatistics(){
+        return memberDao.memberStatistics();
     }
 
 }
