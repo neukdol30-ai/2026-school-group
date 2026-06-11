@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사진 리뷰 게시판</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto p-10">
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">
+            📸 사진 리뷰 게시판
+        </h1>
+
+        <a href="/photoBoard/write"
+           class="btn btn-primary">
+            글쓰기
+        </a>
+    </div>
+
+    <div class="overflow-x-auto bg-base-100 rounded-box shadow">
+
+        <table class="table">
+
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>평점</th>
+                <th>조회수</th>
+                <th>좋아요</th>
+                <th>작성일</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="board : ${boardList}">
+
+                <td th:text="${board.no}"></td>
+
+                <td>
+                    <a th:href="@{/photoBoard/view(no=${board.no})}"
+                       class="link link-hover font-semibold"
+                       th:text="${board.title}">
+                    </a>
+                </td>
+
+                <td th:text="${board.rating}"></td>
+
+                <td th:text="${board.hit}"></td>
+
+                <td th:text="${board.likeCount}"></td>
+
+                <td th:text="${board.regdate}"></td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>
