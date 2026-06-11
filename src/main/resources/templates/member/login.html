@@ -8,6 +8,11 @@
 
 <h2>로그인</h2>
 
+<p th:if="${errorMessage}"
+   style="color:red;">
+    <span th:text="${errorMessage}"></span>
+</p>
+
 <form action="/member/login" method="post">
 
     <p>

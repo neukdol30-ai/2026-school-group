@@ -10,86 +10,81 @@
         body{
             font-family: Arial, sans-serif;
             background-color: #f4f6f9;
-            margin: 0;
-            padding: 0;
+            margin:0;
+            padding:0;
         }
 
         .container{
-            width: 800px;
-            margin: 50px auto;
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        h2{
-            text-align: center;
-            margin-bottom: 30px;
+            width:800px;
+            margin:50px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
         }
 
         table{
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 30px;
-        }
-
-        th{
-            width: 150px;
-            background-color: #f8f8f8;
+            width:100%;
+            border-collapse:collapse;
+            margin-bottom:30px;
         }
 
         th, td{
-            border: 1px solid #ddd;
-            padding: 12px;
+            border:1px solid #ddd;
+            padding:12px;
+        }
+
+        th{
+            background:#f8f8f8;
+            width:150px;
         }
 
         .form-group{
-            margin-bottom: 15px;
+            margin-bottom:15px;
         }
 
         label{
-            display: inline-block;
-            width: 120px;
-            font-weight: bold;
+            display:inline-block;
+            width:120px;
+            font-weight:bold;
         }
 
         input{
-            width: 250px;
-            padding: 8px;
+            padding:8px;
+            width:250px;
         }
 
         .btn{
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
+            padding:10px 20px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
         }
 
         .btn-update{
-            background-color: #4CAF50;
-            color: white;
+            background:#4CAF50;
+            color:white;
         }
 
         .btn-logout{
-            background-color: #2196F3;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background:#2196F3;
+            color:white;
+            text-decoration:none;
+            padding:10px 20px;
+            border-radius:5px;
         }
 
         .btn-withdraw{
-            background-color: #f44336;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background:#f44336;
+            color:white;
+            text-decoration:none;
+            padding:10px 20px;
+            border-radius:5px;
         }
 
         .button-area{
-            margin-top: 30px;
-            text-align: center;
+            text-align:center;
+            margin-top:20px;
         }
 
     </style>
@@ -102,6 +97,7 @@
     <h2>마이페이지</h2>
 
     <table>
+
         <tr>
             <th>가입일</th>
             <td th:text="${member.regDate}"></td>
@@ -144,12 +140,44 @@
 
     <h3>회원정보 수정</h3>
 
-    <form action="/member/update" method="post">
+    <form action="/member/update"
+          method="post"
+          onsubmit="return validateUpdateForm()">
 
-        <div class="form-group">
-            <label>새 비밀번호</label>
-            <input type="password" name="password">
-        </div>
+        <p>
+            현재 비밀번호
+            <input type="password"
+                   id="currentPassword"
+                   name="currentPassword"
+                   required>
+        </p>
+
+        <p>
+            새 비밀번호
+            <input type="password"
+                   id="newPassword"
+                   name="password">
+        </p>
+
+        <small>
+            8자 이상, 영문 + 숫자 포함
+        </small>
+
+        <p id="passwordRule"></p>
+
+        <p>
+            새 비밀번호 확인
+            <input type="password"
+                   id="passwordCheck">
+        </p>
+
+        <p id="pwResult"></p>
+
+        <p>
+            <input type="checkbox"
+                   id="showPassword">
+            비밀번호 보기
+        </p>
 
         <div class="form-group">
             <label>전화번호</label>
@@ -186,8 +214,6 @@
             로그아웃
         </a>
 
-        &nbsp;
-
         <a href="/member/withdraw"
            class="btn-withdraw">
             회원탈퇴
@@ -196,6 +222,104 @@
     </div>
 
 </div>
+
+<script>
+
+    const pw =
+        document.getElementById("newPassword");
+
+    const pwCheck =
+        document.getElementById("passwordCheck");
+
+    pw.addEventListener("keyup", checkPassword);
+    pwCheck.addEventListener("keyup", checkPassword);
+
+    function checkPassword(){
+
+        const result =
+            document.getElementById("pwResult");
+
+        if(pw.value === pwCheck.value){
+
+            result.style.color="blue";
+            result.innerText="비밀번호가 일치합니다.";
+
+        }else{
+
+            result.style.color="red";
+            result.innerText="비밀번호가 일치하지 않습니다.";
+        }
+    }
+
+    pw.addEventListener("keyup", function(){
+
+        const regex =
+            /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        const result =
+            document.getElementById("passwordRule");
+
+        if(pw.value === ""){
+            result.innerText="";
+            return;
+        }
+
+        if(regex.test(pw.value)){
+
+            result.style.color="blue";
+            result.innerText="사용 가능한 비밀번호입니다.";
+
+        }else{
+
+            result.style.color="red";
+            result.innerText="8자 이상 영문과 숫자를 포함해야 합니다.";
+        }
+
+    });
+
+    document.getElementById("showPassword")
+        .addEventListener("change", function(){
+
+            const type =
+                this.checked ? "text" : "password";
+
+            document.getElementById("currentPassword").type = type;
+            document.getElementById("newPassword").type = type;
+            document.getElementById("passwordCheck").type = type;
+
+        });
+
+    function validateUpdateForm(){
+
+        const password =
+            document.getElementById("newPassword").value;
+
+        const passwordCheck =
+            document.getElementById("passwordCheck").value;
+
+        if(password === ""){
+            return true;
+        }
+
+        const regex =
+            /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        if(!regex.test(password)){
+
+            alert("비밀번호는 8자 이상 영문과 숫자를 포함해야 합니다.");
+            return false;
+        }
+
+        if(password !== passwordCheck){
+
+            alert("비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
 
 </body>
 </html>

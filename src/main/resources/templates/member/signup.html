@@ -35,6 +35,10 @@
                name="password"
                required>
     </p>
+    <small>
+        8자 이상, 영문과 숫자를 포함해야 합니다.
+    </small>
+    <p id="passwordRule"></p>
 
     <p>
         비밀번호 확인 :
@@ -149,6 +153,68 @@
 <hr>
 
 <a href="/member/login">로그인</a>
+
+<script>
+
+    const password =
+        document.getElementById("password");
+
+    password.addEventListener("keyup", function(){
+
+        const regex =
+            /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        const result =
+            document.getElementById("passwordRule");
+
+        if(regex.test(password.value)){
+
+            result.style.color="blue";
+            result.innerText=
+                "사용 가능한 비밀번호입니다.";
+
+        }else{
+
+            result.style.color="red";
+            result.innerText=
+                "8자 이상 영문과 숫자를 포함해야 합니다.";
+        }
+
+    });
+
+    function validateForm(){
+
+        const pw =
+            document.getElementById("password").value;
+
+        const pwCheck =
+            document.getElementById("passwordCheck").value;
+
+        const regex =
+            /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        if(!regex.test(pw)){
+
+            alert(
+                "비밀번호는 8자 이상 영문과 숫자를 포함해야 합니다."
+            );
+
+            return false;
+        }
+
+        if(pw !== pwCheck){
+
+            alert(
+                "비밀번호 확인이 일치하지 않습니다."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
 
 </body>
 </html>

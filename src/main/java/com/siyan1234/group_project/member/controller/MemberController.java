@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,14 @@ public class MemberController {
 
     @PostMapping("/signup")
     public String signupProcess(MemberDto memberDto){
+        String password = memberDto.getPassword();
+        String regex = "^(?=.*[A-Za-z])(?=.*\\d).{8,}$";
+        if (!password.matches(regex)){
+            return "redirect:/member/signup";
+        }
+
         int result = memberService.signup(memberDto);
+
         if (result == 0){
             return "redirect:/member/signup";
         }
@@ -54,10 +62,13 @@ public class MemberController {
     @PostMapping("/login")
     public String login(
             LoginDto loginDto,
-            HttpSession session){
+            HttpSession session, RedirectAttributes redirectAttributes){
         MemberDto member = memberService.login(loginDto);
 
         if (member == null){
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "아이디 또는 비밀번호를 다시 확인해주세요.");
             return "redirect:/member/login";
         }
         session.setAttribute("loginUser",member);
@@ -125,11 +136,17 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public String updateMember(MemberDto memberDto, HttpSession session){
+    public String updateMember(MemberDto memberDto,String currentPassword,HttpSession session){
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if (loginUser == null){
             return "redirect:/member/login";
         }
+        MemberDto member = memberService.findByNo(loginUser.getNo());
+
+        if (!member.getPassword().equals(currentPassword)){
+            return "redirect:/member/mypage";
+        }
+
         memberDto.setNo(loginUser.getNo());
         memberService.updateMember(memberDto);
         return "redirect:/member/mypage";
