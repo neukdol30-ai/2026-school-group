@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+</head>
+<body class="bg-base-200">
+
+<div class="container mx-auto mt-10">
+
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <h2 class="card-title text-3xl">
+                마이페이지
+            </h2>
+
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+
+                    <tr>
+                        <th>아이디</th>
+                        <td th:text="${member.memberId}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>이름</th>
+                        <td th:text="${member.name}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>성별</th>
+                        <td th:text="${member.gender}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>생년월일</th>
+                        <td th:text="${member.birthDate}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>전화번호</th>
+                        <td th:text="${member.phone}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>주소</th>
+                        <td th:text="${member.address}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>권한</th>
+                        <td th:text="${member.role}"></td>
+                    </tr>
+
+                </table>
+            </div>
+
+            <div class="flex gap-3 mt-5">
+
+                <a href="/member/logout"
+                   class="btn btn-warning">
+                    로그아웃
+                </a>
+
+                <a href="/member/withdraw"
+                   class="btn btn-error">
+                    회원탈퇴
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+

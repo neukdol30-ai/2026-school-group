@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>회원탈퇴</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+</head>
+<body class="bg-base-200 min-h-screen flex items-center justify-center">
+
+<div class="card w-full max-w-md bg-base-100 shadow-xl">
+
+    <div class="card-body">
+
+        <h2 class="card-title text-error text-3xl justify-center">
+            회원탈퇴
+        </h2>
+
+        <div class="alert alert-warning mt-3">
+            <span>
+                회원탈퇴를 진행하면 계정을 복구할 수 없습니다.
+            </span>
+        </div>
+
+        <form action="/member/delete" method="post">
+
+            <label class="label mt-4">
+                <span class="label-text">
+                    비밀번호 확인
+                </span>
+            </label>
+
+            <input type="password"
+                   name="password"
+                   class="input input-bordered w-full"
+                   placeholder="비밀번호를 입력하세요"
+                   required>
+
+            <div class="flex gap-3 mt-5">
+
+                <a href="/member/mypage"
+                   class="btn btn-outline flex-1">
+                    취소
+                </a>
+
+                <button type="submit"
+                        class="btn btn-error flex-1"
+                        onclick="return confirm('정말 회원탈퇴 하시겠습니까?');">
+                    회원탈퇴
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

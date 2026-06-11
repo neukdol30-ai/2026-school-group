@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen flex items-center justify-center">
+
+<div class="card w-full max-w-xl bg-base-100 shadow-xl">
+
+    <div class="card-body">
+
+        <h2 class="card-title text-3xl justify-center mb-4">
+            회원가입
+        </h2>
+
+        <form action="/member/signup"
+              method="post"
+              th:object="${memberDto}">
+
+            <!-- 아이디 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">아이디</span>
+                </label>
+
+                <div class="flex gap-2">
+
+                    <input type="text"
+                           id="memberId"
+                           th:field="*{memberId}"
+                           class="input input-bordered flex-1"
+                           placeholder="아이디 입력">
+
+                    <button type="button"
+                            id="btnDuplicate"
+                            class="btn btn-primary">
+                        중복확인
+                    </button>
+
+                </div>
+
+                <p id="idCheckMessage"
+                   class="text-sm mt-2"></p>
+
+            </div>
+
+            <!-- 비밀번호 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">비밀번호</span>
+                </label>
+
+                <input type="password"
+                       th:field="*{password}"
+                       class="input input-bordered w-full"
+                       placeholder="비밀번호 입력">
+
+            </div>
+
+            <!-- 이름 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">이름</span>
+                </label>
+
+                <input type="text"
+                       th:field="*{name}"
+                       class="input input-bordered w-full"
+                       placeholder="이름 입력">
+
+            </div>
+
+            <!-- 성별 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">성별</span>
+                </label>
+
+                <div class="flex gap-5">
+
+                    <label class="label cursor-pointer gap-2">
+                        <input type="radio"
+                               th:field="*{gender}"
+                               value="M"
+                               class="radio radio-primary">
+                        <span>남자</span>
+                    </label>
+
+                    <label class="label cursor-pointer gap-2">
+                        <input type="radio"
+                               th:field="*{gender}"
+                               value="F"
+                               class="radio radio-primary">
+                        <span>여자</span>
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- 생년월일 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">생년월일</span>
+                </label>
+
+                <input type="date"
+                       th:field="*{birthDate}"
+                       class="input input-bordered w-full">
+
+            </div>
+
+            <!-- 전화번호 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">전화번호</span>
+                </label>
+
+                <input type="text"
+                       th:field="*{phone}"
+                       class="input input-bordered w-full"
+                       placeholder="010-0000-0000">
+
+            </div>
+
+            <!-- 주소 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">주소</span>
+                </label>
+
+                <div class="flex gap-2">
+
+                    <input type="text"
+                           id="address"
+                           th:field="*{address}"
+                           readonly
+                           class="input input-bordered flex-1"
+                           placeholder="주소 검색 버튼을 눌러주세요">
+
+                    <button type="button"
+                            id="btnPostcode"
+                            class="btn btn-outline btn-primary">
+                        주소검색
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- 상세주소 -->
+            <div class="mb-5">
+
+                <label class="label">
+                    <span class="label-text">상세주소</span>
+                </label>
+
+                <input type="text"
+                       th:field="*{detailAddress}"
+                       class="input input-bordered w-full"
+                       placeholder="상세주소 입력">
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-full">
+                회원가입
+            </button>
+
+        </form>
+
+        <div class="text-center mt-3">
+
+            <a href="/member/login"
+               class="link link-primary">
+                로그인 하러가기
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- 다음 주소 API -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script>
+
+    // 주소 검색
+    const btnPostcode = document.querySelector("#btnPostcode");
+
+    btnPostcode.addEventListener("click", () => {
+
+        new daum.Postcode({
+
+            oncomplete: function(data) {
+
+                document.querySelector("#address").value =
+                    data.address;
+
+                document.querySelector("#detailAddress").focus();
+            }
+
+        }).open();
+
+    });
+
+    // 아이디 중복체크
+    const btnDuplicate = document.querySelector("#btnDuplicate");
+    const idCheckMessage = document.querySelector("#idCheckMessage");
+
+    btnDuplicate.addEventListener("click", async () => {
+
+        const memberId =
+            document.querySelector("#memberId").value;
+
+        const response =
+            await fetch("/member/id-check", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+
+                body: "memberId=" + memberId
+
+            });
+
+        const data = await response.json();
+
+        if(data.isDuplicate){
+
+            idCheckMessage.className =
+                "text-error text-sm mt-2";
+
+            idCheckMessage.textContent =
+                "이미 사용중인 아이디입니다.";
+
+        } else {
+
+            idCheckMessage.className =
+                "text-success text-sm mt-2";
+
+            idCheckMessage.textContent =
+                "사용 가능한 아이디입니다.";
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
+
+
+
