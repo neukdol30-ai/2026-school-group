@@ -1,10 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>상세보기</title>
 </head>
 <body>
+
+<h1>자유게시판 - 상세보기</h1>
+
+<table border="1">
+    <tr>
+        <th>번호</th>
+        <td th:text="${board.no}"></td>
+    </tr>
+    <tr>
+        <th>머릿말</th>
+        <td th:text="${board.category}"></td>
+    </tr>
+    <tr>
+        <th>제목</th>
+        <td th:text="${board.title}"></td>
+    </tr>
+    <tr>
+        <th>작성자</th>
+        <td th:text="${board.name}"></td>
+    </tr>
+    <tr>
+        <th>조회수</th>
+        <td th:text="${board.hit}"></td>
+    </tr>
+    <tr>
+        <th>작성일</th>
+        <td th:text="${board.regDate}"></td>
+    </tr>
+    <tr>
+        <th>내용</th>
+        <td th:text="${board.content}"></td>
+    </tr>
+</table>
+<a th:href="@{/board/list}">목록</a>
 
 </body>
 </html>

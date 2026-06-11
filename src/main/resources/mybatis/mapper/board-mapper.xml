@@ -12,4 +12,17 @@
         ORDER BY b.no DESC
     </select>
 
+    <!-- 글 1건 조회 -->
+    <select id="viewBoard" parameterType="int" resultType="BoardDto">
+        SELECT b.*, m.member_id, m.name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.no = #{no}
+    </select>
+    <!-- 조회수 + 1 -->
+    <update id="updateHit" parameterType="int">
+        UPDATE board
+        SET hit = hit + 1
+        WHERE no = #{no}
+    </update>
 </mapper>

@@ -8,4 +8,8 @@ import java.util.List;
 @Mapper
 public interface BoardDao {
     List<BoardDto> listBoard();
+
+    BoardDto viewBoard(int no);
+    void updateHit(int no);
 }
+

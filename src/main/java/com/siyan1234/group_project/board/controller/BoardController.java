@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,5 +19,12 @@ public class BoardController {
     public String listBoard(Model model) {
         model.addAttribute("boardList", boardService.listBoard());
         return "board/list";
+    }
+
+    @GetMapping("/view")
+    public String view(@RequestParam int no, Model model) {
+        model.addAttribute("board", boardService.viewBoard(no));
+
+        return "board/view";
     }
 }
