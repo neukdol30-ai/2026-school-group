@@ -1,10 +1,104 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>맛집모아모아</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
 </head>
-<body>
+
+<body class="bg-base-200 min-h-screen">
+
+<!-- NAVBAR -->
+<div class="navbar bg-base-100 shadow-lg">
+
+    <div class="flex-1">
+        <a href="/"
+           class="btn btn-ghost text-xl">
+            맛집모아모아
+        </a>
+    </div>
+
+    <!-- 로그인 안 된 경우 -->
+    <div class="flex gap-2"
+         th:if="${session.loginUser == null}">
+
+        <a href="/member/login"
+           class="btn btn-primary">
+            로그인
+        </a>
+
+        <a href="/member/signup"
+           class="btn btn-outline">
+            회원가입
+        </a>
+
+    </div>
+
+    <!-- 로그인 된 경우 -->
+    <div class="flex items-center gap-2"
+         th:if="${session.loginUser != null}">
+
+        <span class="font-semibold">
+            <span th:text="${session.loginUser.name}">
+                사용자
+            </span>님 환영합니다.
+        </span>
+
+        <a href="/member/mypage"
+           class="btn btn-primary">
+            마이페이지
+        </a>
+
+        <a href="/member/logout"
+           class="btn btn-error">
+            로그아웃
+        </a>
+
+    </div>
+
+</div>
+
+<!-- HERO -->
+<div class="hero min-h-[80vh]">
+
+    <div class="hero-content text-center">
+
+        <div>
+
+            <h1 class="text-5xl font-bold">
+                맛집 모아모아
+            </h1>
+
+            <p class="py-6">
+                회원가입 후 맛집을 등록하고
+                리뷰를 작성해보세요.
+            </p>
+
+            <!-- 비회원 -->
+            <a th:if="${session.loginUser == null}"
+               href="/member/signup"
+               class="btn btn-primary">
+                시작하기
+            </a>
+
+            <!-- 회원 -->
+            <a th:if="${session.loginUser != null}"
+               href="/member/mypage"
+               class="btn btn-success">
+                내 정보 보기
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
 
 </body>
 </html>
+
