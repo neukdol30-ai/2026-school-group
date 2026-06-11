@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사진 리뷰 상세보기</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto max-w-4xl py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-3xl font-bold"
+                    th:text="${board.title}">
+                    리뷰 제목
+                </h1>
+
+                <a href="/photoBoard/list" class="btn">
+                    목록
+                </a>
+            </div>
+
+            <div class="text-sm text-gray-500 mb-4">
+                <span>작성자 : </span>
+                <span th:text="${board.memberName}">작성자</span>
+
+                <span class="mx-2">|</span>
+
+                <span>조회수 : </span>
+                <span th:text="${board.hit}">0</span>
+
+                <span class="mx-2">|</span>
+
+                <span>좋아요 : </span>
+                <span th:text="${board.likeCount}">0</span>
+
+                <span class="mx-2">|</span>
+
+                <span th:text="${board.regdate}">작성일</span>
+            </div>
+
+            <div class="mb-4">
+                <div class="badge badge-primary"
+                     th:text="${board.restaurantName}">
+                    맛집명
+                </div>
+
+                <div class="badge badge-outline"
+                     th:text="${board.address}">
+                    주소
+                </div>
+
+                <div class="badge badge-warning"
+                     th:text="${board.rating + '점'}">
+                    평점
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <img th:src="@{${board.imageUrl}}"
+                     alt="리뷰 사진"
+                     class="w-full max-h-[500px] object-cover rounded-xl shadow">
+            </div>
+
+            <div class="prose max-w-none min-h-40"
+                 th:utext="${board.content}">
+                리뷰 내용
+            </div>
+
+            <div class="flex justify-end gap-2 mt-8">
+                <a th:href="@{/photoBoard/update(no=${board.no})}"
+                   class="btn btn-warning">
+                    수정
+                </a>
+
+                <a th:href="@{/photoBoard/delete(no=${board.no})}"
+                   class="btn btn-error">
+                    삭제
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
