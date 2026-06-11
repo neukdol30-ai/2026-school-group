@@ -37,8 +37,6 @@ CREATE TABLE board (
                        CONSTRAINT board_rating_ck
                            CHECK (rating IS NULL OR rating BETWEEN 1 AND 5)
 );
--- 머릿말 컬럼 추가. 예: 잡담, 질문, 정보 등
-ALTER TABLE board ADD category VARCHAR2(20);
 
 -- board 게시판 SEQUENCE
 CREATE SEQUENCE board_seq
@@ -48,6 +46,25 @@ CREATE SEQUENCE board_seq
     nocache
     nocycle;
 
+-- 머릿말 컬럼 추가. 예: 잡담, 질문, 정보 등
+ALTER TABLE board ADD category VARCHAR2(20);
+
+-- 평점 항목 3개 추가. 맛, 시설, 서비스
+-- 맛 점수 (1.0 ~ 5.0)
+ALTER TABLE board ADD taste_rating number(2,1);
+-- 시설 점수
+ALTER TABLE board ADD facility_rating number(2,1);
+-- 서비스 점수
+ALTER TABLE board ADD service_rating number(2,1);
+
+-- 기존 rating 컬럼은 "평균 점수" 저장용으로 그대로 사용.
+
+ALTER TABLE board ADD CONSTRAINT board_taste_ck
+    CHECK (taste_rating IS NULL OR taste_rating BETWEEN 1 AND 5);
+ALTER TABLE board ADD CONSTRAINT board_facility_ck
+    CHECK (facility_rating IS NULL OR facility_rating BETWEEN 1 AND 5);
+ALTER TABLE board ADD CONSTRAINT board_service_ck
+    CHECK (service_rating IS NULL OR service_rating BETWEEN 1 AND 5);
 
 SELECT * FROM board;
 COMMIT;
