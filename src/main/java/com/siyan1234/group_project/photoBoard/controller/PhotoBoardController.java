@@ -31,9 +31,9 @@ public class PhotoBoardController {
     @PostMapping("/write")
     public String writeProcess(PhotoBoardDto photoBoardDto) {
 
-        System.out.println("title = " + photoBoardDto.getTitle());
-        System.out.println("content = " + photoBoardDto.getContent());
-        System.out.println("rating = " + photoBoardDto.getRating());
+        //System.out.println("title = " + photoBoardDto.getTitle());
+        //System.out.println("content = " + photoBoardDto.getContent());
+        //System.out.println("rating = " + photoBoardDto.getRating());
 
         photoBoardDto.setMemberNo(1);
         photoBoardDto.setRestaurantNo(1);
