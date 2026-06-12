@@ -110,3 +110,28 @@ CREATE SEQUENCE board_comment_seq
     INCREMENT BY 1
     NOCACHE
 NOCYCLE;
+
+
+
+
+CREATE TABLE board_like (
+                            no NUMBER PRIMARY KEY,
+                            board_no NUMBER NOT NULL,
+                            member_no NUMBER NOT NULL,
+
+                            CONSTRAINT board_like_board_fk
+                                FOREIGN KEY(board_no) REFERENCES board(no),
+
+                            CONSTRAINT board_like_member_fk
+                                FOREIGN KEY(member_no) REFERENCES member(no),
+
+                            CONSTRAINT board_like_unique
+                                UNIQUE(board_no, member_no)
+);
+
+
+CREATE SEQUENCE board_like_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+NOCYCLE;
