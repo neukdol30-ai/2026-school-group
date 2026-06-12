@@ -13,7 +13,7 @@ public interface MemberDao {
 
     int signup(MemberDto dto);
 
-    MemberDto login(LoginDto loginDto);
+    MemberDto findByMemberId(String memberId);
 
     MemberDto findByNo(Integer no);
 

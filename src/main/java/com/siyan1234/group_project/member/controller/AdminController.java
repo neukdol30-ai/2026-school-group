@@ -41,6 +41,7 @@ public class AdminController {
             return "redirect:/";
         }
         model.addAttribute("memberList", memberService.findAllMembers());
+
         ///보드 연동후 사용할 코드 memberStatistics
 //        model.addAttribute("memberList", memberService.memberStatistics());
         return "admin/member-list";

@@ -138,6 +138,42 @@
 
     </table>
 
+    <div th:if="${error != null}"
+         style="color:red;
+            margin-bottom:15px;
+            font-weight:bold;">
+
+    <span th:if="${error == 'WRONG_CURRENT_PASSWORD'}">
+        현재 비밀번호가 일치하지 않습니다.
+    </span>
+
+        <span th:if="${error == 'INVALID_PHONE'}">
+        전화번호 형식이 올바르지 않습니다.
+    </span>
+
+        <span th:if="${error == 'INVALID_PASSWORD'}">
+        비밀번호는 8자 이상 영문+숫자를 포함해야 합니다.
+    </span>
+
+        <span th:if="${error == 'SAME_PASSWORD'}">
+        기존 비밀번호와 같은 비밀번호는 사용할 수 없습니다.
+    </span>
+
+        <span th:if="${error == 'FAIL'}">
+        회원정보 수정에 실패했습니다.
+    </span>
+
+    </div>
+
+    <div th:if="${success != null}"
+         style="color:blue;
+            font-weight:bold;
+            margin-bottom:15px;">
+
+        회원정보가 수정되었습니다.
+
+    </div>
+
     <h3>회원정보 수정</h3>
 
     <form action="/member/update"

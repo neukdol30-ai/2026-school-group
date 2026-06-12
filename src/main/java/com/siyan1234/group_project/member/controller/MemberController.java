@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+///비밀번호 암호화///
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +23,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+///비밀번호 암호화///
+    private final BCryptPasswordEncoder passwordEncoder;
     @GetMapping("/signup")
     public String signup(){ return "member/signup";}
 
@@ -85,12 +89,19 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public String mypage(HttpSession session, Model model){
+    public String mypage(
+            HttpSession session,
+            Model model,
+            String error,
+            String success){
+
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if (loginUser == null){
             return "redirect:/member/login";
         }
         model.addAttribute("member",loginUser);
+        model.addAttribute("error",error);
+        model.addAttribute("success", success);
         return "member/mypage";
     }
 
@@ -136,19 +147,34 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public String updateMember(MemberDto memberDto,String currentPassword,HttpSession session){
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+    public String updateMember(
+            MemberDto memberDto,
+            String currentPassword,
+            HttpSession session){
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
         if (loginUser == null){
             return "redirect:/member/login";
         }
-        MemberDto member = memberService.findByNo(loginUser.getNo());
-
-        if (!member.getPassword().equals(currentPassword)){
-            return "redirect:/member/mypage";
+        String result =
+                memberService.updateMember(
+                        loginUser.getNo(),
+                        currentPassword,
+                        memberDto
+                );
+        if (!"SUCCESS".equals(result)){
+            return "redirect:/member/mypage?error="
+                    +result;
         }
 
-        memberDto.setNo(loginUser.getNo());
-        memberService.updateMember(memberDto);
-        return "redirect:/member/mypage";
+        MemberDto updateMember =
+                memberService.findByNo(loginUser.getNo());
+        session.setAttribute(
+                "loginUser",
+                updateMember
+        );
+        return "redirect:/member/mypage?success=true";
     }
 }
