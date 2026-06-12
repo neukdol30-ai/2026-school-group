@@ -10,9 +10,11 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
 </head>
 
-<body class="bg-base-200 min-h-screen flex items-center justify-center">
+<body class="bg-base-200 min-h-screen flex flex-col">
 
-<div class="card w-full max-w-xl bg-base-100 shadow-xl">
+<div class="flex-grow flex items-start justify-center py-6">
+
+    <div class="card w-full max-w-xl bg-base-100 shadow-xl">
 
     <div class="card-body">
 
@@ -60,11 +62,34 @@
                 </label>
 
                 <input type="password"
+                       id="password"
                        th:field="*{password}"
                        class="input input-bordered w-full"
                        placeholder="비밀번호 입력">
 
             </div>
+
+            <!-- 비밀번호 확인 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">비밀번호 확인</span>
+                </label>
+
+                <input type="password"
+                       id="passwordCheck"
+                       class="input input-bordered w-full"
+                       placeholder="비밀번호를 다시 입력하세요">
+
+                <p id="pwResult"
+                   class="text-sm mt-2">
+                </p>
+
+            </div>
+
+
+
+
 
             <!-- 이름 -->
             <div class="mb-4">
@@ -170,6 +195,7 @@
                 </label>
 
                 <input type="text"
+                       id="detailAddress"
                        th:field="*{detailAddress}"
                        class="input input-bordered w-full"
                        placeholder="상세주소 입력">
@@ -191,6 +217,8 @@
             </a>
 
         </div>
+
+    </div>
 
     </div>
 
@@ -266,6 +294,44 @@
     });
 
 </script>
+
+
+<script>
+
+    const password =
+        document.getElementById("password");
+
+    const passwordCheck =
+        document.getElementById("passwordCheck");
+
+    passwordCheck.addEventListener("keyup", function(){
+
+        const result =
+            document.getElementById("pwResult");
+
+        if(password.value === passwordCheck.value){
+
+            result.className =
+                "text-success text-sm mt-2";
+
+            result.innerText =
+                "비밀번호가 일치합니다.";
+
+        }else{
+
+            result.className =
+                "text-error text-sm mt-2";
+
+            result.innerText =
+                "비밀번호가 일치하지 않습니다.";
+        }
+
+    });
+
+</script>
+
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
