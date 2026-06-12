@@ -24,6 +24,17 @@ public class MemberService {
         if (idCheck(memberDto.getMemberId())){
             return 0;
         }
+        if (memberDto.getPhone() == null ||!memberDto.getPhone().matches(
+                "^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$"
+        )){
+            return -1;
+        }
+        if (memberDto.getPassword() == null ||!memberDto.getPassword().matches(
+                "^(?=.*[A-Za-z])(?=.*\\d).{8,}$"
+        )){
+            return -2;
+        }
+
         memberDto.setPassword(
                 passwordEncoder.encode(
                         memberDto.getPassword()

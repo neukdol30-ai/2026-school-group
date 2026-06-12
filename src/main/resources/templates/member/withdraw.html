@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>회원탈퇴</title>
@@ -12,7 +13,9 @@
     비밀번호를 입력하면 회원탈퇴가 진행됩니다.
 </p>
 
-<form action="/member/delete" method="post">
+<form action="/member/delete"
+      method="post"
+      onsubmit="return confirmWithdraw()">
 
     <p>
         <input type="password"
@@ -20,6 +23,7 @@
                placeholder="비밀번호 입력"
                required>
     </p>
+
     <p>
         탈퇴사유
         <textarea name="reason"
@@ -32,11 +36,32 @@
 
 </form>
 
+<form action="/member/delete"
+      method="post"
+      onsubmit="return confirm('정말 회원탈퇴 하시겠습니까?');">
+
 <br>
 
 <a href="/member/mypage">
     취소
 </a>
 
+<script th:if="${param.error != null and param.error[0] == 'password'}">
+
+    alert("비밀번호가 일치하지 않습니다.");
+
+</script>
+
+    <script>
+
+        function confirmWithdraw(){
+
+            return confirm(
+                "정말 회원탈퇴 하시겠습니까?\n탈퇴 후 복구할 수 없습니다."
+            );
+
+        }
+
+    </script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
@@ -35,9 +36,11 @@
                name="password"
                required>
     </p>
+
     <small>
         8자 이상, 영문과 숫자를 포함해야 합니다.
     </small>
+
     <p id="passwordRule"></p>
 
     <p>
@@ -51,22 +54,32 @@
 
     <p>
         이름 :
-        <input type="text" name="name" required>
+        <input type="text"
+               name="name"
+               required>
     </p>
 
     <p>
         성별 :
-        <input type="text" name="gender" placeholder="M 또는 F" required>
+        <input type="text"
+               name="gender"
+               placeholder="M 또는 F"
+               required>
     </p>
 
     <p>
         생년월일 :
-        <input type="date" name="birthDate" required>
+        <input type="date"
+               name="birthDate"
+               required>
     </p>
 
     <p>
         전화번호 :
-        <input type="text" name="phone" required>
+        <input type="text"
+               name="phone"
+               placeholder="010-1234-5678"
+               required>
     </p>
 
     <p>
@@ -86,7 +99,15 @@
     </button>
 
 </form>
+
+<hr>
+
+<a href="/member/login">
+    로그인
+</a>
+
 <script>
+
     function idCheck(){
 
         const memberId =
@@ -100,23 +121,32 @@
             },
             body:"memberId="+memberId
         })
-            .then(response=>response.json())
-            .then(data=>{
+            .then(response => response.json())
+            .then(data => {
 
                 const result =
                     document.getElementById("checkResult");
 
                 if(data.isDuplicate){
+
+                    result.style.color = "red";
+
                     result.innerText =
                         "이미 사용중인 아이디입니다.";
+
                 }else{
+
+                    result.style.color = "blue";
+
                     result.innerText =
                         "사용 가능한 아이디입니다.";
                 }
 
             });
     }
+
 </script>
+
 <script>
 
     window.onload = function(){
@@ -134,14 +164,17 @@
 
             if(pw.value === pwCheck.value){
 
+                result.style.color = "blue";
+
                 result.innerText =
                     "비밀번호가 일치합니다.";
 
             }else{
 
+                result.style.color = "red";
+
                 result.innerText =
                     "비밀번호가 일치하지 않습니다.";
-
             }
 
         });
@@ -149,10 +182,6 @@
     }
 
 </script>
-
-<hr>
-
-<a href="/member/login">로그인</a>
 
 <script>
 
@@ -169,18 +198,24 @@
 
         if(regex.test(password.value)){
 
-            result.style.color="blue";
-            result.innerText=
+            result.style.color = "blue";
+
+            result.innerText =
                 "사용 가능한 비밀번호입니다.";
 
         }else{
 
-            result.style.color="red";
-            result.innerText=
+            result.style.color = "red";
+
+            result.innerText =
                 "8자 이상 영문과 숫자를 포함해야 합니다.";
         }
 
     });
+
+</script>
+
+<script>
 
     function validateForm(){
 
@@ -213,6 +248,26 @@
 
         return true;
     }
+
+</script>
+
+<!-- 중복 아이디 팝업 -->
+<script th:if="${param.error != null and param.error[0] == 'duplicate'}">
+
+    alert("이미 사용 중인 아이디입니다.");
+
+</script>
+
+<!-- 전화번호 오류 팝업 -->
+<script th:if="${param.error != null and param.error[0] == 'phone'}">
+
+    alert("전화번호 형식이 올바르지 않습니다.");
+
+</script>
+
+<script th:if="${param.error != null and param.error[0] == 'password'}">
+
+    alert("비밀번호 형식이 올바르지 않습니다.");
 
 </script>
 

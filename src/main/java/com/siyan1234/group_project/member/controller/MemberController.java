@@ -25,6 +25,7 @@ public class MemberController {
     private final MemberService memberService;
 ///비밀번호 암호화///
     private final BCryptPasswordEncoder passwordEncoder;
+
     @GetMapping("/signup")
     public String signup(){ return "member/signup";}
 
@@ -39,7 +40,13 @@ public class MemberController {
         int result = memberService.signup(memberDto);
 
         if (result == 0){
-            return "redirect:/member/signup";
+            return "redirect:/member/signup?error=duplicate";
+        }
+        if(result == -1){
+            return "redirect:/member/signup?error=phone";
+        }
+        if (result == -2){
+            return "redirect:/member/signup?error=password";
         }
         return "redirect:/member/login";
     }
@@ -118,8 +125,11 @@ public class MemberController {
             return "redirect:/member/login";
         }
 
-        if (!member.getPassword().equals(password)){
-            return "redirect:/member/withdraw";
+        if (!passwordEncoder.matches(
+                password,
+                member.getPassword()
+        )){
+            return "redirect:/member/withdraw?error=password";
         }
         // 탈퇴사유 미입력 처리
         if(reason == null || reason.trim().isEmpty()){
