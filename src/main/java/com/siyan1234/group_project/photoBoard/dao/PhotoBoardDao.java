@@ -13,7 +13,6 @@ public class PhotoBoardDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    // 사진 리뷰 목록
     public List<PhotoBoardDto> findAll() {
         String sql = """
                 SELECT *
@@ -35,11 +34,53 @@ public class PhotoBoardDao {
                         .likeCount(rs.getInt("like_count"))
                         .regdate(rs.getString("regdate"))
                         .updateDate(rs.getString("update_date"))
+                        .imageUrl(rs.getString("image_url"))
                         .build()
         );
     }
 
-    // 사진 리뷰 상세보기
+    public void write(PhotoBoardDto photoBoardDto) {
+        String sql = """
+                INSERT INTO board (
+                    no,
+                    member_no,
+                    board_type,
+                    restaurant_no,
+                    title,
+                    content,
+                    rating,
+                    hit,
+                    like_count,
+                    regdate,
+                    update_date,
+                    image_url
+                )
+                VALUES (
+                    board_seq.nextval,
+                    ?,
+                    'REVIEW',
+                    ?,
+                    ?,
+                    ?,
+                    ?,
+                    0,
+                    0,
+                    SYSDATE,
+                    SYSDATE,
+                    ?
+                )
+                """;
+
+        jdbcTemplate.update(sql,
+                photoBoardDto.getMemberNo(),
+                photoBoardDto.getRestaurantNo(),
+                photoBoardDto.getTitle(),
+                photoBoardDto.getContent(),
+                photoBoardDto.getRating(),
+                photoBoardDto.getImageUrl()
+        );
+    }
+
     public PhotoBoardDto findByNo(int no) {
         String sql = """
                 SELECT *
@@ -61,66 +102,26 @@ public class PhotoBoardDao {
                                 .likeCount(rs.getInt("like_count"))
                                 .regdate(rs.getString("regdate"))
                                 .updateDate(rs.getString("update_date"))
+                                .imageUrl(rs.getString("image_url"))
                                 .build(),
                 no
         );
     }
 
-    // 사진 리뷰 등록
-    public void insert(PhotoBoardDto photeBoardDto) {
+    public void delete(int no) {
         String sql = """
-                INSERT INTO board (
-                    no,
-                    member_no,
-                    board_type,
-                    restaurant_no,
-                    title,
-                    content,
-                    rating
-                ) VALUES (
-                    board_seq.NEXTVAL,
-                    ?,
-                    'REVIEW',
-                    ?,
-                    ?,
-                    ?,
-                    ?
-                )
-                """;
-
-        jdbcTemplate.update(sql,
-                photeBoardDto.getMemberNo(),
-                photeBoardDto.getRestaurantNo(),
-                photeBoardDto.getTitle(),
-                photeBoardDto.getContent(),
-                photeBoardDto.getRating()
-        );
-    }
-
-    // 사진 리뷰 수정
-    public void update(PhotoBoardDto photeBoardDto) {
-        String sql = """
-                UPDATE board
-                SET title = ?,
-                    content = ?,
-                    rating = ?,
-                    update_date = SYSDATE
+                DELETE FROM board
                 WHERE no = ?
                 AND board_type = 'REVIEW'
                 """;
 
-        jdbcTemplate.update(sql,
-                photeBoardDto.getTitle(),
-                photeBoardDto.getContent(),
-                photeBoardDto.getRating(),
-                photeBoardDto.getNo()
-        );
+        jdbcTemplate.update(sql, no);
     }
 
-    // 사진 리뷰 삭제
-    public void delete(int no) {
+    public void like(int no) {
         String sql = """
-                DELETE FROM board
+                UPDATE board
+                SET like_count = like_count + 1
                 WHERE no = ?
                 AND board_type = 'REVIEW'
                 """;

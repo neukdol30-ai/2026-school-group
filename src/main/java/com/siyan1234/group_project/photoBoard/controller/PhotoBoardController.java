@@ -6,8 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,14 +33,28 @@ public class PhotoBoardController {
     }
 
     @PostMapping("/write")
-    public String writeProcess(PhotoBoardDto photoBoardDto) {
-
-        //System.out.println("title = " + photoBoardDto.getTitle());
-        //System.out.println("content = " + photoBoardDto.getContent());
-        //System.out.println("rating = " + photoBoardDto.getRating());
+    public String writeProcess(PhotoBoardDto photoBoardDto,
+                               @RequestParam("file") MultipartFile file) throws IOException {
 
         photoBoardDto.setMemberNo(1);
         photoBoardDto.setRestaurantNo(1);
+
+        if (!file.isEmpty()) {
+            String uploadPath = "D:/upload/";
+
+            File folder = new File(uploadPath);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            String originalFileName = file.getOriginalFilename();
+            String savedFileName = UUID.randomUUID() + "_" + originalFileName;
+
+            File saveFile = new File(uploadPath + savedFileName);
+            file.transferTo(saveFile);
+
+            photoBoardDto.setImageUrl("/upload/" + savedFileName);
+        }
 
         photoBoardService.write(photoBoardDto);
 
@@ -54,5 +72,11 @@ public class PhotoBoardController {
     public String delete(@RequestParam int no) {
         photoBoardService.delete(no);
         return "redirect:/photoBoard/list";
+    }
+
+    @GetMapping("/like")
+    public String like(@RequestParam int no) {
+        photoBoardService.like(no);
+        return "redirect:/photoBoard/view?no=" + no;
     }
 }
