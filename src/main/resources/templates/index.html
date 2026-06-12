@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>메인페이지</title>
@@ -8,33 +8,50 @@
 
 <h1>맛집 게시판</h1>
 
-<a href="/member/mypage">
-    마이페이지
-</a>
+<!-- 로그인 상태 -->
+<div th:if="${session.loginUser != null}">
 
-<br>
+    <p>
+        환영합니다!
+        <b th:text="${session.loginUser.name}"></b>님
+    </p>
 
-<a href="/member/login">
-    로그인
-</a>
+    <a href="/member/mypage">마이페이지</a>
+    <br>
 
-<br>
+    <!-- 사용자만 -->
+    <a th:if="${session.loginUser.role != 'ADMIN'}"
+       href="/inquiry/list">1:1 문의</a>
 
-<a href="/member/logout">
-    로그아웃
-</a>
+    <br>
 
-<br>
+    <a href="/member/logout">로그아웃</a>
 
-<a href="/admin">
-    관리자 페이지
-</a>
+</div>
 
-<br>
+<!-- 비로그인 -->
+<div th:if="${session.loginUser == null}">
 
-<a href="/admin/member-list">
-    멤버관리
-</a>
+    <a href="/member/login">로그인</a>
+    <br>
+
+    <a href="/member/signup">회원가입</a>
+
+</div>
+
+<hr>
+
+<!-- 관리자 -->
+<div th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}">
+
+    <h3>관리자 메뉴</h3>
+
+    <a href="/admin">관리자 홈</a>
+    <br>
+
+    <a href="/admin/inquiry-list">문의 관리</a>
+
+</div>
 
 </body>
 </html>

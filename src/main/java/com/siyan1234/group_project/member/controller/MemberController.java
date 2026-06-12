@@ -92,7 +92,7 @@ public class MemberController {
 
         session.invalidate();
 
-        return "redirect:/";
+        return "redirect:/?logout=true";
     }
 
     @GetMapping("/mypage")

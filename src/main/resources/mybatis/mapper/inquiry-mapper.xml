@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siyan1234.group_project.inquiry.dao.InquiryDao">
+
+    <!-- =========================
+         문의 등록
+    ========================= -->
+    <insert id="insertInquiry">
+
+        INSERT INTO INQUIRY
+        (
+        NO,
+        MEMBER_NO,
+        TITLE,
+        CONTENT,
+        PHONE,
+        CATEGORY
+        )
+        VALUES
+        (
+        INQUIRY_SEQ.NEXTVAL,
+        #{memberNo},
+        #{title},
+        #{content},
+        #{phone},
+        #{category}
+        )
+
+    </insert>
+
+    <!-- =========================
+         사용자 문의 목록
+    ========================= -->
+    <select id="findMyInquiryList"
+            resultType="InquiryDto">
+
+        SELECT *
+        FROM INQUIRY
+        WHERE MEMBER_NO = #{memberNo}
+        AND IS_DELETED = 'N'
+        ORDER BY NO DESC
+
+    </select>
+
+    <!-- =========================
+         문의 상세 (안정형)
+    ========================= -->
+    <select id="findByNo"
+            resultType="InquiryDto">
+
+        SELECT *
+        FROM INQUIRY
+        WHERE NO = #{no}
+        AND IS_DELETED = 'N'
+
+    </select>
+
+    <!-- =========================
+         관리자 전체 목록
+    ========================= -->
+    <select id="findAllInquiry"
+            resultType="InquiryDto">
+
+        SELECT *
+        FROM INQUIRY
+        WHERE IS_DELETED = 'N'
+        ORDER BY NO DESC
+
+    </select>
+
+    <!-- =========================
+         답변 등록
+    ========================= -->
+    <insert id="insertAnswer">
+
+        INSERT INTO INQUIRY_ANSWER
+        (
+        NO,
+        INQUIRY_NO,
+        ADMIN_NO,
+        CONTENT
+        )
+        VALUES
+        (
+        INQUIRY_ANSWER_SEQ.NEXTVAL,
+        #{inquiryNo},
+        #{adminNo},
+        #{content}
+        )
+
+    </insert>
+
+    <!-- =========================
+         답변 조회
+    ========================= -->
+    <select id="findAnswerByInquiryNo"
+            resultType="InquiryAnswerDto">
+
+        SELECT *
+        FROM INQUIRY_ANSWER
+        WHERE INQUIRY_NO = #{inquiryNo}
+        AND IS_DELETED = 'N'
+
+    </select>
+
+    <!-- =========================
+         상태 변경
+    ========================= -->
+    <update id="updateInquiryStatus">
+
+        UPDATE INQUIRY
+        SET STATUS = 'ANSWERED'
+        WHERE NO = #{inquiryNo}
+
+    </update>
+
+</mapper>
