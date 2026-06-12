@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>인증 게시판</title>
+    <title>인증 게시글 수정</title>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +29,7 @@
         }
 
         .top-inner {
-            max-width: 1200px;
+            max-width: 1500px;
             height: 100%;
             margin: 0 auto;
             padding: 0 20px;
@@ -46,7 +46,7 @@
         .top-menu a:hover { color: #2563eb; }
 
         .brand-area {
-            max-width: 1200px;
+            max-width: 1500px;
             height: 110px;
             margin: 0 auto;
             padding: 0 20px;
@@ -61,7 +61,9 @@
             color: #2563eb;
         }
 
-        .logo span { color: #111827; }
+        .logo span {
+            color: #111827;
+        }
 
         .search-box {
             width: 420px;
@@ -99,17 +101,12 @@
         }
 
         .nav-inner {
-            max-width: 1200px;
+            max-width: 1500px;
             height: 58px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
             align-items: center;
-            gap: 34px;
-        }
-
-        .hamburger {
-            font-size: 24px;
         }
 
         .main-menu {
@@ -146,38 +143,6 @@
             padding: 0 20px;
         }
 
-        .page-title {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .page-title h1 {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-
-        .page-title p {
-            color: #666;
-        }
-
-        .write-btn {
-            background-color: #2563eb;
-            color: white;
-            padding: 13px 22px;
-            border-radius: 999px;
-            font-weight: 700;
-        }
-
-        .write-btn:hover {
-            background-color: #1d4ed8;
-        }
-
         .content-grid {
             display: grid;
             grid-template-columns: 260px 1fr;
@@ -212,119 +177,132 @@
             color: #2563eb;
         }
 
-        .board-box {
+        .write-card {
             background-color: #fff;
             border: 1px solid #ddd;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 36px 40px;
         }
 
-        .board-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
+        .write-title {
+            padding-bottom: 22px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 26px;
         }
 
-        .board-top h2 {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .board-count {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .board-table {
-            width: 100%;
-            border-top: 2px solid #111827;
-        }
-
-        .board-head,
-        .board-row {
-            display: grid;
-            grid-template-columns: 90px minmax(260px, 1fr) 110px 110px 110px 160px;
-            text-align: center;
-            align-items: center;
-        }
-
-        .board-head {
-            min-height: 54px;
-            border-bottom: 1px solid #d1d5db;
-            background-color: #f8fafc;
-            color: #111827;
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .board-row {
-            min-height: 70px;
-            border-bottom: 1px solid #e5e7eb;
-            color: #374151;
-            font-size: 15px;
-        }
-
-        .board-row:hover {
-            background-color: #f9fafb;
-        }
-
-        .board-no {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .board-title {
-            text-align: left;
-            padding: 0 32px;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        .board-title a:hover {
-            color: #2563eb;
-            text-decoration: underline;
-        }
-
-        .board-data {
-            color: #475569;
-            font-size: 14px;
-        }
-
-        .empty-box {
-            padding: 80px 20px;
-            text-align: center;
-            color: #555;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .empty-box h2 {
-            font-size: 23px;
+        .write-title h1 {
+            font-size: 32px;
             margin-bottom: 10px;
             color: #111827;
         }
 
-        .paging {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 32px;
+        .write-title p {
+            color: #64748b;
+            font-size: 15px;
         }
 
-        .paging button {
-            min-width: 36px;
-            height: 36px;
-            border: 1px solid #ddd;
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-control {
+            margin-bottom: 18px;
+        }
+
+        .form-control label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 15px;
+            outline: none;
+            background-color: #fff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        textarea {
+            min-height: 260px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+
+        .current-photo {
+            margin-bottom: 18px;
+            padding: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #f8fafc;
+        }
+
+        .current-photo p {
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .current-photo img {
+            width: 100%;
+            max-height: 360px;
+            object-fit: contain;
+            display: block;
+            border-radius: 10px;
             background-color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
         }
 
-        .paging button.active {
+        .bottom-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 9px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 15px;
+        }
+
+        .btn-list {
+            background-color: #111827;
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .btn-submit {
             background-color: #2563eb;
             color: white;
-            border-color: #2563eb;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 10px;
         }
 
         footer {
@@ -372,8 +350,6 @@
 
     <nav class="nav-area">
         <div class="nav-inner">
-
-
             <ul class="main-menu">
                 <li><a href="/">🏠</a></li>
                 <li><a href="/board/free">자유게시판</a></li>
@@ -385,16 +361,8 @@
 </header>
 
 <main>
-    <section class="page-title">
-        <div>
-            <h1>인증 게시판</h1>
-            <p>방문한 맛집 사진과 후기를 인증하는 공간입니다.</p>
-        </div>
-
-        <a href="/photoBoard/write" class="write-btn">글쓰기</a>
-    </section>
-
     <section class="content-grid">
+
         <aside>
             <h2>메뉴</h2>
             <a href="/">홈</a>
@@ -403,61 +371,87 @@
             <a href="/member/info">내정보</a>
         </aside>
 
-        <section class="board-box">
-            <div class="board-top">
-                <h2>인증 게시글 목록</h2>
-                <span class="board-count" th:text="'전체 ' + ${#lists.size(boardList)} + '건'">전체 0건</span>
+        <section class="write-card">
+            <div class="write-title">
+                <h1>인증 게시글 수정</h1>
+                <p>작성한 맛집 리뷰 내용을 수정할 수 있습니다.</p>
             </div>
 
-            <div class="board-table">
-                <div class="board-head">
-                    <div>번호</div>
-                    <div>제목</div>
-                    <div>평점</div>
-                    <div>조회수</div>
-                    <div>추천수</div>
-                    <div>작성일</div>
+            <form action="/photoBoard/update" method="post">
+                <input type="hidden" name="no" th:value="${board.no}">
+
+                <div class="form-control">
+                    <label>제목</label>
+                    <input type="text" name="title" th:value="${board.title}">
                 </div>
 
-                <div th:if="${#lists.isEmpty(boardList)}" class="empty-box">
-                    <h2>등록된 게시글이 없습니다</h2>
-                    <p>첫 번째 인증 게시글을 작성해보세요.</p>
-                    <br>
-                    <a href="/photoBoard/write" class="write-btn">글쓰기</a>
-                </div>
+                <div class="form-row">
+                    <div class="form-control">
+                        <label>맛집명</label>
+                        <input type="text" name="restaurantName" th:value="${board.restaurantName}">
+                    </div>
 
-                <div th:if="${!#lists.isEmpty(boardList)}">
-                    <div th:each="board : ${boardList}" class="board-row">
-                        <div class="board-no" th:text="${board.no}">1</div>
-
-                        <div class="board-title">
-                            <a th:href="@{/photoBoard/view(no=${board.no})}"
-                               th:text="${board.title}">
-                                게시글 제목
-                            </a>
-                        </div>
-
-                        <div class="board-data" th:text="${board.rating}">5.0</div>
-                        <div class="board-data" th:text="${board.hit}">0</div>
-                        <div class="board-data" th:text="${board.likeCount}">0</div>
-                        <div class="board-data" th:text="${board.regdate}">2026-06-12</div>
+                    <div class="form-control">
+                        <label>카테고리</label>
+                        <select name="category">
+                            <option value="한식" th:selected="${board.category == '한식'}">한식</option>
+                            <option value="중식" th:selected="${board.category == '중식'}">중식</option>
+                            <option value="일식" th:selected="${board.category == '일식'}">일식</option>
+                            <option value="양식" th:selected="${board.category == '양식'}">양식</option>
+                            <option value="카페" th:selected="${board.category == '카페'}">카페</option>
+                            <option value="기타" th:selected="${board.category == '기타'}">기타</option>
+                        </select>
                     </div>
                 </div>
-            </div>
 
-            <div class="paging">
-                <button>«</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>»</button>
-            </div>
+                <div class="form-control">
+                    <label>주소</label>
+                    <input type="text" name="address" th:value="${board.address}">
+                </div>
+
+                <div class="form-control">
+                    <label>한 줄 설명</label>
+                    <input type="text" name="description" th:value="${board.description}">
+                </div>
+
+                <div class="form-control">
+                    <label>평점</label>
+                    <select name="rating">
+                        <option value="5" th:selected="${board.rating == 5}">5점</option>
+                        <option value="4" th:selected="${board.rating == 4}">4점</option>
+                        <option value="3" th:selected="${board.rating == 3}">3점</option>
+                        <option value="2" th:selected="${board.rating == 2}">2점</option>
+                        <option value="1" th:selected="${board.rating == 1}">1점</option>
+                    </select>
+                </div>
+
+                <div class="current-photo" th:if="${board.imageUrl != null}">
+                    <p>현재 등록된 사진</p>
+                    <img th:src="@{${board.imageUrl}}" alt="현재 사진">
+                </div>
+
+                <div class="form-control">
+                    <label>리뷰 내용</label>
+                    <textarea name="content" th:text="${board.content}"></textarea>
+                </div>
+
+                <div class="bottom-actions">
+                    <a th:href="@{/photoBoard/view(no=${board.no})}" class="btn btn-list">뒤로가기</a>
+
+                    <div class="right-actions">
+                        <a th:href="@{/photoBoard/view(no=${board.no})}" class="btn btn-cancel">취소</a>
+                        <button type="submit" class="btn btn-submit">수정</button>
+                    </div>
+                </div>
+
+            </form>
         </section>
+
     </section>
 </main>
 
 <footer>
-    © 2026 MY SITE. All rights reserved.
+    © 2026 맛집모아모아. All rights reserved.
 </footer>
 
 </body>

@@ -25,6 +25,10 @@ public class PhotoBoardService {
         return photoBoardDao.findByNo(no);
     }
 
+    public void update(PhotoBoardDto photoBoardDto) {
+        photoBoardDao.update(photoBoardDto);
+    }
+
     public void delete(int no) {
         photoBoardDao.delete(no);
     }
@@ -32,4 +36,9 @@ public class PhotoBoardService {
     public void like(int no) {
         photoBoardDao.like(no);
     }
+
+    public void increaseHit(int no) {
+        photoBoardDao.increaseHit(no);
+    }
+
 }

@@ -108,10 +108,6 @@
             gap: 34px;
         }
 
-        .hamburger {
-            font-size: 24px;
-        }
-
         .main-menu {
             display: flex;
             gap: 38px;
@@ -233,6 +229,11 @@
             color: #334155;
         }
 
+        .like-badge:hover {
+            background-color: #dbeafe;
+            color: #2563eb;
+        }
+
         .photo-box {
             width: 100%;
             margin: 26px 0;
@@ -259,6 +260,82 @@
             font-size: 17px;
             color: #333;
             white-space: pre-line;
+        }
+
+        .comment-section {
+            margin-top: 32px;
+            padding-top: 28px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .comment-section h2 {
+            font-size: 22px;
+            margin-bottom: 18px;
+            color: #111827;
+        }
+
+        .comment-empty {
+            padding: 24px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background-color: #f8fafc;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .comment-item {
+            padding: 18px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background-color: #fff;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .comment-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #222;
+            white-space: pre-line;
+        }
+
+        .comment-form {
+            margin-top: 24px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-form textarea {
+            flex: 1;
+            min-height: 90px;
+            resize: vertical;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .comment-form textarea:focus {
+            border-color: #2563eb;
+        }
+
+        .comment-form button {
+            width: 110px;
+            border: none;
+            border-radius: 10px;
+            background-color: #2563eb;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
         }
 
         .bottom-actions {
@@ -328,7 +405,7 @@
     </div>
 
     <div class="brand-area">
-        <a href="/" class="logo">MY<span>SITE</span></a>
+        <a href="/" class="logo">맛집<span>모아모아</span></a>
 
         <form class="search-box">
             <input type="text" placeholder="검색어를 입력하세요">
@@ -342,10 +419,8 @@
 
     <nav class="nav-area">
         <div class="nav-inner">
-            <div class="hamburger">☰</div>
-
             <ul class="main-menu">
-                <li><a href="/">홈</a></li>
+                <li><a href="/">🏠</a></li>
                 <li><a href="/board/free">자유게시판</a></li>
                 <li><a href="/photoBoard/list" class="active">인증게시판</a></li>
                 <li><a href="/member/info">내정보</a></li>
@@ -373,7 +448,7 @@
 
                     <div class="meta">
                         <span>조회수 : <b th:text="${board.hit}">0</b></span>
-                        <span>좋아요 : <b th:text="${board.likeCount}">0</b></span>
+                        <span>추천수 : <b th:text="${board.likeCount}">0</b></span>
                         <span th:text="${board.regdate}">작성일</span>
                     </div>
                 </div>
@@ -383,22 +458,52 @@
 
             <div class="score-area">
                 <span class="score-badge">
-                    ⭐ <span th:text="${board.rating}">5</span>점
+                    평점 <span th:text="${board.rating}">5</span>점
                 </span>
 
-                <span class="like-badge">
-                    ❤️ <span th:text="${board.likeCount}">0</span>
-                </span>
+                <a th:href="@{/photoBoard/like(no=${board.no})}"
+                   class="like-badge">
+                    추천수 <span th:text="${board.likeCount}">0</span>
+                </a>
             </div>
 
-            <!-- 사진 변수명이 다르면 이 줄만 기존 변수명으로 바꾸면 됨 -->
-            <!-- 예: board.imageUrl / board.imgUrl / board.filePath -->
             <div class="photo-box">
                 <img th:src="@{${board.imageUrl}}" alt="리뷰 사진">
             </div>
 
             <div class="content-box" th:text="${board.content}">
                 게시글 내용
+            </div>
+
+            <div class="comment-section">
+                <h2>댓글</h2>
+
+                <div th:if="${#lists.isEmpty(commentList)}" class="comment-empty">
+                    등록된 댓글이 없습니다.
+                </div>
+
+                <div th:if="${!#lists.isEmpty(commentList)}">
+                    <div th:each="comment : ${commentList}" class="comment-item">
+                        <div class="comment-meta">
+                            <span>회원번호 <b th:text="${comment.memberNo}">1</b></span>
+                            <span th:text="${comment.regdate}">작성일</span>
+                        </div>
+
+                        <div class="comment-content" th:text="${comment.content}">
+                            댓글 내용
+                        </div>
+                    </div>
+                </div>
+
+                <form action="/photoBoard/comment/write" method="post" class="comment-form">
+                    <input type="hidden" name="boardNo" th:value="${board.no}">
+
+                    <textarea name="content"
+                              placeholder="댓글을 입력하세요"
+                              required></textarea>
+
+                    <button type="submit">댓글 등록</button>
+                </form>
             </div>
 
             <div class="bottom-actions">
@@ -416,7 +521,7 @@
 </main>
 
 <footer>
-    © 2026 MY SITE. All rights reserved.
+    © 2026 맛집모아모아. All rights reserved.
 </footer>
 
 </body>
