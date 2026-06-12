@@ -10,6 +10,11 @@
 
 <a href="/board/write">글쓰기</a>
 
+<form action="/board/list" method="get">
+    <input type="text" name="keyword" th:value="${page.keyword}">
+    <button type="submit">제목 검색</button>
+</form>
+
 <table border="1">
     <tr>
         <th>번호</th>
@@ -31,5 +36,13 @@
         <td th:text="${item.regDate}"></td>
     </tr>
 </table>
+
+<!-- 페이지 번호 -->
+<div>
+    <a th:each="i : ${#numbers.sequence(1, page.totalPage)}"
+       th:href="@{/board/list(page=${i}, keyword=${page.keyword})}"
+       th:text="${i}"></a>
+</div>
+
 </body>
 </html>

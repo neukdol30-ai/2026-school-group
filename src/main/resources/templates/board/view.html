@@ -39,6 +39,8 @@
     </tr>
 </table>
 <a th:href="@{/board/list}">목록</a>
+<a th:href="@{/board/edit(no=${board.no})}">수정</a>
+<a th:href="@{/board/delete(no=${board.no})}" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
 
 </body>
 </html>

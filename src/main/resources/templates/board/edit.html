@@ -2,9 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>글 수정</title>
 </head>
 <body>
+
+<h1>자유게시판 - 글 수정</h1>
+
+<form action="/board/edit" method="post">
+    <input type="hidden" name="no" th:value="${board.no}">
+
+    <table border="1">
+        <tr>
+            <th>머릿말</th>
+            <td>
+                <select name="category">
+                    <option value="잡담" th:selected="${board.category == '잡담'}">잡담</option>
+                    <option value="질문" th:selected="${board.category == '질문'}">질문</option>
+                    <option value="정보" th:selected="${board.category == '정보'}">정보</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>제목</th>
+            <td><input type="text" name="title" th:value="${board.title}"></td>
+        </tr>
+        <tr>
+            <th>맛 평점</th>
+            <td>
+                <select name="tasteRating">
+                    <option value="5" th:selected="${board.tasteRating == 5}">5</option>
+                    <option value="4" th:selected="${board.tasteRating == 4}">4</option>
+                    <option value="3" th:selected="${board.tasteRating == 3}">3</option>
+                    <option value="2" th:selected="${board.tasteRating == 2}">2</option>
+                    <option value="1" th:selected="${board.tasteRating == 1}">1</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>시설 평점</th>
+            <td>
+                <select name="facilityRating">
+                    <option value="5" th:selected="${board.facilityRating == 5}">5</option>
+                    <option value="4" th:selected="${board.facilityRating == 4}">4</option>
+                    <option value="3" th:selected="${board.facilityRating == 3}">3</option>
+                    <option value="2" th:selected="${board.facilityRating == 2}">2</option>
+                    <option value="1" th:selected="${board.facilityRating == 1}">1</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>서비스 평점</th>
+            <td>
+                <select name="serviceRating">
+                    <option value="5" th:selected="${board.serviceRating == 5}">5</option>
+                    <option value="4" th:selected="${board.serviceRating == 4}">4</option>
+                    <option value="3" th:selected="${board.serviceRating == 3}">3</option>
+                    <option value="2" th:selected="${board.serviceRating == 2}">2</option>
+                    <option value="1" th:selected="${board.serviceRating == 1}">1</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td><textarea name="content" rows="10" cols="50" th:text="${board.content}"></textarea></td>
+        </tr>
+    </table>
+
+    <button type="submit">수정 완료</button>
+
+</form>
+
+<a th:href="@{/board/list}">목록으로</a>
 
 </body>
 </html>

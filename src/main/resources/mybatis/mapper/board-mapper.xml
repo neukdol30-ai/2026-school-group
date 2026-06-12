@@ -4,12 +4,16 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.siyan1234.group_project.board.dao.BoardDao">
     <!-- 글 목록: 작성자 정보 위해 member와 JOIN -->
-    <select id="listBoard" resultType="BoardDto">
+    <select id="listBoard" parameterType="PageDto" resultType="BoardDto">
         SELECT b.*, m.member_id, m.name
         FROM board b
         JOIN member m ON b.member_no = m.NO
         WHERE b.board_type = 'FREE'
+        <if test="keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
         ORDER BY b.no DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{amount} ROWS ONLY
     </select>
 
     <!-- 글 1건 조회 -->
@@ -54,4 +58,13 @@
         DELETE FROM board
         WHERE no = #{no}
     </delete>
+    <!-- 전체 글 수 -->
+    <select id="countBoard" parameterType="PageDto" resultType="int">
+        SELECT COUNT(*)
+        FROM board b
+        WHERE b.board_type = 'FREE'
+        <if test="keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+    </select>
 </mapper>
