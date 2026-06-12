@@ -21,6 +21,9 @@ public class MemberService {
 
     /// 비밀번호 암호화 ///
     public int signup(MemberDto memberDto) {
+        if (idCheck(memberDto.getMemberId())){
+            return 0;
+        }
         memberDto.setPassword(
                 passwordEncoder.encode(
                         memberDto.getPassword()
@@ -81,7 +84,7 @@ public class MemberService {
             return "WRONG_CURRENT_PASSWORD";
         }
         //전화번호 형식 검사
-        if (!memberDto.getPhone().matches(
+        if (memberDto.getPhone() == null || !memberDto.getPhone().matches(
                 "^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$"
         )) {
             return "INVALID_PHONE";
