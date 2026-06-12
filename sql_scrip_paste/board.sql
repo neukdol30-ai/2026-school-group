@@ -221,3 +221,31 @@ FROM board_like l
 WHERE l.board_no = 3;
 
 COMMIT;
+
+-- 아래는 전부 테스트용 SQL문
+SELECT NO, title, rating, update_date, hit FROM board ORDER BY NO DESC;
+SELECT * FROM board_comment WHERE board_no = 4;
+
+-- 계산용 테이블
+INSERT INTO board (NO, member_no, board_type, category,
+                   title, content, hit, like_count, regdate)
+SELECT board_seq.NEXTVAL, 1, 'FREE', '잡담',
+       '페이징 테스트' || LEVEL,
+       '내용' || LEVEL,
+       0, 0, SYSDATE
+FROM dual
+CONNECT BY LEVEL <= 25;
+
+SELECT * FROM board;
+
+COMMIT;
+
+-- 교차 확인
+SELECT b.*, m.member_id, m.name
+FROM board b
+         JOIN MEMBER m ON b.member_no = m.NO
+WHERE b.board_type = 'FREE'
+ORDER BY b.NO DESC
+OFFSET 10 ROWS FETCH NEXT 10 ROWS ONLY;
+-- 화면 페이지 수 = 올림인지 확인
+SELECT count(*) FROM board WHERE board_type = 'FREE';
