@@ -25,4 +25,33 @@
         SET hit = hit + 1
         WHERE no = #{no}
     </update>
+    <!-- 글 저장 -->
+    <insert id="writeBoard" parameterType="BoardDto">
+        INSERT INTO board (no, member_no, board_type, category,
+                           title, content, rating, taste_rating,
+                           facility_rating, service_rating,
+                           hit, like_count, regdate)
+        VALUES (board_seq.NEXTVAL, #{memberNo}, 'FREE', #{category},
+                #{title}, #{content}, #{rating}, #{tasteRating},
+                #{facilityRating}, #{serviceRating},
+                 0, 0, SYSDATE)
+    </insert>
+    <!-- 글 수정 -->
+    <update id="editBoard" parameterType="BoardDto">
+        UPDATE board
+        SET category = #{category},
+            title = #{title},
+            content = #{content},
+            rating = #{rating},
+            taste_rating = #{tasteRating},
+            facility_rating = #{facilityRating},
+            service_rating = #{serviceRating},
+            update_date = SYSDATE
+        WHERE no = #{no}
+    </update>
+    <!-- 글 삭제 -->
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM board
+        WHERE no = #{no}
+    </delete>
 </mapper>

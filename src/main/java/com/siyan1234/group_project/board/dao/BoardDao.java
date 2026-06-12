@@ -11,5 +11,13 @@ public interface BoardDao {
 
     BoardDto viewBoard(int no);
     void updateHit(int no);
+
+    // 글 저장
+    void writeBoard(BoardDto boardDto);
+
+    // 글 수정
+    void editBoard(BoardDto boardDto);
+    // 글 삭제
+    void deleteBoard(int no);
 }
 
