@@ -108,6 +108,36 @@ public class PhotoBoardDao {
         );
     }
 
+    public void increaseHit(int no) {
+        String sql = """
+            UPDATE board
+            SET hit = hit + 1
+            WHERE no = ?
+            AND board_type = 'REVIEW'
+            """;
+
+        jdbcTemplate.update(sql, no);
+    }
+
+    public void update(PhotoBoardDto photoBoardDto) {
+        String sql = """
+                UPDATE board
+                SET title = ?,
+                    content = ?,
+                    rating = ?,
+                    update_date = SYSDATE
+                WHERE no = ?
+                AND board_type = 'REVIEW'
+                """;
+
+        jdbcTemplate.update(sql,
+                photoBoardDto.getTitle(),
+                photoBoardDto.getContent(),
+                photoBoardDto.getRating(),
+                photoBoardDto.getNo()
+        );
+    }
+
     public void delete(int no) {
         String sql = """
                 DELETE FROM board

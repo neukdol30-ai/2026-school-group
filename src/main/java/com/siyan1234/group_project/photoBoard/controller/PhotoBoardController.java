@@ -1,6 +1,8 @@
 package com.siyan1234.group_project.photoBoard.controller;
 
+import com.siyan1234.group_project.photoBoard.dto.CommentDto;
 import com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto;
+import com.siyan1234.group_project.photoBoard.service.CommentService;
 import com.siyan1234.group_project.photoBoard.service.PhotoBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class PhotoBoardController {
 
     private final PhotoBoardService photoBoardService;
+    private final CommentService commentService;
 
     @GetMapping("/list")
     public String list(Model model) {
@@ -63,9 +66,29 @@ public class PhotoBoardController {
 
     @GetMapping("/view")
     public String view(@RequestParam int no, Model model) {
+
+        photoBoardService.increaseHit(no);
+
+        PhotoBoardDto board = photoBoardService.getBoard(no);
+        List<CommentDto> commentList = commentService.getList(no);
+
+        model.addAttribute("board", board);
+        model.addAttribute("commentList", commentList);
+
+        return "photoBoard/view";
+    }
+
+    @GetMapping("/update")
+    public String update(@RequestParam int no, Model model) {
         PhotoBoardDto board = photoBoardService.getBoard(no);
         model.addAttribute("board", board);
-        return "photoBoard/view";
+        return "photoBoard/update";
+    }
+
+    @PostMapping("/update")
+    public String updateProcess(PhotoBoardDto photoBoardDto) {
+        photoBoardService.update(photoBoardDto);
+        return "redirect:/photoBoard/view?no=" + photoBoardDto.getNo();
     }
 
     @GetMapping("/delete")
@@ -78,5 +101,13 @@ public class PhotoBoardController {
     public String like(@RequestParam int no) {
         photoBoardService.like(no);
         return "redirect:/photoBoard/view?no=" + no;
+    }
+
+    @PostMapping("/comment/write")
+    public String commentWrite(CommentDto commentDto) {
+        commentDto.setMemberNo(1);
+        commentService.write(commentDto);
+
+        return "redirect:/photoBoard/view?no=" + commentDto.getBoardNo();
     }
 }
