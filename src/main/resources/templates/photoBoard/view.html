@@ -1,95 +1,423 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>사진 리뷰 상세보기</title>
+    <title>인증 게시글 상세보기</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+            height: 36px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .top-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-menu {
+            display: flex;
+            gap: 18px;
+        }
+
+        .top-menu a:hover { color: #2563eb; }
+
+        .brand-area {
+            max-width: 1200px;
+            height: 110px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .logo span { color: #111827; }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .notice {
+            font-size: 14px;
+            color: #444;
+        }
+
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+
+        .hamburger {
+            font-size: 24px;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .main-menu a {
+            position: relative;
+            padding: 18px 0;
+        }
+
+        .main-menu a:hover,
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+        }
+
+        aside {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            background-color: #111827;
+            color: white;
+            font-size: 18px;
+        }
+
+        aside a {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        aside a:hover,
+        aside a.active {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .view-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 30px;
+        }
+
+        .view-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .view-title h1 {
+            font-size: 32px;
+            margin-bottom: 14px;
+            color: #111827;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .score-area {
+            margin-top: 22px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .score-badge,
+        .like-badge {
+            padding: 8px 15px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .score-badge {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .like-badge {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .photo-box {
+            width: 100%;
+            margin: 26px 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            background-color: #f8fafc;
+        }
+
+        .photo-box img {
+            width: 100%;
+            max-height: 900px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .content-box {
+            min-height: 220px;
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background-color: #fff;
+            line-height: 1.8;
+            font-size: 17px;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        .bottom-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #eee;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 9px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .btn-list {
+            background-color: #111827;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
 
-<body class="bg-base-200 min-h-screen">
+<body>
 
-<div class="container mx-auto max-w-4xl py-10">
-
-    <div class="card bg-base-100 shadow-xl">
-        <div class="card-body">
-
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-3xl font-bold"
-                    th:text="${board.title}">
-                    리뷰 제목
-                </h1>
-
-                <a href="/photoBoard/list" class="btn">
-                    목록
-                </a>
+<header>
+    <div class="top-bar">
+        <div class="top-inner">
+            <div class="top-menu">
+                <a href="/">🏠 홈</a>
+                <a href="/notice">공지사항</a>
+                <a href="/event">이벤트</a>
             </div>
 
-            <div class="text-sm text-gray-500 mb-4">
-                <span>작성자 : </span>
-                <span th:text="${board.memberName}">작성자</span>
-
-                <span class="mx-2">|</span>
-
-                <span>조회수 : </span>
-                <span th:text="${board.hit}">0</span>
-
-                <span class="mx-2">|</span>
-
-                <span>좋아요 : </span>
-                <span th:text="${board.likeCount}">0</span>
-
-                <span class="mx-2">|</span>
-
-                <span th:text="${board.regdate}">작성일</span>
+            <div class="top-menu">
+                <a href="/member/login">로그인</a>
+                <a href="/member/signup">회원가입</a>
             </div>
-
-            <div class="mb-4">
-                <div class="badge badge-primary"
-                     th:text="${board.restaurantName}">
-                    맛집명
-                </div>
-
-                <div class="badge badge-outline"
-                     th:text="${board.address}">
-                    주소
-                </div>
-
-                <div class="badge badge-warning"
-                     th:text="${board.rating + '점'}">
-                    평점
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <img th:src="@{${board.imageUrl}}"
-                     alt="리뷰 사진"
-                     class="w-full max-h-[500px] object-cover rounded-xl shadow">
-            </div>
-
-            <div class="prose max-w-none min-h-40"
-                 th:utext="${board.content}">
-                리뷰 내용
-            </div>
-
-            <div class="flex justify-end gap-2 mt-8">
-                <a th:href="@{/photoBoard/update(no=${board.no})}"
-                   class="btn btn-warning">
-                    수정
-                </a>
-
-                <a th:href="@{/photoBoard/delete(no=${board.no})}"
-                   class="btn btn-error">
-                    삭제
-                </a>
-            </div>
-
         </div>
     </div>
 
-</div>
+    <div class="brand-area">
+        <a href="/" class="logo">MY<span>SITE</span></a>
+
+        <form class="search-box">
+            <input type="text" placeholder="검색어를 입력하세요">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="notice">
+            <strong>실시간 인기글</strong> 인증게시판 새 글 확인하기
+        </div>
+    </div>
+
+    <nav class="nav-area">
+        <div class="nav-inner">
+            <div class="hamburger">☰</div>
+
+            <ul class="main-menu">
+                <li><a href="/">홈</a></li>
+                <li><a href="/board/free">자유게시판</a></li>
+                <li><a href="/photoBoard/list" class="active">인증게시판</a></li>
+                <li><a href="/member/info">내정보</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="content-grid">
+
+        <aside>
+            <h2>메뉴</h2>
+            <a href="/">홈</a>
+            <a href="/board/free">자유게시판</a>
+            <a href="/photoBoard/list" class="active">인증게시판</a>
+            <a href="/member/info">내정보</a>
+        </aside>
+
+        <section class="view-card">
+
+            <div class="view-top">
+                <div class="view-title">
+                    <h1 th:text="${board.title}">게시글 제목</h1>
+
+                    <div class="meta">
+                        <span>조회수 : <b th:text="${board.hit}">0</b></span>
+                        <span>좋아요 : <b th:text="${board.likeCount}">0</b></span>
+                        <span th:text="${board.regdate}">작성일</span>
+                    </div>
+                </div>
+
+                <a href="/photoBoard/list" class="btn btn-list">목록</a>
+            </div>
+
+            <div class="score-area">
+                <span class="score-badge">
+                    ⭐ <span th:text="${board.rating}">5</span>점
+                </span>
+
+                <span class="like-badge">
+                    ❤️ <span th:text="${board.likeCount}">0</span>
+                </span>
+            </div>
+
+            <!-- 사진 변수명이 다르면 이 줄만 기존 변수명으로 바꾸면 됨 -->
+            <!-- 예: board.imageUrl / board.imgUrl / board.filePath -->
+            <div class="photo-box">
+                <img th:src="@{${board.imageUrl}}" alt="리뷰 사진">
+            </div>
+
+            <div class="content-box" th:text="${board.content}">
+                게시글 내용
+            </div>
+
+            <div class="bottom-actions">
+                <a href="/photoBoard/list" class="btn btn-list">목록</a>
+
+                <div class="right-actions">
+                    <a th:href="@{/photoBoard/update(no=${board.no})}" class="btn btn-edit">수정</a>
+                    <a th:href="@{/photoBoard/delete(no=${board.no})}" class="btn btn-delete">삭제</a>
+                </div>
+            </div>
+
+        </section>
+
+    </section>
+</main>
+
+<footer>
+    © 2026 MY SITE. All rights reserved.
+</footer>
 
 </body>
 </html>
