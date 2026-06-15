@@ -110,11 +110,11 @@ public class PhotoBoardDao {
 
     public void increaseHit(int no) {
         String sql = """
-            UPDATE board
-            SET hit = hit + 1
-            WHERE no = ?
-            AND board_type = 'REVIEW'
-            """;
+                UPDATE board
+                SET hit = hit + 1
+                WHERE no = ?
+                AND board_type = 'REVIEW'
+                """;
 
         jdbcTemplate.update(sql, no);
     }
@@ -139,16 +139,66 @@ public class PhotoBoardDao {
     }
 
     public void delete(int no) {
-        String sql = """
+        String deleteLikeSql = """
+                DELETE FROM board_like
+                WHERE board_no = ?
+                """;
+
+        jdbcTemplate.update(deleteLikeSql, no);
+
+        String deleteCommentSql = """
+                DELETE FROM board_comment
+                WHERE board_no = ?
+                """;
+
+        jdbcTemplate.update(deleteCommentSql, no);
+
+        String deleteBoardSql = """
                 DELETE FROM board
                 WHERE no = ?
                 AND board_type = 'REVIEW'
                 """;
 
-        jdbcTemplate.update(sql, no);
+        jdbcTemplate.update(deleteBoardSql, no);
     }
 
-    public void like(int no) {
+    public int countLike(int boardNo, int memberNo) {
+        String sql = """
+                SELECT COUNT(*)
+                FROM board_like
+                WHERE board_no = ?
+                AND member_no = ?
+                """;
+
+        return jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                boardNo,
+                memberNo
+        );
+    }
+
+    public void insertLike(int boardNo, int memberNo) {
+        String sql = """
+                INSERT INTO board_like (
+                    no,
+                    board_no,
+                    member_no
+                )
+                VALUES (
+                    board_like_seq.nextval,
+                    ?,
+                    ?
+                )
+                """;
+
+        jdbcTemplate.update(sql,
+                boardNo,
+                memberNo
+        );
+    }
+
+    public void increaseLikeCount(int boardNo) {
         String sql = """
                 UPDATE board
                 SET like_count = like_count + 1
@@ -156,6 +206,6 @@ public class PhotoBoardDao {
                 AND board_type = 'REVIEW'
                 """;
 
-        jdbcTemplate.update(sql, no);
+        jdbcTemplate.update(sql, boardNo);
     }
 }
