@@ -1,57 +1,358 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>메인페이지</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>맛집 모아모아</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* 전체 헤더 */
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* 가장 위 얇은 메뉴 */
+        .top-bar {
+            height: 36px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .top-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .top-menu {
+            display: flex;
+            gap: 18px;
+        }
+
+        .top-menu a:hover {
+            color: #2563eb;
+        }
+
+        /* 로고가 들어가는 중간 영역 */
+        .brand-area {
+            max-width: 1200px;
+            height: 110px;
+            margin: 0 auto;
+            padding: 0 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 800;
+            color: #2563eb;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #111827;
+        }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .notice {
+            font-size: 14px;
+            color: #444;
+            white-space: nowrap;
+        }
+
+        .notice strong {
+            color: #111;
+        }
+
+        /* 아래쪽 목차 메뉴 */
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+
+        .hamburger {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .main-menu {
+            display: flex;
+            align-items: center;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .main-menu a {
+            position: relative;
+            padding: 18px 0;
+        }
+
+        .main-menu a:hover {
+            color: #2563eb;
+        }
+
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        /* 메인 영역 */
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .banner {
+            height: 220px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #dbeafe, #ede9fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .banner h1 {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .banner p {
+            color: #555;
+            font-size: 17px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+        }
+
+        aside {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            font-size: 18px;
+            background-color: #111827;
+            color: #fff;
+        }
+
+        aside a {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        aside a:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .board-preview {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            padding: 24px;
+        }
+
+        .board-preview h2 {
+            margin-bottom: 18px;
+            font-size: 22px;
+        }
+
+        .post-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+
+        .post-list li:last-child {
+            border-bottom: none;
+        }
+
+        .post-list a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        @media (max-width: 900px) {
+            .brand-area {
+                height: auto;
+                padding: 24px 20px;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .search-box {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            .notice {
+                display: none;
+            }
+
+            .nav-inner {
+                overflow-x: auto;
+                gap: 20px;
+            }
+
+            .main-menu {
+                gap: 24px;
+                white-space: nowrap;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+
+
 <body>
 
-<h1>맛집 게시판</h1>
+<div th:replace="~{fragments/header :: header}"></div>
 
-<!-- 로그인 상태 -->
-<div th:if="${session.loginUser != null}">
+<main>
 
-    <p>
-        환영합니다!
-        <b th:text="${session.loginUser.name}"></b>님
-    </p>
+    <div th:replace="~{fragments/banner :: banner}"></div>
 
-    <a href="/member/mypage">마이페이지</a>
-    <br>
+    <section class="content-grid">
+        <aside>
+            <h2>메뉴</h2>
+            <a href="/">홈</a>
+            <a href="/board/free">자유게시판</a>
+            <a href="/board/photo">인증게시판</a>
+            <a href="/member/mypage">내정보</a>
+        </aside>
 
-    <!-- 사용자만 -->
-    <a th:if="${session.loginUser.role != 'ADMIN'}"
-       href="/inquiry/list">1:1 문의</a>
+        <section class="board-preview">
+            <h2>최근 게시글</h2>
 
-    <br>
+            <ul class="post-list">
+                <li>
+                    <a href="#">첫 번째 자유게시판 글입니다.</a>
+                    <span>06.12</span>
+                </li>
+                <li>
+                    <a href="#">인증게시판 테스트 글입니다.</a>
+                    <span>06.12</span>
+                </li>
+                <li>
+                    <a href="#">맛집모아모아 이용 안내입니다.</a>
+                    <span>06.11</span>
+                </li>
+                <li>
+                    <a href="#">내정보 페이지는 로그인 후 이용 가능합니다.</a>
+                    <span>06.10</span>
+                </li>
+            </ul>
+        </section>
+    </section>
 
-    <a href="/member/logout">로그아웃</a>
+</main>
 
-</div>
-
-<!-- 비로그인 -->
-<div th:if="${session.loginUser == null}">
-
-    <a href="/member/login">로그인</a>
-    <br>
-
-    <a href="/member/signup">회원가입</a>
-
-</div>
-
-<hr>
-
-<!-- 관리자 -->
-<div th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}">
-
-    <h3>관리자 메뉴</h3>
-
-    <a href="/admin">관리자 홈</a>
-    <br>
-
-    <a href="/admin/inquiry-list">문의 관리</a>
-
-</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
+
 </html>
+

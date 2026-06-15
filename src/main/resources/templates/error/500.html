@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
-    <title>접근 거부</title>
+    <title>500 Error</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
@@ -15,15 +14,20 @@
 
     <div class="card-body text-center">
 
-        <h1 class="text-6xl text-error font-bold">
-            ACCESS DENIED
+        <h1 class="text-8xl font-bold text-warning">
+            500
         </h1>
 
-        <p class="text-lg mt-4">
-            관리자만 접근할 수 있는 페이지입니다.
+        <h2 class="text-3xl font-bold">
+            서버 오류가 발생했습니다
+        </h2>
+
+        <p class="py-4">
+            요청 처리 중 문제가 발생했습니다.
+            잠시 후 다시 시도해주세요.
         </p>
 
-        <div class="mt-6">
+        <div class="card-actions justify-center">
 
             <a href="/"
                class="btn btn-primary">
