@@ -14,7 +14,9 @@ CREATE TABLE MEMBER (
     IS_DELETED CHAR(1) DEFAULT 'N' NOT NULL,
     
     CONSTRAINT CK_MEMBER_DELETED
-        CHECK (IS_DELETED IN ('Y', 'N'))
+        CHECK (IS_DELETED IN ('Y', 'N')),
+    CONSTRAINT CK_MEMBER_PHONE
+		CHECK (REGEXP_LIKE(PHONE,'^010-[0-9]{4}-[0-9]{4}$')
 );
 
 COMMIT;
@@ -52,22 +54,28 @@ CREATE TABLE board (
                        rating		  NUMBER(2,1),
                        hit			  NUMBER		DEFAULT 0,
                        like_count	  NUMBER		DEFAULT 0,
+                       category VARCHAR2(20),
+                       taste_rating number(2,1),
+                       facility_rating number(2,1),
+                       service_rating number(2,1),
                        regdate		  DATE			DEFAULT sysdate,
                        update_date	  DATE,
                        IS_DELETED CHAR(1) DEFAULT 'N' NOT NULL,
 						CONSTRAINT CK_BOARD_DELETED
     						CHECK (IS_DELETED IN ('Y', 'N')),
-
-                       CONSTRAINT board_member_fk
-                           FOREIGN KEY (member_no) REFERENCES member(NO),
-
-                       CONSTRAINT board_type_ck
-                           CHECK (board_type IN ('FREE', 'REVIEW')),
-
-                       CONSTRAINT board_rating_ck
-                           CHECK (rating IS NULL OR rating BETWEEN 1 AND 5)
+                       	CONSTRAINT board_member_fk
+                           	FOREIGN KEY (member_no) REFERENCES member(NO),
+                       	CONSTRAINT board_type_ck
+                           	CHECK (board_type IN ('FREE', 'REVIEW')),
+                       	CONSTRAINT board_rating_ck
+                           	CHECK (rating IS NULL OR rating BETWEEN 1 AND 5),
+                       	CONSTRAINT board_taste_ck
+    						CHECK (taste_rating IS NULL OR taste_rating BETWEEN 1 AND 5),
+					   	CONSTRAINT board_facility_ck
+					    	CHECK (facility_rating IS NULL OR facility_rating BETWEEN 1 AND 5),
+					   	CONSTRAINT board_service_ck
+					    	CHECK (service_rating IS NULL OR service_rating BETWEEN 1 AND 5)
 );
-DROP SEQUENCE BOARD_SEQ;
 
 CREATE SEQUENCE board_seq
     START WITH 1
@@ -77,19 +85,8 @@ CREATE SEQUENCE board_seq
     nocycle;
 
 SELECT * FROM board;
-ALTER TABLE board ADD category VARCHAR2(20);
-ALTER TABLE board ADD taste_rating number(2,1);
-ALTER TABLE board ADD facility_rating number(2,1);
-ALTER TABLE board ADD service_rating number(2,1);
-
-ALTER TABLE board ADD CONSTRAINT board_taste_ck
-    CHECK (taste_rating IS NULL OR taste_rating BETWEEN 1 AND 5);
-ALTER TABLE board ADD CONSTRAINT board_facility_ck
-    CHECK (facility_rating IS NULL OR facility_rating BETWEEN 1 AND 5);
-ALTER TABLE board ADD CONSTRAINT board_service_ck
-    CHECK (service_rating IS NULL OR service_rating BETWEEN 1 AND 5);
-
 COMMIT;
+
 INSERT INTO board (
     NO,
     member_no,
@@ -110,7 +107,7 @@ CREATE TABLE board_comment (
                                NO			NUMBER			CONSTRAINT board_comment_no_pk PRIMARY KEY,
                                board_no	NUMBER			CONSTRAINT board_comment_board_nn NOT NULL,
                                member_no	NUMBER			CONSTRAINT board_comment_member_nn NOT NULL,
-                               content		VARCHAR2(1000)	CONSTRAINT board_comment_content_nn NOT NULL,
+                               content		VARCHAR2(2000)	CONSTRAINT board_comment_content_nn NOT NULL,
                                regdate		DATE 			DEFAULT sysdate,
                                update_date	DATE,
                                IS_DELETED CHAR(1) DEFAULT 'N' NOT NULL,
@@ -118,14 +115,13 @@ CREATE TABLE board_comment (
 								CONSTRAINT CK_BOARD_COMMENT_DELETED
     								CHECK (IS_DELETED IN ('Y', 'N')),
 
-                               CONSTRAINT board_comment_board_fk
-                                   FOREIGN KEY (board_no) REFERENCES board(NO)
+                               	CONSTRAINT board_comment_board_fk
+                                   	FOREIGN KEY (board_no) REFERENCES board(NO)
                                        ON DELETE CASCADE ,
 
-                               CONSTRAINT board_comment_member_fk
-                                   FOREIGN KEY (member_no) REFERENCES member(NO)
+                               	CONSTRAINT board_comment_member_fk
+                                   	FOREIGN KEY (member_no) REFERENCES member(NO)
 );
-DROP SEQUENCE board_comment_seq;
 
 CREATE SEQUENCE board_comment_seq
     START WITH 1
@@ -260,8 +256,9 @@ CREATE TABLE INQUIRY (
                 'REPORT',
                 'ETC'
             )
-        )
-
+        ),
+    CONSTRAINT CK_INQUIRY_PHONE
+		CHECK (REGEXP_LIKE(PHONE,'^010-[0-9]{4}-[0-9]{4}$')
 );
 
 CREATE SEQUENCE INQUIRY_SEQ
@@ -270,7 +267,8 @@ INCREMENT BY 1
 MAXVALUE 99999999999
 NOCACHE
 NOCYCLE;
-
+SELECT * FROM INQUIRY;
+SELECT * FROM INQUIRY_ANSWER;
 --관리자 문의관리 테이블
 CREATE TABLE INQUIRY_ANSWER (
 
@@ -310,7 +308,9 @@ CREATE TABLE INQUIRY_ANSWER (
                 'Y',
                 'N'
             )
-        )
+        ),
+    CONSTRAINT UK_INQUIRY_ANSWER
+		UNIQUE(INQUIRY_NO)
 
 );
 
