@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siyan1234.group_project.comment.dao.CommentDao">
+    <select id="listComment" parameterType="int" resultType="CommentDto">
+        SELECT c.no,
+               c.board_no,
+               c.member_no,
+               c.content,
+               TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
+               m.name
+        FROM board_comment c
+        JOIN member m ON c.member_no = m.no
+        WHERE c.board_no = #{boardNo}
+        ORDER BY c.no ASC
+    </select>
+
+    <!-- 댓글 저장 -->
+    <insert id="writeComment" parameterType="CommentDto">
+        INSERT INTO board_comment (no, board_no, member_no, content, regdate)
+        VALUES (board_comment_seq.NEXTVAL, #{boardNo}, #{memberNo}, #{content}, SYSDATE)
+    </insert>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM board_comment
+        WHERE no = #{no}
+    </delete>
+
+</mapper>
