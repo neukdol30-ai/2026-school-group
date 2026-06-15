@@ -42,7 +42,14 @@ public class BoardApiController {
     }
 
     @PostMapping("/comment/delete")
-    public void deleteComment(@RequestParam int no) {
+    public void deleteComment(@RequestParam int no, HttpSession session) {
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return;
+        }
+
         commentService.deleteComment(no);
     }
 
@@ -53,7 +60,7 @@ public class BoardApiController {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if (loginUser == null) {
-            return Map.of("liked", false, "likeCount",0 );
+            return Map.of("liked", false, "likeCount", 0);
         }
 
         int memberNo = loginUser.getNo();

@@ -9,7 +9,8 @@
                c.member_no,
                c.content,
                TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
-               m.name
+               m.name,
+               m.member_id AS member_id
         FROM board_comment c
         JOIN member m ON c.member_no = m.no
         WHERE c.board_no = #{boardNo}

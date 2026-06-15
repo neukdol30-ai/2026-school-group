@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.siyan1234.group_project.member.dto.MemberDto;
 
+import java.lang.reflect.Member;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
@@ -22,10 +24,18 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/list")
-    public String listBoard(PageDto pageDto, Model model) {
+    public String listBoard(PageDto pageDto, Model model, HttpSession session) {
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
         model.addAttribute("boardList", boardService.listBoard(pageDto)); // 목록 10건 화면 전달
 
         model.addAttribute("page", pageDto);
+
         return "board/list";
     }
 
@@ -37,7 +47,14 @@ public class BoardController {
     }
 
     @GetMapping("/write") // 글쓰기 화면
-    public String writeForm() {
+    public String writeForm(HttpSession session) {
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
         return "board/write";
     }
 
@@ -71,7 +88,14 @@ public class BoardController {
 
     // 삭제(실행 후 목록으로)
     @GetMapping("/delete")
-    public String delete(@RequestParam int no) {
+    public String delete(@RequestParam int no, HttpSession session) {
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
         boardService.deleteBoard(no);
 
         return "redirect:/board/list";
