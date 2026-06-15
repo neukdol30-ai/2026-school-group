@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 상세</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 700px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        th {
+            width: 120px;
+            background: #f5f5f5;
+        }
+
+        .box {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+        }
+
+        .waiting {
+            color: red;
+            font-weight: bold;
+        }
+
+        .answered {
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>문의 상세</h2>
+
+<table>
+
+    <tr>
+        <th>번호</th>
+        <td th:text="${inquiry.no}"></td>
+    </tr>
+
+    <tr>
+        <th>유형</th>
+        <td>
+            <span th:switch="${inquiry.category}">
+                <span th:case="'GENERAL'">일반문의</span>
+                <span th:case="'ACCOUNT'">계정문의</span>
+                <span th:case="'BOARD'">게시판문의</span>
+                <span th:case="'RESTAURANT'">맛집문의</span>
+                <span th:case="'REPORT'">신고문의</span>
+                <span th:case="'BUG'">버그신고</span>
+                <span th:case="'ETC'">기타</span>
+            </span>
+        </td>
+    </tr>
+
+    <tr>
+        <th>제목</th>
+        <td th:text="${inquiry.title}"></td>
+    </tr>
+
+    <tr>
+        <th>내용</th>
+        <td style="white-space: pre-line;" th:text="${inquiry.content}"></td>
+    </tr>
+
+    <tr>
+        <th>상태</th>
+        <td>
+            <span th:switch="${inquiry.status}">
+                <span th:case="'WAITING'" class="waiting">답변대기</span>
+                <span th:case="'ANSWERED'" class="answered">답변완료</span>
+            </span>
+        </td>
+    </tr>
+
+</table>
+
+<div class="box">
+
+    <h3>관리자 답변</h3>
+
+    <div th:if="${answer == null}">
+        <p>아직 답변이 등록되지 않았습니다.</p>
+    </div>
+
+    <div th:if="${answer != null}">
+        <p style="white-space: pre-line;" th:text="${answer.content}"></p>
+        <br>
+        <small th:text="${answer.regDate}"></small>
+    </div>
+
+</div>
+
+<br>
+
+<a href="/inquiry/list">목록으로</a>
+
+</body>
+</html>
