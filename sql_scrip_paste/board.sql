@@ -38,6 +38,31 @@ CREATE TABLE board (
         CHECK (rating IS NULL OR rating BETWEEN 1 AND 5)
 );
 
+-- IS_DELETED 관련
+ALTER TABLE board
+	ADD IS_DELETED CHAR(1) DEFAULT 'N' NOT NULL;
+ALTER TABLE board
+	ADD CONSTRAINT CK_BOARD_DELETED
+		CHECK (IS_DELETED IN ('Y', 'N'));
+
+ALTER TABLE board_comment
+	ADD IS_DELETED CHAR(1) DEFAULT 'N' NOT NULL;
+ALTER TABLE board_comment
+	ADD CONSTRAINT CK_BOARD_COMMENT_DELETED
+		CHECK (IS_DELETED IN ('Y', 'N'));
+
+-- IS_DELETED 확인
+SELECT column_name, data_type, nullable, data_default
+FROM user_tab_columns
+WHERE table_name = 'BOARD_COMMENT'
+ORDER BY column_id;
+
+SELECT constraint_name, search_condition
+FROM user_constraints
+WHERE table_name = 'BOARD_COMMENT'
+  AND constraint_type = 'C';
+
+
 -- board 게시판 SEQUENCE
 CREATE SEQUENCE board_seq
     START WITH 1
@@ -124,6 +149,11 @@ CREATE TABLE board_comment (
     CONSTRAINT board_comment_member_fk
         FOREIGN KEY (member_no) REFERENCES member(NO)
 );
+
+-- member 테이블 반영
+ALTER TABLE board_comment
+	MODIFY content VARCHAR2(2000);
+
 -- update_date 댓글 수정일 / ON DELETE CASCADE 게시글 삭제 시 달린 댓글도 함께 삭제
 -- 댓글 번호 시퀀스
 CREATE SEQUENCE board_comment_seq

@@ -3,6 +3,7 @@ package com.siyan1234.group_project.board.controller;
 import com.siyan1234.group_project.board.dto.BoardDto;
 import com.siyan1234.group_project.board.dto.PageDto;
 import com.siyan1234.group_project.board.service.BoardService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.siyan1234.group_project.member.dto.MemberDto;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,11 +42,16 @@ public class BoardController {
     }
 
     @PostMapping("/write") // 글 저장
-    public String write(BoardDto boardDto) {
-        boardDto.setMemberNo(1);
+    public String write(BoardDto boardDto, HttpSession session) {
 
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        boardDto.setMemberNo(loginUser.getNo());
         boardService.writeBoard(boardDto);
-
         return "redirect:/board/list";
     }
 
