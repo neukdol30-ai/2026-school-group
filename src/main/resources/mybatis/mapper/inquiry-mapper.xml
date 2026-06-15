@@ -117,4 +117,15 @@
 
     </update>
 
+    <select id="findMyInquiry"
+            resultType="InquiryDto">
+
+        SELECT *
+        FROM INQUIRY
+        WHERE NO = #{param1}
+        AND MEMBER_NO = #{param2}
+        AND IS_DELETED = 'N'
+
+    </select>
+
 </mapper>
