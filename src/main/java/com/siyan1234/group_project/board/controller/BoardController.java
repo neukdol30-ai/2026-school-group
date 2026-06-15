@@ -73,16 +73,29 @@ public class BoardController {
     }
 
     @GetMapping("/edit") // 수정 화면
-    public String editForm(@RequestParam int no, Model model) {
+    public String editForm(@RequestParam int no, Model model, HttpSession session) {
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
         model.addAttribute("board", boardService.getBoard(no)); // 수정 화면은 조회수 올라가면 X => getBoard 사용
         return "board/edit";
     }
 
     // 수정 저장(실행 후 상세 보기로 이동)
     @PostMapping("/edit")
-    public String edit(BoardDto boardDto) {
-        boardService.editBoard(boardDto);
+    public String edit(BoardDto boardDto, HttpSession session) {
 
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if(loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        boardService.editBoard(boardDto);
         return "redirect:/board/view?no=" + boardDto.getNo();
     }
 
@@ -96,7 +109,7 @@ public class BoardController {
             return "redirect:/member/login";
         }
 
-        boardService.deleteBoard(no);
+        boardService.deleteBoard(no, loginUser.getNo());
 
         return "redirect:/board/list";
     }

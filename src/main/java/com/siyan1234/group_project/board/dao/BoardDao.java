@@ -3,6 +3,7 @@ package com.siyan1234.group_project.board.dao;
 import com.siyan1234.group_project.board.dto.BoardDto;
 import com.siyan1234.group_project.board.dto.PageDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -20,7 +21,10 @@ public interface BoardDao {
 
     // 글 수정
     void editBoard(BoardDto boardDto);
+
     // 글 삭제
-    void deleteBoard(int no);
+    void deleteBoard(@Param("no") int no,
+                     @Param("memberNo") int memberNo);
+
 }
 

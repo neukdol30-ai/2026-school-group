@@ -24,9 +24,10 @@
     </insert>
 
     <!-- 댓글 삭제 -->
-    <delete id="deleteComment" parameterType="int">
+    <delete id="deleteComment">
         DELETE FROM board_comment
         WHERE no = #{no}
+            AND member_no = #{memberNo}
     </delete>
 
 </mapper>

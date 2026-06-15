@@ -50,7 +50,7 @@ public class BoardApiController {
             return;
         }
 
-        commentService.deleteComment(no);
+        commentService.deleteComment(no, loginUser.getNo());
     }
 
     @GetMapping("/like")
