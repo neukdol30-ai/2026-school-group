@@ -9,11 +9,18 @@ import java.util.List;
 @Mapper
 public interface InquiryDao {
     int insertInquiry(InquiryDto inquiryDto);
+
     List<InquiryDto> findMyInquiryList(Integer memberNo);
+
     InquiryDto findByNo(Integer no);
+
+    InquiryDto findMyInquiry(Integer no, Integer memberNo);
+
     List<InquiryDto> findAllInquiry();
 
     int insertAnswer(InquiryAnswerDto answerDto);
+
     InquiryAnswerDto findAnswerByInquiryNo(Integer inquiryNo);
+
     int updateInquiryStatus(Integer inquiryNo);
 }

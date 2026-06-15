@@ -15,27 +15,49 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/inquiry")
 @RequiredArgsConstructor
 public class InquiryController {
+
     private final InquiryService inquiryService;
 
     @GetMapping("/write")
     public String writeForm(HttpSession session){
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
         if (loginUser == null){
-            return "redirect:/memeber/login";
+            return "redirect:/member/login";
         }
+
         return "inquiry/write";
     }
 
     @PostMapping("/write")
-    public String writeProcess(InquiryDto inquiryDto,HttpSession session){
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+    public String writeProcess(
+            InquiryDto inquiryDto,
+            HttpSession session){
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
         if (loginUser == null){
             return "redirect:/member/login";
         }
+
+        String phone = inquiryDto.getPhone();
+
+        String regex =
+                "^01[0-9]-\\d{3,4}-\\d{4}$";
+
+        if (phone == null || !phone.matches(regex)){
+            return "redirect:/inquiry/write?error=phone";
+        }
+
         inquiryDto.setMemberNo(
                 loginUser.getNo()
         );
+
         inquiryService.insertInquiry(inquiryDto);
+
         return "redirect:/inquiry/list";
     }
 
@@ -43,18 +65,22 @@ public class InquiryController {
     public String myInquiryList(
             HttpSession session,
             Model model){
+
         MemberDto loginUser =
                 (MemberDto) session.getAttribute("loginUser");
+
         if (loginUser == null){
             return "redirect:/member/login";
         }
+
         model.addAttribute(
                 "inquiryList",
                 inquiryService.findMyInquiryList(
                         loginUser.getNo()
                 )
         );
-        return "inquiry/list";
+
+        return "inquiry/inquiry-list";
     }
 
     @GetMapping("/detail")
@@ -62,21 +88,32 @@ public class InquiryController {
             Integer no,
             HttpSession session,
             Model model){
+
         MemberDto loginUser =
-                (MemberDto) session.getAttribute(
-                        "loginUser"
-                );
+                (MemberDto) session.getAttribute("loginUser");
+
         if (loginUser == null){
-            return "redirect:/memeber/login";
+            return "redirect:/member/login";
         }
+
+        InquiryDto inquiry = inquiryService.findMyInquiry(
+                no,
+                loginUser.getNo()
+        );
+        if (inquiry == null){
+            return "redirect:/inquiry/list";
+        }
+
         model.addAttribute(
                 "inquiry",
-                inquiryService.findByNo(no)
+                inquiry
         );
+
         model.addAttribute(
                 "answer",
                 inquiryService.findAnswerByInquiryNo(no)
         );
-        return "inquiry-detail";
+
+        return "inquiry/inquiry-detail";
     }
 }

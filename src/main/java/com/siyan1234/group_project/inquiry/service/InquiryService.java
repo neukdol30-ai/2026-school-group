@@ -62,4 +62,13 @@ public class InquiryService {
     public InquiryAnswerDto findAnswerByInquiryNo(Integer inquiryNo){
         return inquiryDao.findAnswerByInquiryNo(inquiryNo);
     }
+    public InquiryDto findMyInquiry(
+            Integer no,
+            Integer memberNo){
+
+        return inquiryDao.findMyInquiry(
+                no,
+                memberNo
+        );
+    }
 }
