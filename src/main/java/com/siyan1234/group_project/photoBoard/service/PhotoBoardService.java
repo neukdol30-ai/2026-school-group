@@ -33,12 +33,20 @@ public class PhotoBoardService {
         photoBoardDao.delete(no);
     }
 
-    public void like(int no) {
-        photoBoardDao.like(no);
+    public void like(int boardNo) {
+        int memberNo = 1;
+
+        int count = photoBoardDao.countLike(boardNo, memberNo);
+
+        if (count > 0) {
+            return;
+        }
+
+        photoBoardDao.insertLike(boardNo, memberNo);
+        photoBoardDao.increaseLikeCount(boardNo);
     }
 
     public void increaseHit(int no) {
         photoBoardDao.increaseHit(no);
     }
-
 }
