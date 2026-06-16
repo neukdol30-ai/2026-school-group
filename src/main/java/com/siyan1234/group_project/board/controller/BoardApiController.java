@@ -3,6 +3,7 @@ package com.siyan1234.group_project.board.controller;
 import com.siyan1234.group_project.board.service.LikeService;
 import com.siyan1234.group_project.comment.dto.CommentDto;
 import com.siyan1234.group_project.comment.service.CommentService;
+import com.siyan1234.group_project.member.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class BoardApiController {
     }
 
     @PostMapping("/comment/write")
-    public void writeComment(@RequestBody CommentDto commentDto
+    public void writeComment(@RequestBody CommentDto commentDto,
                              HttpSession session) {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
@@ -41,8 +42,15 @@ public class BoardApiController {
     }
 
     @PostMapping("/comment/delete")
-    public void deleteComment(@RequestParam int no) {
-        commentService.deleteComment(no);
+    public void deleteComment(@RequestParam int no, HttpSession session) {
+
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return;
+        }
+
+        commentService.deleteComment(no, loginUser.getNo());
     }
 
     @GetMapping("/like")
@@ -52,7 +60,7 @@ public class BoardApiController {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
         if (loginUser == null) {
-            return Map.of("liked", false, "likeCount",0 );
+            return Map.of("liked", false, "likeCount", 0);
         }
 
         int memberNo = loginUser.getNo();

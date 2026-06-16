@@ -54,9 +54,10 @@
         WHERE no = #{no}
     </update>
     <!-- 글 삭제 -->
-    <delete id="deleteBoard" parameterType="int">
+    <delete id="deleteBoard">
         DELETE FROM board
         WHERE no = #{no}
+            AND member_no = #{memberNo}
     </delete>
     <!-- 전체 글 수 -->
     <select id="countBoard" parameterType="PageDto" resultType="int">

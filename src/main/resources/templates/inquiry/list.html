@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 문의내역</title>
+</head>
+<body>
+
+<h2>내 문의내역</h2>
+
+<table border="1">
+
+    <tr>
+        <th>번호</th>
+        <th>유형</th>
+        <th>제목</th>
+        <th>상태</th>
+        <th>작성일</th>
+    </tr>
+
+    <tr th:each="inquiry : ${inquiryList}">
+
+        <td th:text="${inquiry.no}"></td>
+
+        <td th:text="${inquiry.category}"></td>
+
+        <td th:text="${inquiry.title}"></td>
+
+        <td th:text="${inquiry.status}"></td>
+
+        <td th:text="${inquiry.regDate}"></td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<a href="/inquiry/write">
+    문의 작성
+</a>
+
+</body>
+</html>

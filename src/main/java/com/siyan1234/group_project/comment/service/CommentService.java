@@ -20,7 +20,7 @@ public class CommentService {
         commentDao.writeComment(commentDto);
     }
 
-    public void deleteComment(int no) {
-        commentDao.deleteComment(no);
+    public void deleteComment(int no, int memberNo) {
+        commentDao.deleteComment(no, memberNo);
     }
 }

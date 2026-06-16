@@ -48,8 +48,8 @@ public class BoardService {
     }
 
     // 글 삭제
-    public void deleteBoard(int no) {
-        boardDao.deleteBoard(no);
+    public void deleteBoard(int no, int memberNo) {
+        boardDao.deleteBoard(no, memberNo);
     }
 
     // 평균 평점 계산 공용 메서드

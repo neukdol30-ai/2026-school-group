@@ -72,7 +72,7 @@
 <table border="1">
     <thead>
     <tr>
-        <th>작성자</th>
+        <th>작성자 ID</th>
         <th>내용</th>
         <th>작성일</th>
         <th>삭제</th>
@@ -98,7 +98,7 @@
 
                     commentList.innerHTML +=
                         "<tr>" +
-                        "<td>" + comment.name + "</td>" +
+                        "<td>" + comment.memberId + "</td>" +
                         "<td>" + comment.content + "</td>" +
                         "<td>" + comment.regDate + "</td>" +
                         "<td><button type='button' onclick='deleteComment(" + comment.no + ")'>삭제</button></td>" +
