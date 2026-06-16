@@ -264,6 +264,21 @@
 
     let idChecked = false;
 
+    const memberIdInput =
+        document.querySelector("#memberId");
+
+    memberIdInput.addEventListener("input", () => {
+
+        idChecked = false;
+
+        idCheckMessage.className =
+            "text-sm mt-2";
+
+        idCheckMessage.textContent =
+            "";
+
+    });
+
     // 아이디 중복체크
     const btnDuplicate = document.querySelector("#btnDuplicate");
     const idCheckMessage = document.querySelector("#idCheckMessage");
