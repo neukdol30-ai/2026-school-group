@@ -1,192 +1,370 @@
 <!DOCTYPE html>
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>회원가입</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
 </head>
-<body>
 
-<h2>회원가입</h2>
+<body class="bg-base-200 min-h-screen flex flex-col">
 
-<form
-        action="/member/signup"
-        method="post"
-        onsubmit="return validateForm()">
+<div class="flex-grow flex items-start justify-center py-6">
 
-    <p>
-        아이디 :
-        <input type="text"
-               id="memberId"
-               name="memberId"
-               required>
+    <div class="card w-full max-w-xl bg-base-100 shadow-xl">
 
-        <button type="button"
-                onclick="idCheck()">
-            중복확인
-        </button>
+    <div class="card-body">
 
-        <span id="checkResult"></span>
-    </p>
+        <h2 class="card-title text-3xl justify-center mb-4">
+            회원가입
+        </h2>
 
-    <p>
-        비밀번호 :
-        <input type="password"
-               id="password"
-               name="password"
-               required>
-    </p>
+        <form action="/member/signup"
+              method="post"
+              th:object="${memberDto}"
+              onsubmit="return validateForm()">
 
-    <small>
-        8자 이상, 영문과 숫자를 포함해야 합니다.
-    </small>
+            <!-- 아이디 -->
+            <div class="mb-4">
 
-    <p id="passwordRule"></p>
+                <label class="label">
+                    <span class="label-text">아이디</span>
+                </label>
 
-    <p>
-        비밀번호 확인 :
-        <input type="password"
-               id="passwordCheck"
-               required>
+                <div class="flex gap-2">
 
-        <span id="pwResult"></span>
-    </p>
+                    <input type="text"
+                           id="memberId"
+                           th:field="*{memberId}"
+                           class="input input-bordered flex-1"
+                           placeholder="아이디 입력"
+                           required>
 
-    <p>
-        이름 :
-        <input type="text"
-               name="name"
-               required>
-    </p>
+                    <button type="button"
+                            id="btnDuplicate"
+                            class="btn btn-primary">
+                        중복확인
+                    </button>
 
-    <p>
-        성별 :
-        <input type="text"
-               name="gender"
-               placeholder="M 또는 F"
-               required>
-    </p>
+                </div>
 
-    <p>
-        생년월일 :
-        <input type="date"
-               name="birthDate"
-               required>
-    </p>
+                <p id="idCheckMessage"
+                   class="text-sm mt-2"></p>
 
-    <p>
-        전화번호 :
-        <input type="text"
-               name="phone"
-               placeholder="010-1234-5678"
-               required>
-    </p>
+            </div>
 
-    <p>
-        주소 :
-        <input type="text"
-               name="address">
-    </p>
+            <!-- 비밀번호 -->
+            <div class="mb-4">
 
-    <p>
-        상세주소 :
-        <input type="text"
-               name="detailAddress">
-    </p>
+                <label class="label">
+                    <span class="label-text">비밀번호</span>
+                </label>
 
-    <button type="submit">
-        회원가입
-    </button>
+                <input type="password"
+                       id="password"
+                       th:field="*{password}"
+                       class="input input-bordered w-full"
+                       placeholder="비밀번호 입력"
+                       required>
+                <p id="passwordRule"
+                   class="text-sm mt-2">
+                </p>
 
-</form>
+            </div>
 
-<hr>
+            <!-- 비밀번호 확인 -->
+            <div class="mb-4">
 
-<a href="/member/login">
-    로그인
-</a>
+                <label class="label">
+                    <span class="label-text">비밀번호 확인</span>
+                </label>
+
+                <input type="password"
+                       id="passwordCheck"
+                       class="input input-bordered w-full"
+                       placeholder="비밀번호를 다시 입력하세요">
+
+                <p id="pwResult"
+                   class="text-sm mt-2">
+                </p>
+
+            </div>
+
+
+
+
+
+            <!-- 이름 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">이름</span>
+                </label>
+
+                <input type="text"
+                       th:field="*{name}"
+                       class="input input-bordered w-full"
+                       placeholder="이름 입력"
+                       required>
+
+            </div>
+
+            <!-- 성별 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">성별</span>
+                </label>
+
+                <div class="flex gap-5">
+
+                    <label class="label cursor-pointer gap-2">
+                        <input type="radio"
+                               th:field="*{gender}"
+                               value="M"
+                               class="radio radio-primary"
+                               required>
+                        <span>남자</span>
+                    </label>
+
+                    <label class="label cursor-pointer gap-2">
+                        <input type="radio"
+                               th:field="*{gender}"
+                               value="F"
+                               class="radio radio-primary">
+                        <span>여자</span>
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- 생년월일 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">생년월일</span>
+                </label>
+
+                <input type="date"
+                       th:field="*{birthDate}"
+                       class="input input-bordered w-full"
+                       required>
+
+            </div>
+
+            <!-- 전화번호 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">전화번호</span>
+                </label>
+
+                <input type="text"
+                       id="phone"
+                       th:field="*{phone}"
+                       class="input input-bordered w-full"
+                       placeholder="010-1234-5678"
+                       required>
+
+                <p id="phoneMessage"
+                   class="text-sm mt-2"></p>
+
+            </div>
+
+            <!-- 주소 -->
+            <div class="mb-4">
+
+                <label class="label">
+                    <span class="label-text">주소</span>
+                </label>
+
+                <div class="flex gap-2">
+
+                    <input type="text"
+                           id="address"
+                           th:field="*{address}"
+                           readonly
+                           class="input input-bordered flex-1"
+                           placeholder="주소 검색 버튼을 눌러주세요">
+
+                    <button type="button"
+                            id="btnPostcode"
+                            class="btn btn-outline btn-primary">
+                        주소검색
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- 상세주소 -->
+            <div class="mb-5">
+
+                <label class="label">
+                    <span class="label-text">상세주소</span>
+                </label>
+
+                <input type="text"
+                       id="detailAddress"
+                       th:field="*{detailAddress}"
+                       class="input input-bordered w-full"
+                       placeholder="상세주소 입력">
+
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-full">
+                회원가입
+            </button>
+
+        </form>
+
+        <div class="text-center mt-3">
+
+            <a href="/member/login"
+               class="link link-primary">
+                로그인 하러가기
+            </a>
+
+        </div>
+
+    </div>
+
+    </div>
+
+</div>
+
+<!-- 다음 주소 API -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
 
-    function idCheck(){
+    // 주소 검색
+    const btnPostcode = document.querySelector("#btnPostcode");
 
-        const memberId =
-            document.getElementById("memberId").value;
+    btnPostcode.addEventListener("click", () => {
 
-        fetch("/member/id-check",{
-            method:"POST",
-            headers:{
-                "Content-Type":
-                    "application/x-www-form-urlencoded"
-            },
-            body:"memberId="+memberId
-        })
-            .then(response => response.json())
-            .then(data => {
+        new daum.Postcode({
 
-                const result =
-                    document.getElementById("checkResult");
+            oncomplete: function(data) {
 
-                if(data.isDuplicate){
+                document.querySelector("#address").value =
+                    data.address;
 
-                    result.style.color = "red";
-
-                    result.innerText =
-                        "이미 사용중인 아이디입니다.";
-
-                }else{
-
-                    result.style.color = "blue";
-
-                    result.innerText =
-                        "사용 가능한 아이디입니다.";
-                }
-
-            });
-    }
-
-</script>
-
-<script>
-
-    window.onload = function(){
-
-        const pw =
-            document.getElementById("password");
-
-        const pwCheck =
-            document.getElementById("passwordCheck");
-
-        pwCheck.addEventListener("keyup", function(){
-
-            const result =
-                document.getElementById("pwResult");
-
-            if(pw.value === pwCheck.value){
-
-                result.style.color = "blue";
-
-                result.innerText =
-                    "비밀번호가 일치합니다.";
-
-            }else{
-
-                result.style.color = "red";
-
-                result.innerText =
-                    "비밀번호가 일치하지 않습니다.";
+                document.querySelector("#detailAddress").focus();
             }
 
-        });
+        }).open();
 
-    }
+    });
+
+    let idChecked = false;
+
+    const memberIdInput =
+        document.querySelector("#memberId");
+
+    memberIdInput.addEventListener("input", () => {
+
+        idChecked = false;
+
+        idCheckMessage.className =
+            "text-sm mt-2";
+
+        idCheckMessage.textContent =
+            "";
+
+    });
+
+    // 아이디 중복체크
+    const btnDuplicate = document.querySelector("#btnDuplicate");
+    const idCheckMessage = document.querySelector("#idCheckMessage");
+
+    btnDuplicate.addEventListener("click", async () => {
+
+        const memberId =
+            document.querySelector("#memberId").value;
+
+        const response =
+            await fetch("/member/id-check", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+
+                body: "memberId=" + memberId
+
+            });
+
+        const data = await response.json();
+
+        if(data.isDuplicate){
+
+            idChecked = false;
+
+            idCheckMessage.className =
+                "text-error text-sm mt-2";
+
+            idCheckMessage.textContent =
+                "이미 사용중인 아이디입니다.";
+
+        } else {
+            idChecked = true;
+
+            idCheckMessage.className =
+                "text-success text-sm mt-2";
+
+            idCheckMessage.textContent =
+                "사용 가능한 아이디입니다.";
+
+        }
+
+    });
 
 </script>
+
 
 <script>
 
     const password =
         document.getElementById("password");
+
+    const passwordCheck =
+        document.getElementById("passwordCheck");
+
+    passwordCheck.addEventListener("keyup", function(){
+
+        const result =
+            document.getElementById("pwResult");
+
+        if(password.value === passwordCheck.value){
+
+            result.className =
+                "text-success text-sm mt-2";
+
+            result.innerText =
+                "비밀번호가 일치합니다.";
+
+        }else{
+
+            result.className =
+                "text-error text-sm mt-2";
+
+            result.innerText =
+                "비밀번호가 일치하지 않습니다.";
+        }
+
+    });
+
+</script>
+
+<script>
 
     password.addEventListener("keyup", function(){
 
@@ -196,16 +374,24 @@
         const result =
             document.getElementById("passwordRule");
 
+        if(password.value === ""){
+
+            result.innerText = "";
+            return;
+        }
+
         if(regex.test(password.value)){
 
-            result.style.color = "blue";
+            result.className =
+                "text-success text-sm mt-2";
 
             result.innerText =
                 "사용 가능한 비밀번호입니다.";
 
         }else{
 
-            result.style.color = "red";
+            result.className =
+                "text-error text-sm mt-2";
 
             result.innerText =
                 "8자 이상 영문과 숫자를 포함해야 합니다.";
@@ -216,33 +402,72 @@
 </script>
 
 <script>
+    const phone =
+        document.getElementById("phone");
+
+    phone.addEventListener("keyup", function(){
+
+        const regex =
+            /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
+
+        const result =
+            document.getElementById("phoneMessage");
+
+        if(regex.test(phone.value)){
+
+            result.className =
+                "text-success text-sm mt-2";
+
+            result.innerText =
+                "올바른 전화번호입니다.";
+
+        }else{
+
+            result.className =
+                "text-error text-sm mt-2";
+
+            result.innerText =
+                "010-1234-5678 형식으로 입력해주세요.";
+        }
+
+    });
+</script>
+
+
+<script>
 
     function validateForm(){
 
-        const pw =
-            document.getElementById("password").value;
+        const pw = password.value;
+        const pwCheck = passwordCheck.value;
 
-        const pwCheck =
-            document.getElementById("passwordCheck").value;
-
-        const regex =
+        const pwRegex =
             /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
 
-        if(!regex.test(pw)){
+        const phoneRegex =
+            /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
 
-            alert(
-                "비밀번호는 8자 이상 영문과 숫자를 포함해야 합니다."
-            );
+        if(!idChecked){
 
+            alert("아이디 중복확인을 진행해주세요.");
+            return false;
+        }
+
+        if(!pwRegex.test(pw)){
+
+            alert("비밀번호는 8자 이상 영문과 숫자를 포함해야 합니다.");
             return false;
         }
 
         if(pw !== pwCheck){
 
-            alert(
-                "비밀번호 확인이 일치하지 않습니다."
-            );
+            alert("비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
 
+        if(!phoneRegex.test(phone.value)){
+
+            alert("전화번호 형식이 올바르지 않습니다.");
             return false;
         }
 
@@ -251,25 +476,10 @@
 
 </script>
 
-<!-- 중복 아이디 팝업 -->
-<script th:if="${param.error != null and param.error[0] == 'duplicate'}">
-
-    alert("이미 사용 중인 아이디입니다.");
-
-</script>
-
-<!-- 전화번호 오류 팝업 -->
-<script th:if="${param.error != null and param.error[0] == 'phone'}">
-
-    alert("전화번호 형식이 올바르지 않습니다.");
-
-</script>
-
-<script th:if="${param.error != null and param.error[0] == 'password'}">
-
-    alert("비밀번호 형식이 올바르지 않습니다.");
-
-</script>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
+
+
+

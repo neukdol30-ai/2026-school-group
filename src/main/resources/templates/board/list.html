@@ -105,6 +105,11 @@
             padding: 0 20px;
             display: flex;
             align-items: center;
+            gap: 34px;
+        }
+
+        .hamburger {
+            font-size: 24px;
         }
 
         .main-menu {
@@ -219,7 +224,6 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
-            gap: 16px;
         }
 
         .board-top h2 {
@@ -227,33 +231,9 @@
             font-weight: 800;
         }
 
-        .search-form {
-            display: flex;
-            gap: 8px;
-        }
-
-        .search-form input {
-            width: 240px;
-            height: 38px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 0 12px;
-            outline: none;
-        }
-
-        .search-form input:focus {
-            border-color: #2563eb;
-        }
-
-        .search-form button {
-            height: 38px;
-            border: none;
-            background-color: #111827;
-            color: white;
-            padding: 0 15px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
+        .board-count {
+            color: #64748b;
+            font-size: 14px;
         }
 
         .board-table {
@@ -264,7 +244,7 @@
         .board-head,
         .board-row {
             display: grid;
-            grid-template-columns: 80px 120px minmax(260px, 1fr) 120px 90px 160px;
+            grid-template-columns: 90px minmax(260px, 1fr) 110px 110px 110px 160px;
             text-align: center;
             align-items: center;
         }
@@ -294,20 +274,9 @@
             font-size: 14px;
         }
 
-        .board-category {
-            display: inline-block;
-            margin: 0 auto;
-            padding: 6px 12px;
-            border-radius: 999px;
-            background-color: #eff6ff;
-            color: #2563eb;
-            font-weight: 800;
-            font-size: 13px;
-        }
-
         .board-title {
             text-align: left;
-            padding: 0 28px;
+            padding: 0 32px;
             font-weight: 700;
             color: #111827;
         }
@@ -342,20 +311,17 @@
             margin-top: 32px;
         }
 
-        .paging a {
+        .paging button {
             min-width: 36px;
             height: 36px;
             border: 1px solid #ddd;
             background-color: white;
             border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            cursor: pointer;
             font-weight: 700;
-            color: #334155;
         }
 
-        .paging a:hover {
+        .paging button.active {
             background-color: #2563eb;
             color: white;
             border-color: #2563eb;
@@ -379,12 +345,12 @@
     <div class="top-bar">
         <div class="top-inner">
             <div class="top-menu">
-                <a href="/">🏠 홈</a>
+                <a href="/">홈</a>
                 <a href="/notice">공지사항</a>
-                <a href="/event">이벤트</a>
+
             </div>
 
-            <div class="top-menu" th:if="${session.loginUser == null}">
+            <div class="top-menu">
                 <a href="/member/login">로그인</a>
                 <a href="/member/signup">회원가입</a>
             </div>
@@ -402,18 +368,15 @@
     <div class="brand-area">
         <a href="/" class="logo">맛집<span>모아모아</span></a>
 
-        <form class="search-box" action="/board/list" method="get">
-            <input type="text" name="keyword" th:value="${page.keyword}" placeholder="자유게시판 검색">
-            <button type="submit">🔍</button>
-        </form>
-
         <div class="notice">
-            <strong>실시간 인기글</strong> 자유게시판 새 글 확인하기
+            <strong>맛집 추천 사이트</strong>
         </div>
     </div>
 
     <nav class="nav-area">
         <div class="nav-inner">
+
+
             <ul class="main-menu">
                 <li><a href="/">🏠</a></li>
                 <li><a href="/board/list" class="active">자유게시판</a></li>
@@ -427,8 +390,8 @@
 <main>
     <section class="page-title">
         <div>
-            <h1>자유게시판</h1>
-            <p>맛집 이야기와 자유로운 의견을 나누는 공간입니다.</p>
+            <h1>자유 게시판</h1>
+            <p>자유롭게 이야기를 나누는 공간입니다.</p>
         </div>
 
         <a href="/board/write" class="write-btn">글쓰기</a>
@@ -445,59 +408,100 @@
 
         <section class="board-box">
             <div class="board-top">
-                <h2>자유 게시글 목록</h2>
+                <form action="/board/list"
+                      method="get"
+                      style="display:flex;gap:10px;margin-bottom:20px;">
 
-                <form class="search-form" action="/board/list" method="get">
-                    <input type="text" name="keyword" th:value="${page.keyword}" placeholder="제목 검색">
-                    <button type="submit">검색</button>
+                    <input type="text"
+                           name="keyword"
+                           th:value="${page.keyword}"
+                           placeholder="제목 검색"
+                           style="
+               flex:1;
+               padding:10px;
+               border:1px solid #ddd;
+               border-radius:8px;">
+
+                    <button type="submit"
+                            class="write-btn"
+                            style="border:none;">
+                        검색
+                    </button>
+
                 </form>
+                <h2>자유게시판 목록</h2>
+                <span class="board-count" th:text="'전체 ' + ${#lists.size(boardList)} + '건'">전체 0건</span>
             </div>
 
             <div class="board-table">
-                <div class="board-head">
+                <div class="board-head"
+                     style="grid-template-columns:80px 100px 1fr 120px 100px 140px;">
+
                     <div>번호</div>
                     <div>머릿말</div>
                     <div>제목</div>
                     <div>작성자</div>
-                    <div>조회</div>
+                    <div>조회수</div>
                     <div>작성일</div>
+
                 </div>
 
                 <div th:if="${#lists.isEmpty(boardList)}" class="empty-box">
-                    <h2>등록된 게시글이 없습니다</h2>
-                    <p>첫 번째 자유게시글을 작성해보세요.</p>
+                    <h2>등록된 자유게시글이 없습니다</h2>
+                    <p>첫 번째 게시글을 작성해보세요.</p>
                     <br>
                     <a href="/board/write" class="write-btn">글쓰기</a>
                 </div>
 
                 <div th:if="${!#lists.isEmpty(boardList)}">
-                    <div th:each="item : ${boardList}" class="board-row">
-                        <div class="board-no" th:text="${item.no}">1</div>
 
-                        <div>
-                            <span class="board-category" th:text="${item.category}">잡담</span>
+                    <div th:each="item : ${boardList}"
+                         class="board-row"
+                         style="grid-template-columns:80px 100px 1fr 120px 100px 140px;">
+
+                        <div class="board-no"
+                             th:text="${item.no}">
+                        </div>
+
+                        <div class="board-data"
+                             th:text="${item.category}">
                         </div>
 
                         <div class="board-title">
+
                             <a th:href="@{/board/view(no=${item.no})}"
                                th:text="${item.title}">
-                                게시글 제목
                             </a>
+
                         </div>
 
-                        <div class="board-data" th:text="${item.name}">작성자</div>
-                        <div class="board-data" th:text="${item.hit}">0</div>
-                        <div class="board-data" th:text="${item.regDate}">2026-06-16</div>
+                        <div class="board-data"
+                             th:text="${item.name}">
+                        </div>
+
+                        <div class="board-data"
+                             th:text="${item.hit}">
+                        </div>
+
+                        <div class="board-data"
+                             th:text="${item.regDate}">
+                        </div>
+
                     </div>
+
                 </div>
             </div>
 
-            <div class="paging" th:if="${page.totalPage > 0}">
-                <a th:each="i : ${#numbers.sequence(1, page.totalPage)}"
-                   th:href="@{/board/list(page=${i}, keyword=${page.keyword})}"
-                   th:text="${i}">
-                    1
+            <div class="paging">
+
+                <a th:each="i : ${#numbers.sequence(1,page.totalPage)}"
+                   th:href="@{/board/list(page=${i},keyword=${page.keyword})}">
+
+                    <button th:text="${i}">
+                    </button>
+
                 </a>
+
             </div>
         </section>
     </section>

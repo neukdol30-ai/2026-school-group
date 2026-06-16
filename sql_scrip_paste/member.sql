@@ -183,6 +183,7 @@ CREATE TABLE INQUIRY (
                 'BOARD',
                 'RESTAURANT',
                 'REPORT',
+                'BUG',
                 'ETC'
             )
         ),
@@ -249,4 +250,48 @@ MAXVALUE 99999999999
 NOCACHE
 NOCYCLE;
 
+SELECT * FROM MEMBER;
 
+UPDATE MEMBER
+SET ROLE = 'ADMIN'
+WHERE MEMBER_ID = 'admin001';
+
+COMMIT;
+
+BEGIN
+
+FOR i IN 1..100 LOOP
+
+INSERT INTO MEMBER
+(
+    MEMBER_ID,
+    PASSWORD,
+    NAME,
+    GENDER,
+    BIRTH_DATE,
+    PHONE,
+    ADDRESS,
+    DETAIL_ADDRESS,
+    ROLE
+)
+VALUES
+(
+    'user' || i,
+    '1234',
+    '회원' || i,
+    CASE
+        WHEN MOD(i,2)=0 THEN 'M'
+        ELSE 'F'
+    END,
+    DATE '1990-01-01',
+    '010-1234-' || LPAD(i,4,'0'),
+    '경기도',
+    '상세주소' || i,
+    'USER'
+);
+
+END LOOP;
+
+COMMIT;
+
+END;

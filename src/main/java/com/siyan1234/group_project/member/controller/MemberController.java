@@ -27,14 +27,43 @@ public class MemberController {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping("/signup")
-    public String signup(){ return "member/signup";}
+    public String signup(
+            HttpSession session,
+            Model model){
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if(loginUser != null){
+            return "redirect:/?error=alreadySignup";
+        }
+
+        model.addAttribute(
+                "memberDto",
+                new MemberDto()
+        );
+
+        return "member/signup";
+    }
 
     @PostMapping("/signup")
-    public String signupProcess(MemberDto memberDto){
+    public String signupProcess(
+            MemberDto memberDto,
+            HttpSession session){
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser != null){
+            return "redirect:/";
+        }
+
         String password = memberDto.getPassword();
+
         String regex = "^(?=.*[A-Za-z])(?=.*\\d).{8,}$";
-        if (!password.matches(regex)){
-            return "redirect:/member/signup";
+
+        if(password == null ||
+                !password.matches(regex)){
+
+            return "redirect:/member/signup?error=password";
         }
 
         int result = memberService.signup(memberDto);
@@ -66,7 +95,16 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String login(){
+    public String login(
+            HttpSession session){
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if(loginUser != null){
+            return "redirect:/?error=alreadyLogin";
+        }
+
         return "member/login";
     }
 
@@ -152,7 +190,16 @@ public class MemberController {
     }
 
     @GetMapping("/withdraw")
-    public String withdraw(){
+    public String withdraw(
+            HttpSession session){
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if(loginUser == null){
+            return "redirect:/member/login";
+        }
+
         return "member/withdraw";
     }
 
@@ -175,7 +222,7 @@ public class MemberController {
                         memberDto
                 );
         if (!"SUCCESS".equals(result)){
-            return "redirect:/member/mypage?error="
+            return "redirect:/member/edit?error="
                     +result;
         }
 
@@ -185,6 +232,26 @@ public class MemberController {
                 "loginUser",
                 updateMember
         );
-        return "redirect:/member/mypage?success=true";
+        return "redirect:/member/edit?success=true";
+    }
+    @GetMapping("/edit")
+    public String edit(
+            HttpSession session,
+            Model model,
+            String error,
+            String success) {
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        model.addAttribute("member", loginUser);
+        model.addAttribute("error", error);
+        model.addAttribute("success", success);
+
+        return "member/editmember";
     }
 }

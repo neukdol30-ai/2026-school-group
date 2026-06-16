@@ -24,4 +24,7 @@ public class InquiryDto {
     private String isDeleted;
     private LocalDateTime regDate;
     private LocalDateTime updateDate;
+    // 관리자 검색용 필드
+    private String searchType;
+    private String keyword;
 }

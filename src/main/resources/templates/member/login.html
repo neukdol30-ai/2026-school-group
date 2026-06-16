@@ -3,43 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
 </head>
-<body>
+<body class="bg-base-200 min-h-screen">
 
-<h2>로그인</h2>
+<div class="flex flex-col items-center justify-center min-h-screen">
 
-<p th:if="${errorMessage}"
-   style="color:red;">
-    <span th:text="${errorMessage}"></span>
-</p>
-<p th:if="${session.loginUser != null}">
-    환영합니다, <span th:text="${session.loginUser.name}"></span>님
-</p>
-<a th:if="${session.loginUser != null}" href="/member/logout">
-    로그아웃
-</a>
+    <!-- 로고 -->
+    <a href="/"
+       class="mb-8 text-center">
 
-<form action="/member/login" method="post">
+        <h1 class="text-5xl font-bold text-blue-600">
+            맛집<span class="text-black">모아모아</span>
+        </h1>
 
-    <p>
-        아이디 :
-        <input type="text" name="memberId" required>
-    </p>
+    </a>
 
-    <p>
-        비밀번호 :
-        <input type="password" name="password" required>
-    </p>
+    <!-- 로그인 카드 -->
+    <div class="card w-96 bg-base-100 shadow-xl">
 
-    <button type="submit">
-        로그인
-    </button>
+        <div class="card-body">
 
-</form>
+            <h2 class="card-title justify-center text-3xl">
+                로그인
+            </h2>
 
-<hr>
+            <div th:if="${errorMessage != null}"
+                 class="alert alert-error mt-3 mb-3">
 
-<a href="/member/signup">회원가입</a>
+                <span th:text="${errorMessage}">
+                    아이디 또는 비밀번호를 다시 확인해주세요.
+                </span>
+
+            </div>
+
+            <form action="/member/login" method="post">
+
+                <label class="label">
+                    <span class="label-text">아이디</span>
+                </label>
+
+                <input type="text"
+                       name="memberId"
+                       class="input input-bordered w-full"
+                       required>
+
+                <label class="label mt-3">
+                    <span class="label-text">비밀번호</span>
+                </label>
+
+                <input type="password"
+                       name="password"
+                       class="input input-bordered w-full"
+                       required>
+
+                <button class="btn btn-primary w-full mt-5">
+                    로그인
+                </button>
+
+            </form>
+
+            <div class="divider">OR</div>
+
+            <a href="/member/signup"
+               class="btn btn-outline">
+                회원가입
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
 
 </body>
 </html>
+

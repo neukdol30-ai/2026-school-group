@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보수정</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto pt-20 pb-10">
+
+    <div class="text-center mb-6">
+        <a href="/" class="text-5xl font-bold text-blue-600">
+            맛집<span class="text-black">모아모아</span>
+        </a>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl max-w-3xl mx-auto">
+        <div class="card-body">
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="card-title text-3xl">회원정보수정</h2>
+
+                <a href="/member/mypage" class="btn btn-outline">
+                    마이페이지로
+                </a>
+            </div>
+
+            <div th:if="${error != null}" class="alert alert-error mb-4">
+                <span th:if="${error == 'WRONG_CURRENT_PASSWORD'}">
+                    현재 비밀번호가 일치하지 않습니다.
+                </span>
+                <span th:if="${error == 'INVALID_PHONE'}">
+                    전화번호 형식이 올바르지 않습니다.
+                </span>
+                <span th:if="${error == 'INVALID_PASSWORD'}">
+                    비밀번호는 8자 이상 영문+숫자를 포함해야 합니다.
+                </span>
+                <span th:if="${error == 'SAME_PASSWORD'}">
+                    기존 비밀번호와 같은 비밀번호는 사용할 수 없습니다.
+                </span>
+                <span th:if="${error == 'FAIL'}">
+                    회원정보 수정에 실패했습니다.
+                </span>
+            </div>
+
+            <div th:if="${success != null}" class="alert alert-success mb-4">
+                회원정보가 수정되었습니다.
+            </div>
+
+            <form action="/member/update"
+                  method="post"
+                  onsubmit="return validateUpdateForm()">
+
+                <label class="label">
+                    <span class="label-text">현재 비밀번호</span>
+                </label>
+                <input type="password"
+                       id="currentPassword"
+                       name="currentPassword"
+                       class="input input-bordered w-full"
+                       required>
+
+                <label class="label mt-4">
+                    <span class="label-text">새 비밀번호</span>
+                </label>
+                <input type="password"
+                       id="newPassword"
+                       name="password"
+                       class="input input-bordered w-full"
+                       placeholder="변경하지 않으려면 비워두세요">
+
+                <p class="text-sm text-gray-500 mt-1">
+                    8자 이상, 영문 + 숫자 포함
+                </p>
+
+                <p id="passwordRule" class="text-sm mt-2"></p>
+
+                <label class="label mt-4">
+                    <span class="label-text">새 비밀번호 확인</span>
+                </label>
+                <input type="password"
+                       id="passwordCheck"
+                       class="input input-bordered w-full">
+
+                <p id="pwResult" class="text-sm mt-2"></p>
+
+                <label class="label cursor-pointer justify-start gap-3 mt-4">
+                    <input type="checkbox"
+                           id="showPassword"
+                           class="checkbox checkbox-primary">
+                    <span class="label-text">비밀번호 보기</span>
+                </label>
+                <br>
+                <label class="label mt-4">
+                    <span class="label-text">전화번호</span>
+                </label>
+                <input type="text"
+                       name="phone"
+                       th:value="${member.phone}"
+                       class="input input-bordered w-full">
+                <p id="phoneMessage"
+                   class="text-sm mt-2"></p>
+
+                <label class="label mt-4">
+                    <span class="label-text">주소</span>
+                </label>
+
+                <div class="flex gap-2">
+
+                    <input type="text"
+                           id="address"
+                           name="address"
+                           th:value="${member.address}"
+                           readonly
+                           class="input input-bordered flex-1">
+
+                    <button type="button"
+                            id="btnPostcode"
+                            class="btn btn-outline btn-primary">
+                        주소검색
+                    </button>
+
+                </div>
+                <label class="label mt-4">
+                    <span class="label-text">상세주소</span>
+                </label>
+                <input type="text"
+                       id="detailAddress"
+                       name="detailAddress"
+                       th:value="${member.detailAddress}"
+                       class="input input-bordered w-full">
+
+                <button type="submit"
+                        class="btn btn-primary w-full mt-6">
+                    정보 수정
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const pw = document.getElementById("newPassword");
+    const pwCheck = document.getElementById("passwordCheck");
+
+    pw.addEventListener("keyup", checkPassword);
+    pwCheck.addEventListener("keyup", checkPassword);
+
+    function checkPassword() {
+        const result = document.getElementById("pwResult");
+
+        if (pw.value === "" && pwCheck.value === "") {
+            result.innerText = "";
+            return;
+        }
+
+        if (pw.value === pwCheck.value) {
+            result.className = "text-success text-sm mt-2";
+            result.innerText = "비밀번호가 일치합니다.";
+        } else {
+            result.className = "text-error text-sm mt-2";
+            result.innerText = "비밀번호가 일치하지 않습니다.";
+        }
+    }
+
+    pw.addEventListener("keyup", function () {
+        const regex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+        const result = document.getElementById("passwordRule");
+
+        if (pw.value === "") {
+            result.innerText = "";
+            return;
+        }
+
+        if (regex.test(pw.value)) {
+            result.className = "text-success text-sm mt-2";
+            result.innerText = "사용 가능한 비밀번호입니다.";
+        } else {
+            result.className = "text-error text-sm mt-2";
+            result.innerText = "8자 이상 영문과 숫자를 포함해야 합니다.";
+        }
+    });
+
+    document.getElementById("showPassword")
+        .addEventListener("change", function () {
+            const type = this.checked ? "text" : "password";
+
+            document.getElementById("currentPassword").type = type;
+            document.getElementById("newPassword").type = type;
+            document.getElementById("passwordCheck").type = type;
+        });
+
+    function validateUpdateForm() {
+        const password = document.getElementById("newPassword").value;
+        const passwordCheck = document.getElementById("passwordCheck").value;
+
+        if (password === "") {
+            return true;
+        }
+
+        const regex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        if (!regex.test(password)) {
+            alert("비밀번호는 8자 이상 영문과 숫자를 포함해야 합니다.");
+            return false;
+        }
+
+        if (password !== passwordCheck) {
+            alert("비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
+
+        const phoneRegex =
+            /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
+
+        if(!phoneRegex.test(phone.value)){
+
+            alert("전화번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+
+
+        return true;
+    }
+</script>
+
+<script>
+
+    const phone =
+        document.querySelector("input[name='phone']");
+
+    phone.addEventListener("keyup", function(){
+
+        const regex =
+            /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
+
+        const result =
+            document.getElementById("phoneMessage");
+
+        if(regex.test(phone.value)){
+
+            result.className =
+                "text-success text-sm mt-2";
+
+            result.innerText =
+                "올바른 전화번호입니다.";
+
+        }else{
+
+            result.className =
+                "text-error text-sm mt-2";
+
+            result.innerText =
+                "010-1234-5678 형식으로 입력해주세요.";
+        }
+
+    });
+
+</script>
+
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+<script>
+
+    const btnPostcode =
+        document.querySelector("#btnPostcode");
+
+    btnPostcode.addEventListener("click", () => {
+
+        new daum.Postcode({
+
+            oncomplete: function(data) {
+
+                document.querySelector("#address").value =
+                    data.address;
+
+                document.querySelector("#detailAddress").focus();
+
+            }
+
+        }).open();
+
+    });
+
+</script>
+
+</body>
+</html>

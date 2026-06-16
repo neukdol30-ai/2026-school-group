@@ -44,16 +44,53 @@ public class InquiryService {
     }
 
     /* =========================
+   관리자 문의 검색 목록
+========================= */
+    public List<InquiryDto> searchInquiryList(InquiryDto inquiryDto){
+        return inquiryDao.searchInquiryList(inquiryDto);
+    }
+
+    /* =========================
        답변 등록 + 상태 변경 (핵심)
     ========================= */
     @Transactional
     public int insertAnswer(InquiryAnswerDto answerDto){
 
-        // 1. 상태 변경
-        inquiryDao.updateInquiryStatus(answerDto.getInquiryNo());
+        InquiryAnswerDto answer =
+                inquiryDao.findAnswerByInquiryNo(
+                        answerDto.getInquiryNo()
+                );
 
-        // 2. 답변 등록
-        return inquiryDao.insertAnswer(answerDto);
+        // 이미 답변 존재
+        if(answer != null){
+            return 0;
+        }
+
+        int updateResult =
+                inquiryDao.updateInquiryStatus(
+                        answerDto.getInquiryNo()
+                );
+
+        // 문의 상태 변경 실패
+        if(updateResult <= 0){
+            throw new RuntimeException(
+                    "문의 상태 변경 실패"
+            );
+        }
+
+        int insertResult =
+                inquiryDao.insertAnswer(
+                        answerDto
+                );
+
+        // 답변 등록 실패
+        if(insertResult <= 0){
+            throw new RuntimeException(
+                    "답변 등록 실패"
+            );
+        }
+
+        return insertResult;
     }
 
     /* =========================

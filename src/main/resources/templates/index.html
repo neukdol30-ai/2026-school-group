@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>맛집모아모아</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>맛집 모아모아</title>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: Arial, "Noto Sans KR", sans-serif;
@@ -18,11 +23,17 @@
             color: inherit;
         }
 
+        ul {
+            list-style: none;
+        }
+
+        /* 전체 헤더 */
         header {
             background-color: #fff;
             border-bottom: 1px solid #ddd;
         }
 
+        /* 가장 위 얇은 메뉴 */
         .top-bar {
             height: 36px;
             border-bottom: 1px solid #eee;
@@ -34,10 +45,10 @@
             max-width: 1200px;
             height: 100%;
             margin: 0 auto;
-            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 20px;
         }
 
         .top-menu {
@@ -49,20 +60,23 @@
             color: #2563eb;
         }
 
+        /* 로고가 들어가는 중간 영역 */
         .brand-area {
             max-width: 1200px;
             height: 110px;
             margin: 0 auto;
             padding: 0 20px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .logo {
-            font-size: 36px;
-            font-weight: 900;
+            font-size: 34px;
+            font-weight: 800;
             color: #2563eb;
+            letter-spacing: -1px;
         }
 
         .logo span {
@@ -78,7 +92,6 @@
             align-items: center;
             padding: 0 18px;
             gap: 10px;
-            background-color: #fff;
         }
 
         .search-box input {
@@ -95,6 +108,17 @@
             cursor: pointer;
         }
 
+        .notice {
+            font-size: 14px;
+            color: #444;
+            white-space: nowrap;
+        }
+
+        .notice strong {
+            color: #111;
+        }
+
+        /* 아래쪽 목차 메뉴 */
         .nav-area {
             border-top: 1px solid #eee;
             background-color: #fff;
@@ -105,116 +129,137 @@
             height: 58px;
             margin: 0 auto;
             padding: 0 20px;
+
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+
+        .hamburger {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .main-menu {
             display: flex;
             align-items: center;
             gap: 38px;
             font-size: 17px;
-            font-weight: 800;
+            font-weight: 700;
         }
 
-        .nav-inner a {
+        .main-menu a {
+            position: relative;
             padding: 18px 0;
         }
 
-        .nav-inner a:hover {
+        .main-menu a:hover {
             color: #2563eb;
         }
 
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        /* 메인 영역 */
         main {
             max-width: 1200px;
-            margin: 34px auto;
+            margin: 30px auto;
             padding: 0 20px;
         }
 
-        .hero {
+        .banner {
+            height: 220px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #dbeafe, #ede9fe);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .banner h1 {
+            font-size: 34px;
+            margin-bottom: 12px;
+        }
+
+        .banner p {
+            color: #555;
+            font-size: 17px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+        }
+
+        aside {
             background-color: #fff;
+            border-radius: 12px;
             border: 1px solid #ddd;
-            border-radius: 18px;
-            padding: 46px;
+            overflow: hidden;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            font-size: 18px;
+            background-color: #111827;
+            color: #fff;
+        }
+
+        aside a {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        aside a:hover {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .board-preview {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            padding: 24px;
+        }
+
+        .board-preview h2 {
+            margin-bottom: 18px;
+            font-size: 22px;
+        }
+
+        .post-list li {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 28px;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+            color: #444;
         }
 
-        .hero h1 {
-            font-size: 38px;
-            margin-bottom: 14px;
-            color: #111827;
+        .post-list li:last-child {
+            border-bottom: none;
         }
 
-        .hero p {
-            color: #64748b;
-            font-size: 17px;
-            line-height: 1.7;
-        }
-
-        .welcome {
-            background-color: #eff6ff;
+        .post-list a:hover {
             color: #2563eb;
-            padding: 10px 16px;
-            border-radius: 999px;
-            font-weight: 800;
-            display: inline-block;
-            margin-bottom: 18px;
-        }
-
-        .quick-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-        }
-
-        .quick-card {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 16px;
-            padding: 26px;
-            min-height: 160px;
-            transition: 0.2s;
-        }
-
-        .quick-card:hover {
-            transform: translateY(-4px);
-            border-color: #2563eb;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        }
-
-        .quick-card h2 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: #111827;
-        }
-
-        .quick-card p {
-            color: #64748b;
-            line-height: 1.6;
-            font-size: 14px;
-        }
-
-        .admin-box {
-            margin-top: 26px;
-            background: #111827;
-            color: white;
-            border-radius: 16px;
-            padding: 26px;
-        }
-
-        .admin-box h2 {
-            margin-bottom: 14px;
-        }
-
-        .admin-links {
-            display: flex;
-            gap: 14px;
-        }
-
-        .admin-links a {
-            background: white;
-            color: #111827;
-            padding: 10px 15px;
-            border-radius: 9px;
-            font-weight: 800;
+            text-decoration: underline;
         }
 
         footer {
@@ -226,121 +271,100 @@
             background-color: #fff;
             border-top: 1px solid #ddd;
         }
+
+        @media (max-width: 900px) {
+            .brand-area {
+                height: auto;
+                padding: 24px 20px;
+                flex-direction: column;
+                gap: 18px;
+            }
+
+            .search-box {
+                width: 100%;
+                max-width: 420px;
+            }
+
+            .notice {
+                display: none;
+            }
+
+            .nav-inner {
+                overflow-x: auto;
+                gap: 20px;
+            }
+
+            .main-menu {
+                gap: 24px;
+                white-space: nowrap;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
-
 <body>
 
-<header>
-    <div class="top-bar">
-        <div class="top-inner">
-            <div class="top-menu">
-                <a href="/">🏠 홈</a>
-                <a href="/board/list">자유게시판</a>
-                <a href="/photoBoard/list">인증게시판</a>
-            </div>
-
-            <div class="top-menu" th:if="${session.loginUser == null}">
-                <a href="/member/login">로그인</a>
-                <a href="/member/signup">회원가입</a>
-            </div>
-
-            <div class="top-menu" th:if="${session.loginUser != null}">
-                <span>
-                    <b th:text="${session.loginUser.name}"></b>님
-                </span>
-                <a href="/member/mypage">내정보</a>
-                <a href="/member/logout">로그아웃</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="brand-area">
-        <a href="/" class="logo">맛집<span>모아모아</span></a>
-
-        <form class="search-box" action="/board/list" method="get">
-            <input type="text" name="keyword" placeholder="맛집 이야기 검색">
-            <button type="submit">🔍</button>
-        </form>
-
-        <div>
-            <strong>오늘의 맛집 이야기</strong>
-        </div>
-    </div>
-
-    <nav class="nav-area">
-        <div class="nav-inner">
-            <a href="/">🏠</a>
-            <a href="/board/list">자유게시판</a>
-            <a href="/photoBoard/list">인증게시판</a>
-            <a th:if="${session.loginUser != null}" href="/inquiry/list">1:1 문의</a>
-            <a th:if="${session.loginUser != null}" href="/member/mypage">내정보</a>
-        </div>
-    </nav>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main>
-    <section class="hero">
-        <div>
-            <div class="welcome" th:if="${session.loginUser != null}">
-                환영합니다, <span th:text="${session.loginUser.name}"></span>님
-            </div>
 
-            <h1>맛집 게시판</h1>
-            <p>
-                자유게시판에서 맛집 이야기를 나누고,<br>
-                인증게시판에서 직접 다녀온 맛집 사진과 후기를 공유해보세요.
-            </p>
-        </div>
+    <div th:replace="~{fragments/banner :: banner}"></div>
+
+    <section class="content-grid">
+        <aside>
+            <h2>메뉴</h2>
+            <a href="/">홈</a>
+            <a href="/board/free">자유게시판</a>
+            <a href="/board/photo">인증게시판</a>
+            <a href="/member/mypage">내정보</a>
+        </aside>
+
+        <section class="board-preview">
+            <h2>최근 게시글</h2>
+
+            <ul class="post-list">
+                <li>
+                    <a href="#">첫 번째 자유게시판 글입니다.</a>
+                    <span>06.12</span>
+                </li>
+                <li>
+                    <a href="#">인증게시판 테스트 글입니다.</a>
+                    <span>06.12</span>
+                </li>
+                <li>
+                    <a href="#">맛집모아모아 이용 안내입니다.</a>
+                    <span>06.11</span>
+                </li>
+                <li>
+                    <a href="#">내정보 페이지는 로그인 후 이용 가능합니다.</a>
+                    <span>06.10</span>
+                </li>
+            </ul>
+        </section>
     </section>
 
-    <section class="quick-grid">
-        <a href="/board/list" class="quick-card">
-            <h2>자유게시판</h2>
-            <p>맛집 정보, 질문, 잡담을 자유롭게 나누는 공간입니다.</p>
-        </a>
-
-        <a href="/photoBoard/list" class="quick-card">
-            <h2>인증게시판</h2>
-            <p>방문한 맛집 사진과 후기를 인증하는 공간입니다.</p>
-        </a>
-
-        <a th:if="${session.loginUser != null}" href="/inquiry/list" class="quick-card">
-            <h2>1:1 문의</h2>
-            <p>사이트 이용 중 궁금한 점을 문의할 수 있습니다.</p>
-        </a>
-
-        <a th:if="${session.loginUser != null}" href="/member/mypage" class="quick-card">
-            <h2>내정보</h2>
-            <p>회원정보 확인과 수정, 로그아웃을 할 수 있습니다.</p>
-        </a>
-
-        <a th:if="${session.loginUser == null}" href="/member/login" class="quick-card">
-            <h2>로그인</h2>
-            <p>로그인 후 게시판과 문의 기능을 이용할 수 있습니다.</p>
-        </a>
-
-        <a th:if="${session.loginUser == null}" href="/member/signup" class="quick-card">
-            <h2>회원가입</h2>
-            <p>회원가입하고 맛집모아모아를 이용해보세요.</p>
-        </a>
-    </section>
-
-    <section class="admin-box"
-             th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}">
-        <h2>관리자 메뉴</h2>
-
-        <div class="admin-links">
-            <a href="/admin">관리자 홈</a>
-            <a href="/admin/member-list">회원 관리</a>
-            <a href="/admin/inquiry-list">문의 관리</a>
-        </div>
-    </section>
 </main>
 
-<footer>
-    © 2026 맛집모아모아. All rights reserved.
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script
+        th:if="${param.error != null and param.error[0] == 'alreadyLogin'}">
+
+    alert("이미 로그인된 상태입니다.");
+
+</script>
+
+<script
+        th:if="${param.error != null and param.error[0] == 'alreadySignup'}">
+
+    alert("로그인 중에는 회원가입 페이지에 접근할 수 없습니다.");
+
+</script>
+
+
 
 </body>
 </html>

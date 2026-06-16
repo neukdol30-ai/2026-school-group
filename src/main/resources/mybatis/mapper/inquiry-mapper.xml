@@ -35,7 +35,7 @@
          사용자 문의 목록
     ========================= -->
     <select id="findMyInquiryList"
-            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
+            resultType="InquiryDto">
 
         SELECT *
         FROM INQUIRY
@@ -49,7 +49,7 @@
          문의 상세 (안정형)
     ========================= -->
     <select id="findByNo"
-            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
+            resultType="InquiryDto">
 
         SELECT *
         FROM INQUIRY
@@ -62,11 +62,42 @@
          관리자 전체 목록
     ========================= -->
     <select id="findAllInquiry"
-            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
+            resultType="InquiryDto">
 
         SELECT *
         FROM INQUIRY
         WHERE IS_DELETED = 'N'
+        ORDER BY NO DESC
+
+    </select>
+
+    <select id="searchInquiryList"
+            resultType="InquiryDto">
+
+        SELECT *
+        FROM INQUIRY
+        WHERE IS_DELETED = 'N'
+
+        <if test="status != null and status != ''">
+            AND STATUS = #{status}
+        </if>
+
+        <if test="category != null and category != ''">
+            AND CATEGORY = #{category}
+        </if>
+
+        <if test="searchType == 'title'
+              and keyword != null
+              and keyword != ''">
+            AND TITLE LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberNo'
+              and keyword != null
+              and keyword != ''">
+            AND MEMBER_NO = TO_NUMBER(#{keyword})
+        </if>
+
         ORDER BY NO DESC
 
     </select>
@@ -97,7 +128,7 @@
          답변 조회
     ========================= -->
     <select id="findAnswerByInquiryNo"
-            resultType="com.siyan1234.group_project.inquiry.dto.InquiryAnswerDto">
+            resultType="InquiryAnswerDto">
 
         SELECT *
         FROM INQUIRY_ANSWER
@@ -112,18 +143,19 @@
     <update id="updateInquiryStatus">
 
         UPDATE INQUIRY
-        SET STATUS = 'ANSWERED'
-        WHERE NO = #{inquiryNo}
+        SET STATUS='ANSWERED'
+        WHERE NO=#{inquiryNo}
+        AND STATUS='WAITING'
 
     </update>
 
     <select id="findMyInquiry"
-            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
+            resultType="InquiryDto">
 
         SELECT *
         FROM INQUIRY
-        WHERE NO = #{param1}
-        AND MEMBER_NO = #{param2}
+        WHERE NO = #{no}
+        AND MEMBER_NO = #{memberNo}
         AND IS_DELETED = 'N'
 
     </select>
