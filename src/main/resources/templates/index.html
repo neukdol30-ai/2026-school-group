@@ -2,56 +2,345 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>메인페이지</title>
+    <title>맛집모아모아</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+            height: 36px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .top-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-menu {
+            display: flex;
+            gap: 18px;
+        }
+
+        .top-menu a:hover {
+            color: #2563eb;
+        }
+
+        .brand-area {
+            max-width: 1200px;
+            height: 110px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 900;
+            color: #2563eb;
+        }
+
+        .logo span {
+            color: #111827;
+        }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+            background-color: #fff;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .nav-inner a {
+            padding: 18px 0;
+        }
+
+        .nav-inner a:hover {
+            color: #2563eb;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 34px auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 18px;
+            padding: 46px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            margin-bottom: 14px;
+            color: #111827;
+        }
+
+        .hero p {
+            color: #64748b;
+            font-size: 17px;
+            line-height: 1.7;
+        }
+
+        .welcome {
+            background-color: #eff6ff;
+            color: #2563eb;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 18px;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .quick-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            padding: 26px;
+            min-height: 160px;
+            transition: 0.2s;
+        }
+
+        .quick-card:hover {
+            transform: translateY(-4px);
+            border-color: #2563eb;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .quick-card h2 {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .quick-card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .admin-box {
+            margin-top: 26px;
+            background: #111827;
+            color: white;
+            border-radius: 16px;
+            padding: 26px;
+        }
+
+        .admin-box h2 {
+            margin-bottom: 14px;
+        }
+
+        .admin-links {
+            display: flex;
+            gap: 14px;
+        }
+
+        .admin-links a {
+            background: white;
+            color: #111827;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-weight: 800;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>맛집 게시판</h1>
+<header>
+    <div class="top-bar">
+        <div class="top-inner">
+            <div class="top-menu">
+                <a href="/">🏠 홈</a>
+                <a href="/board/list">자유게시판</a>
+                <a href="/photoBoard/list">인증게시판</a>
+            </div>
 
-<!-- 로그인 상태 -->
-<div th:if="${session.loginUser != null}">
+            <div class="top-menu" th:if="${session.loginUser == null}">
+                <a href="/member/login">로그인</a>
+                <a href="/member/signup">회원가입</a>
+            </div>
 
-    <p>
-        환영합니다!
-        <b th:text="${session.loginUser.name}"></b>님
-    </p>
+            <div class="top-menu" th:if="${session.loginUser != null}">
+                <span>
+                    <b th:text="${session.loginUser.name}"></b>님
+                </span>
+                <a href="/member/mypage">내정보</a>
+                <a href="/member/logout">로그아웃</a>
+            </div>
+        </div>
+    </div>
 
-    <a href="/member/mypage">마이페이지</a>
-    <br>
+    <div class="brand-area">
+        <a href="/" class="logo">맛집<span>모아모아</span></a>
 
-    <!-- 사용자만 -->
-    <a th:if="${session.loginUser.role != 'ADMIN'}"
-       href="/inquiry/list">1:1 문의</a>
+        <form class="search-box" action="/board/list" method="get">
+            <input type="text" name="keyword" placeholder="맛집 이야기 검색">
+            <button type="submit">🔍</button>
+        </form>
 
-    <br>
+        <div>
+            <strong>오늘의 맛집 이야기</strong>
+        </div>
+    </div>
 
-    <a href="/member/logout">로그아웃</a>
+    <nav class="nav-area">
+        <div class="nav-inner">
+            <a href="/">🏠</a>
+            <a href="/board/list">자유게시판</a>
+            <a href="/photoBoard/list">인증게시판</a>
+            <a th:if="${session.loginUser != null}" href="/inquiry/list">1:1 문의</a>
+            <a th:if="${session.loginUser != null}" href="/member/mypage">내정보</a>
+        </div>
+    </nav>
+</header>
 
-</div>
+<main>
+    <section class="hero">
+        <div>
+            <div class="welcome" th:if="${session.loginUser != null}">
+                환영합니다, <span th:text="${session.loginUser.name}"></span>님
+            </div>
 
-<!-- 비로그인 -->
-<div th:if="${session.loginUser == null}">
+            <h1>맛집 게시판</h1>
+            <p>
+                자유게시판에서 맛집 이야기를 나누고,<br>
+                인증게시판에서 직접 다녀온 맛집 사진과 후기를 공유해보세요.
+            </p>
+        </div>
+    </section>
 
-    <a href="/member/login">로그인</a>
-    <br>
+    <section class="quick-grid">
+        <a href="/board/list" class="quick-card">
+            <h2>자유게시판</h2>
+            <p>맛집 정보, 질문, 잡담을 자유롭게 나누는 공간입니다.</p>
+        </a>
 
-    <a href="/member/signup">회원가입</a>
+        <a href="/photoBoard/list" class="quick-card">
+            <h2>인증게시판</h2>
+            <p>방문한 맛집 사진과 후기를 인증하는 공간입니다.</p>
+        </a>
 
-</div>
+        <a th:if="${session.loginUser != null}" href="/inquiry/list" class="quick-card">
+            <h2>1:1 문의</h2>
+            <p>사이트 이용 중 궁금한 점을 문의할 수 있습니다.</p>
+        </a>
 
-<hr>
+        <a th:if="${session.loginUser != null}" href="/member/mypage" class="quick-card">
+            <h2>내정보</h2>
+            <p>회원정보 확인과 수정, 로그아웃을 할 수 있습니다.</p>
+        </a>
 
-<!-- 관리자 -->
-<div th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}">
+        <a th:if="${session.loginUser == null}" href="/member/login" class="quick-card">
+            <h2>로그인</h2>
+            <p>로그인 후 게시판과 문의 기능을 이용할 수 있습니다.</p>
+        </a>
 
-    <h3>관리자 메뉴</h3>
+        <a th:if="${session.loginUser == null}" href="/member/signup" class="quick-card">
+            <h2>회원가입</h2>
+            <p>회원가입하고 맛집모아모아를 이용해보세요.</p>
+        </a>
+    </section>
 
-    <a href="/admin">관리자 홈</a>
-    <br>
+    <section class="admin-box"
+             th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}">
+        <h2>관리자 메뉴</h2>
 
-    <a href="/admin/inquiry-list">문의 관리</a>
+        <div class="admin-links">
+            <a href="/admin">관리자 홈</a>
+            <a href="/admin/member-list">회원 관리</a>
+            <a href="/admin/inquiry-list">문의 관리</a>
+        </div>
+    </section>
+</main>
 
-</div>
+<footer>
+    © 2026 맛집모아모아. All rights reserved.
+</footer>
 
 </body>
 </html>
