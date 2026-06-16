@@ -44,6 +44,13 @@ public class InquiryService {
     }
 
     /* =========================
+   관리자 문의 검색 목록
+========================= */
+    public List<InquiryDto> searchInquiryList(InquiryDto inquiryDto){
+        return inquiryDao.searchInquiryList(inquiryDto);
+    }
+
+    /* =========================
        답변 등록 + 상태 변경 (핵심)
     ========================= */
     @Transactional

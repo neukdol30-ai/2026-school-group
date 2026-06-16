@@ -1,6 +1,7 @@
 package com.siyan1234.group_project.member.controller;
 
 import com.siyan1234.group_project.inquiry.dto.InquiryAnswerDto;
+import com.siyan1234.group_project.inquiry.dto.InquiryDto;
 import com.siyan1234.group_project.inquiry.service.InquiryService;
 import com.siyan1234.group_project.member.dto.MemberDto;
 import com.siyan1234.group_project.member.service.MemberService;
@@ -71,7 +72,10 @@ public class AdminController {
        문의 목록
     ========================= */
     @GetMapping("/inquiry-list")
-    public String inquiryList(HttpSession session, Model model) {
+    public String inquiryList(
+            InquiryDto inquiryDto,
+            HttpSession session,
+            Model model) {
 
         if (!isAdmin(session)) {
             return "redirect:/";
@@ -79,7 +83,12 @@ public class AdminController {
 
         model.addAttribute(
                 "inquiryList",
-                inquiryService.findAllInquiry()
+                inquiryService.searchInquiryList(inquiryDto)
+        );
+
+        model.addAttribute(
+                "search",
+                inquiryDto
         );
 
         return "admin/inquiry-list";
