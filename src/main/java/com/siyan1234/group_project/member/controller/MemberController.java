@@ -47,9 +47,18 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String signupProcess(MemberDto memberDto){
+    public String signupProcess(
+            MemberDto memberDto,
+            HttpSession session){
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        if (loginUser != null){
+            return "redirect:/";
+        }
+
         String password = memberDto.getPassword();
+
         String regex = "^(?=.*[A-Za-z])(?=.*\\d).{8,}$";
+
         if (!password.matches(regex)){
             return "redirect:/member/signup";
         }
