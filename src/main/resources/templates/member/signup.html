@@ -24,7 +24,8 @@
 
         <form action="/member/signup"
               method="post"
-              th:object="${memberDto}">
+              th:object="${memberDto}"
+              onsubmit="return validateForm()">
 
             <!-- 아이디 -->
             <div class="mb-4">
@@ -39,7 +40,8 @@
                            id="memberId"
                            th:field="*{memberId}"
                            class="input input-bordered flex-1"
-                           placeholder="아이디 입력">
+                           placeholder="아이디 입력"
+                           required>
 
                     <button type="button"
                             id="btnDuplicate"
@@ -65,7 +67,11 @@
                        id="password"
                        th:field="*{password}"
                        class="input input-bordered w-full"
-                       placeholder="비밀번호 입력">
+                       placeholder="비밀번호 입력"
+                       required>
+                <p id="passwordRule"
+                   class="text-sm mt-2">
+                </p>
 
             </div>
 
@@ -78,6 +84,7 @@
 
                 <input type="password"
                        id="passwordCheck"
+                       required
                        class="input input-bordered w-full"
                        placeholder="비밀번호를 다시 입력하세요">
 
@@ -101,7 +108,8 @@
                 <input type="text"
                        th:field="*{name}"
                        class="input input-bordered w-full"
-                       placeholder="이름 입력">
+                       placeholder="이름 입력"
+                       required>
 
             </div>
 
@@ -118,7 +126,8 @@
                         <input type="radio"
                                th:field="*{gender}"
                                value="M"
-                               class="radio radio-primary">
+                               class="radio radio-primary"
+                               required>
                         <span>남자</span>
                     </label>
 
@@ -143,7 +152,8 @@
 
                 <input type="date"
                        th:field="*{birthDate}"
-                       class="input input-bordered w-full">
+                       class="input input-bordered w-full"
+                       required>
 
             </div>
 
@@ -155,9 +165,14 @@
                 </label>
 
                 <input type="text"
+                       id="phone"
                        th:field="*{phone}"
                        class="input input-bordered w-full"
-                       placeholder="010-0000-0000">
+                       placeholder="010-1234-5678"
+                       required>
+
+                <p id="phoneMessage"
+                   class="text-sm mt-2"></p>
 
             </div>
 
@@ -248,6 +263,8 @@
 
     });
 
+    let idChecked = false;
+
     // 아이디 중복체크
     const btnDuplicate = document.querySelector("#btnDuplicate");
     const idCheckMessage = document.querySelector("#idCheckMessage");
@@ -275,6 +292,8 @@
 
         if(data.isDuplicate){
 
+            idChecked = false;
+
             idCheckMessage.className =
                 "text-error text-sm mt-2";
 
@@ -282,6 +301,7 @@
                 "이미 사용중인 아이디입니다.";
 
         } else {
+            idChecked = true;
 
             idCheckMessage.className =
                 "text-success text-sm mt-2";
@@ -330,6 +350,117 @@
 
 </script>
 
+<script>
+
+    password.addEventListener("keyup", function(){
+
+        const regex =
+            /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        const result =
+            document.getElementById("passwordRule");
+
+        if(password.value === ""){
+
+            result.innerText = "";
+            return;
+        }
+
+        if(regex.test(password.value)){
+
+            result.className =
+                "text-success text-sm mt-2";
+
+            result.innerText =
+                "사용 가능한 비밀번호입니다.";
+
+        }else{
+
+            result.className =
+                "text-error text-sm mt-2";
+
+            result.innerText =
+                "8자 이상 영문과 숫자를 포함해야 합니다.";
+        }
+
+    });
+
+</script>
+
+<script>
+    const phone =
+        document.getElementById("phone");
+
+    phone.addEventListener("keyup", function(){
+
+        const regex =
+            /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
+
+        const result =
+            document.getElementById("phoneMessage");
+
+        if(regex.test(phone.value)){
+
+            result.className =
+                "text-success text-sm mt-2";
+
+            result.innerText =
+                "올바른 전화번호입니다.";
+
+        }else{
+
+            result.className =
+                "text-error text-sm mt-2";
+
+            result.innerText =
+                "010-1234-5678 형식으로 입력해주세요.";
+        }
+
+    });
+</script>
+
+
+<script>
+
+    function validateForm(){
+
+        const pw = password.value;
+        const pwCheck = passwordCheck.value;
+
+        const pwRegex =
+            /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
+
+        const phoneRegex =
+            /^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$/;
+
+        if(!idChecked){
+
+            alert("아이디 중복확인을 진행해주세요.");
+            return false;
+        }
+
+        if(!pwRegex.test(pw)){
+
+            alert("비밀번호는 8자 이상 영문과 숫자를 포함해야 합니다.");
+            return false;
+        }
+
+        if(pw !== pwCheck){
+
+            alert("비밀번호 확인이 일치하지 않습니다.");
+            return false;
+        }
+
+        if(!phoneRegex.test(phone.value)){
+
+            alert("전화번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+</script>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 

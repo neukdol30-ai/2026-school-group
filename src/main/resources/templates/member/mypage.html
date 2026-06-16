@@ -1,50 +1,41 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>마이페이지</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
 </head>
+
 <body class="bg-base-200 min-h-screen">
 
-<div class="container mx-auto mt-10 pt-24 pb-10">
+<div class="container mx-auto pt-20 pb-10">
 
-    <!-- 로고 -->
     <div class="text-center mb-6">
-
-        <a href="/"
-           class="text-5xl font-bold text-blue-600">
-
+        <a href="/" class="text-5xl font-bold text-blue-600">
             맛집<span class="text-black">모아모아</span>
-
         </a>
-
     </div>
 
-    <div class="card bg-base-100 shadow-xl">
-
+    <div class="card bg-base-100 shadow-xl max-w-4xl mx-auto">
         <div class="card-body">
 
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="card-title text-3xl">마이페이지</h2>
 
-                <h2 class="card-title text-3xl">
-                    마이페이지
-                </h2>
-
-                <a href="/"
-                   class="btn btn-outline btn-primary">
-
+                <a href="/" class="btn btn-outline btn-primary">
                     🏠 홈으로
-
                 </a>
-
             </div>
 
             <div class="overflow-x-auto">
                 <table class="table table-zebra">
+
+                    <tr>
+                        <th>가입일</th>
+                        <td th:text="${member.regDate}"></td>
+                    </tr>
 
                     <tr>
                         <th>아이디</th>
@@ -62,18 +53,16 @@
                     </tr>
 
                     <tr>
-                        <th>생년월일</th>
-                        <td th:text="${member.birthDate}"></td>
-                    </tr>
-
-                    <tr>
                         <th>전화번호</th>
                         <td th:text="${member.phone}"></td>
                     </tr>
 
                     <tr>
                         <th>주소</th>
-                        <td th:text="${member.address}"></td>
+                        <td>
+                            <span th:text="${member.address}"></span>
+                            <span th:text="${member.detailAddress}"></span>
+                        </td>
                     </tr>
 
                     <tr>
@@ -81,10 +70,43 @@
                         <td th:text="${member.role}"></td>
                     </tr>
 
+                    <tr th:if="${member.role == 'ADMIN'}">
+                        <th>관리자</th>
+                        <td>
+                            관리자 계정입니다.
+                        </td>
+                    </tr>
+
                 </table>
             </div>
 
-            <div class="flex gap-3 mt-5">
+            <div class="flex flex-wrap gap-3 mt-5 justify-center">
+
+                <!-- 일반 회원만 -->
+                <a th:if="${session.loginUser != null and session.loginUser.role != 'ADMIN'}"
+                   href="/inquiry/list"
+                   class="btn btn-info">
+                    1:1 문의
+                </a>
+
+                <!-- 관리자만 -->
+                <a th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}"
+                   href="/admin/inquiry-list"
+                   class="btn btn-secondary">
+                    문의관리
+                </a>
+
+                <!-- 관리자만 -->
+                <a th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}"
+                   href="/admin"
+                   class="btn btn-accent">
+                    관리자 홈
+                </a>
+
+                <a href="/member/edit"
+                   class="btn btn-success">
+                    회원정보수정
+                </a>
 
                 <a href="/member/logout"
                    class="btn btn-warning">
