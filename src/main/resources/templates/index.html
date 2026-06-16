@@ -352,6 +352,22 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<script
+        th:if="${param.error != null and param.error[0] == 'alreadyLogin'}">
+
+    alert("이미 로그인된 상태입니다.");
+
+</script>
+
+<script
+        th:if="${param.error != null and param.error[0] == 'alreadySignup'}">
+
+    alert("로그인 중에는 회원가입 페이지에 접근할 수 없습니다.");
+
+</script>
+
+
+
 </body>
 
 </html>

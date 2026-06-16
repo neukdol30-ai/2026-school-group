@@ -30,6 +30,15 @@
                 로그인
             </h2>
 
+            <div th:if="${errorMessage != null}"
+                 class="alert alert-error mt-3 mb-3">
+
+                <span th:text="${errorMessage}">
+                    아이디 또는 비밀번호를 다시 확인해주세요.
+                </span>
+
+            </div>
+
             <form action="/member/login" method="post">
 
                 <label class="label">
@@ -66,6 +75,8 @@
     </div>
 
 </div>
+
+
 
 </body>
 </html>
