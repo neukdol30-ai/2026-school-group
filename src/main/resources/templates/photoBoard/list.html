@@ -350,9 +350,17 @@
                 <a href="/event">이벤트</a>
             </div>
 
-            <div class="top-menu">
+            <div class="top-menu" th:if="${session.loginUser == null}">
                 <a href="/member/login">로그인</a>
                 <a href="/member/signup">회원가입</a>
+            </div>
+
+            <div class="top-menu" th:if="${session.loginUser != null}">
+    <span>
+        <b th:text="${session.loginUser.name}"></b>님
+    </span>
+                <a href="/member/mypage">내정보</a>
+                <a href="/member/logout">로그아웃</a>
             </div>
         </div>
     </div>
