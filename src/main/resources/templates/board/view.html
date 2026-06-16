@@ -297,13 +297,28 @@
         <div class="top-inner">
 
             <div class="top-menu">
-                <a href="/">🏠 홈</a>
+                <a href="/">홈</a>
                 <a href="/notice">공지사항</a>
             </div>
 
-            <div class="top-menu">
+            <!-- 비회원 -->
+            <div class="top-menu"
+                 th:if="${session.loginUser == null}">
                 <a href="/member/login">로그인</a>
                 <a href="/member/signup">회원가입</a>
+            </div>
+
+            <!-- 회원 -->
+            <div class="top-menu"
+                 th:if="${session.loginUser != null}">
+
+                <span>
+                    <span th:text="${session.loginUser.name}"></span>님
+                </span>
+
+                <a href="/member/mypage">내정보</a>
+                <a href="/member/logout">로그아웃</a>
+
             </div>
 
         </div>
@@ -315,9 +330,7 @@
             맛집<span>모아모아</span>
         </a>
 
-        <form class="search-box">
-            <input type="text" placeholder="검색어 입력">
-        </form>
+
 
     </div>
 
