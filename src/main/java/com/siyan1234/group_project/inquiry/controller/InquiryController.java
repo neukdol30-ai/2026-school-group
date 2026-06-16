@@ -43,6 +43,24 @@ public class InquiryController {
             return "redirect:/member/login";
         }
 
+        // 제목 검증
+        if(inquiryDto.getTitle() == null
+                || inquiryDto.getTitle().trim().isEmpty()){
+            return "redirect:/inquiry/write?error=title";
+        }
+
+        // 내용 검증
+        if(inquiryDto.getContent() == null
+                || inquiryDto.getContent().trim().isEmpty()){
+            return "redirect:/inquiry/write?error=content";
+        }
+
+        // 카테고리 검증
+        if(inquiryDto.getCategory() == null
+                || inquiryDto.getCategory().trim().isEmpty()){
+            return "redirect:/inquiry/write?error=category";
+        }
+
         String phone = inquiryDto.getPhone();
 
         String regex =
@@ -56,7 +74,12 @@ public class InquiryController {
                 loginUser.getNo()
         );
 
-        inquiryService.insertInquiry(inquiryDto);
+        int result =
+                inquiryService.insertInquiry(inquiryDto);
+
+        if(result <= 0){
+            return "redirect:/inquiry/write?error=fail";
+        }
 
         return "redirect:/inquiry/list";
     }
@@ -94,6 +117,10 @@ public class InquiryController {
 
         if (loginUser == null){
             return "redirect:/member/login";
+        }
+
+        if(no == null){
+            return "redirect:/inquiry/list";
         }
 
         InquiryDto inquiry = inquiryService.findMyInquiry(

@@ -112,8 +112,9 @@
     <update id="updateInquiryStatus">
 
         UPDATE INQUIRY
-        SET STATUS = 'ANSWERED'
-        WHERE NO = #{inquiryNo}
+        SET STATUS='ANSWERED'
+        WHERE NO=#{inquiryNo}
+        AND STATUS='WAITING'
 
     </update>
 

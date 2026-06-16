@@ -51,6 +51,7 @@ public class MemberController {
             MemberDto memberDto,
             HttpSession session){
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+
         if (loginUser != null){
             return "redirect:/";
         }
@@ -59,8 +60,10 @@ public class MemberController {
 
         String regex = "^(?=.*[A-Za-z])(?=.*\\d).{8,}$";
 
-        if (!password.matches(regex)){
-            return "redirect:/member/signup";
+        if(password == null ||
+                !password.matches(regex)){
+
+            return "redirect:/member/signup?error=password";
         }
 
         int result = memberService.signup(memberDto);

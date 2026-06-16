@@ -116,21 +116,41 @@ public class AdminController {
         return "admin/inquiry-detail";
     }
     @PostMapping("/inquiry-answer")
-    public String insertAnswer(InquiryAnswerDto dto,
-                               HttpSession session){
+    public String insertAnswer(
+            InquiryAnswerDto dto,
+            HttpSession session){
 
         if (!isAdmin(session)) {
             return "redirect:/member/login";
         }
 
+        if(dto == null
+                || dto.getInquiryNo() == null
+                || dto.getContent() == null
+                || dto.getContent().trim().isEmpty()){
+
+            return "redirect:/admin/inquiry-list";
+        }
+
         MemberDto loginUser =
                 (MemberDto) session.getAttribute("loginUser");
 
-        dto.setAdminNo(loginUser.getNo());
+        dto.setAdminNo(
+                loginUser.getNo()
+        );
 
-        inquiryService.insertAnswer(dto);
+        int result =
+                inquiryService.insertAnswer(dto);
 
-        return "redirect:/admin/inquiry-detail?no=" + dto.getInquiryNo();
+        if(result <= 0){
+            return "redirect:/admin/inquiry-detail?no="
+                    + dto.getInquiryNo()
+                    + "&error=answerFail";
+        }
+
+        return "redirect:/admin/inquiry-detail?no="
+                + dto.getInquiryNo()
+                + "&success=true";
     }
 }
 
