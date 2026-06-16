@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>인증 게시판</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+            height: 36px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .top-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-menu {
+            display: flex;
+            gap: 18px;
+        }
+
+        .top-menu a:hover { color: #2563eb; }
+
+        .brand-area {
+            max-width: 1200px;
+            height: 110px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .logo span { color: #111827; }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .notice {
+            font-size: 14px;
+            color: #444;
+        }
+
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+
+        .hamburger {
+            font-size: 24px;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .main-menu a {
+            position: relative;
+            padding: 18px 0;
+        }
+
+        .main-menu a:hover,
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        main {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .page-title p {
+            color: #666;
+        }
+
+        .write-btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        .write-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+        }
+
+        aside {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            background-color: #111827;
+            color: white;
+            font-size: 18px;
+        }
+
+        aside a {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        aside a:hover,
+        aside a.active {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .board-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 36px 40px;
+        }
+
+        .board-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .board-top h2 {
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+        .board-count {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .board-table {
+            width: 100%;
+            border-top: 2px solid #111827;
+        }
+
+        .board-head,
+        .board-row {
+            display: grid;
+            grid-template-columns: 90px minmax(260px, 1fr) 110px 110px 110px 160px;
+            text-align: center;
+            align-items: center;
+        }
+
+        .board-head {
+            min-height: 54px;
+            border-bottom: 1px solid #d1d5db;
+            background-color: #f8fafc;
+            color: #111827;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .board-row {
+            min-height: 70px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
+            font-size: 15px;
+        }
+
+        .board-row:hover {
+            background-color: #f9fafb;
+        }
+
+        .board-no {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .board-title {
+            text-align: left;
+            padding: 0 32px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .board-title a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .board-data {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .empty-box {
+            padding: 80px 20px;
+            text-align: center;
+            color: #555;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .empty-box h2 {
+            font-size: 23px;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .paging {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .paging button {
+            min-width: 36px;
+            height: 36px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .paging button.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="top-bar">
+        <div class="top-inner">
+            <div class="top-menu">
+                <a href="/">🏠 홈</a>
+                <a href="/notice">공지사항</a>
+                <a href="/event">이벤트</a>
+            </div>
+
+            <div class="top-menu">
+                <a href="/member/login">로그인</a>
+                <a href="/member/signup">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="brand-area">
+        <a href="/" class="logo">맛집<span>모아모아</span></a>
+
+        <form class="search-box">
+            <input type="text" placeholder="검색어를 입력하세요">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="notice">
+            <strong>실시간 인기글</strong> 인증게시판 새 글 확인하기
+        </div>
+    </div>
+
+    <nav class="nav-area">
+        <div class="nav-inner">
+
+
+            <ul class="main-menu">
+                <li><a href="/">🏠</a></li>
+                <li><a href="/board/free">자유게시판</a></li>
+                <li><a href="/photoBoard/list" class="active">인증게시판</a></li>
+                <li><a href="/member/info">내정보</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="page-title">
+        <div>
+            <h1>인증 게시판</h1>
+            <p>방문한 맛집 사진과 후기를 인증하는 공간입니다.</p>
+        </div>
+
+        <a href="/photoBoard/write" class="write-btn">글쓰기</a>
+    </section>
+
+    <section class="content-grid">
+        <aside>
+            <h2>메뉴</h2>
+            <a href="/">홈</a>
+            <a href="/board/free">자유게시판</a>
+            <a href="/photoBoard/list" class="active">인증게시판</a>
+            <a href="/member/info">내정보</a>
+        </aside>
+
+        <section class="board-box">
+            <div class="board-top">
+                <h2>인증 게시글 목록</h2>
+                <span class="board-count" th:text="'전체 ' + ${#lists.size(boardList)} + '건'">전체 0건</span>
+            </div>
+
+            <div class="board-table">
+                <div class="board-head">
+                    <div>번호</div>
+                    <div>제목</div>
+                    <div>평점</div>
+                    <div>조회수</div>
+                    <div>추천수</div>
+                    <div>작성일</div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(boardList)}" class="empty-box">
+                    <h2>등록된 게시글이 없습니다</h2>
+                    <p>첫 번째 인증 게시글을 작성해보세요.</p>
+                    <br>
+                    <a href="/photoBoard/write" class="write-btn">글쓰기</a>
+                </div>
+
+                <div th:if="${!#lists.isEmpty(boardList)}">
+                    <div th:each="board : ${boardList}" class="board-row">
+                        <div class="board-no" th:text="${board.no}">1</div>
+
+                        <div class="board-title">
+                            <a th:href="@{/photoBoard/view(no=${board.no})}"
+                               th:text="${board.title}">
+                                게시글 제목
+                            </a>
+                        </div>
+
+                        <div class="board-data" th:text="${board.rating}">5.0</div>
+                        <div class="board-data" th:text="${board.hit}">0</div>
+                        <div class="board-data" th:text="${board.likeCount}">0</div>
+                        <div class="board-data" th:text="${board.regdate}">2026-06-12</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="paging">
+                <button>«</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>»</button>
+            </div>
+        </section>
+    </section>
+</main>
+
+<footer>
+    © 2026 MY SITE. All rights reserved.
+</footer>
+
+</body>
+</html>

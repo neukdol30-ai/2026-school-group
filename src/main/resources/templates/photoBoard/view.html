@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>인증 게시글 상세보기</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+            height: 36px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .top-inner {
+            max-width: 1200px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-menu {
+            display: flex;
+            gap: 18px;
+        }
+
+        .top-menu a:hover { color: #2563eb; }
+
+        .brand-area {
+            max-width: 1200px;
+            height: 110px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .logo span { color: #111827; }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .notice {
+            font-size: 14px;
+            color: #444;
+        }
+
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 34px;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .main-menu a {
+            position: relative;
+            padding: 18px 0;
+        }
+
+        .main-menu a:hover,
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+        }
+
+        aside {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            background-color: #111827;
+            color: white;
+            font-size: 18px;
+        }
+
+        aside a {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        aside a:hover,
+        aside a.active {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .view-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 30px;
+        }
+
+        .view-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .view-title h1 {
+            font-size: 32px;
+            margin-bottom: 14px;
+            color: #111827;
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .score-area {
+            margin-top: 22px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .score-badge,
+        .like-badge {
+            padding: 8px 15px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .score-badge {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .like-badge {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .like-badge:hover {
+            background-color: #dbeafe;
+            color: #2563eb;
+        }
+
+        .photo-box {
+            width: 100%;
+            margin: 26px 0;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            background-color: #f8fafc;
+        }
+
+        .photo-box img {
+            width: 100%;
+            max-height: 900px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .content-box {
+            min-height: 220px;
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            background-color: #fff;
+            line-height: 1.8;
+            font-size: 17px;
+            color: #333;
+            white-space: pre-line;
+        }
+
+        .comment-section {
+            margin-top: 32px;
+            padding-top: 28px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .comment-section h2 {
+            font-size: 22px;
+            margin-bottom: 18px;
+            color: #111827;
+        }
+
+        .comment-empty {
+            padding: 24px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            background-color: #f8fafc;
+            color: #64748b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .comment-item {
+            padding: 18px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background-color: #fff;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .comment-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #222;
+            white-space: pre-line;
+        }
+
+        .comment-form {
+            margin-top: 24px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-form textarea {
+            flex: 1;
+            min-height: 90px;
+            resize: vertical;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .comment-form textarea:focus {
+            border-color: #2563eb;
+        }
+
+        .comment-form button {
+            width: 110px;
+            border: none;
+            border-radius: 10px;
+            background-color: #2563eb;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .bottom-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid #eee;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 9px;
+            font-weight: 800;
+            display: inline-block;
+        }
+
+        .btn-list {
+            background-color: #111827;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="top-bar">
+        <div class="top-inner">
+            <div class="top-menu">
+                <a href="/">🏠 홈</a>
+                <a href="/notice">공지사항</a>
+                <a href="/event">이벤트</a>
+            </div>
+
+            <div class="top-menu">
+                <a href="/member/login">로그인</a>
+                <a href="/member/signup">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="brand-area">
+        <a href="/" class="logo">맛집<span>모아모아</span></a>
+
+        <form class="search-box">
+            <input type="text" placeholder="검색어를 입력하세요">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="notice">
+            <strong>실시간 인기글</strong> 인증게시판 새 글 확인하기
+        </div>
+    </div>
+
+    <nav class="nav-area">
+        <div class="nav-inner">
+            <ul class="main-menu">
+                <li><a href="/">🏠</a></li>
+                <li><a href="/board/free">자유게시판</a></li>
+                <li><a href="/photoBoard/list" class="active">인증게시판</a></li>
+                <li><a href="/member/info">내정보</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="content-grid">
+
+        <aside>
+            <h2>메뉴</h2>
+            <a href="/">홈</a>
+            <a href="/board/free">자유게시판</a>
+            <a href="/photoBoard/list" class="active">인증게시판</a>
+            <a href="/member/info">내정보</a>
+        </aside>
+
+        <section class="view-card">
+
+            <div class="view-top">
+                <div class="view-title">
+                    <h1 th:text="${board.title}">게시글 제목</h1>
+
+                    <div class="meta">
+                        <span>조회수 : <b th:text="${board.hit}">0</b></span>
+                        <span>추천수 : <b th:text="${board.likeCount}">0</b></span>
+                        <span th:text="${board.regdate}">작성일</span>
+                    </div>
+                </div>
+
+                <a href="/photoBoard/list" class="btn btn-list">목록</a>
+            </div>
+
+            <div class="score-area">
+                <span class="score-badge">
+                    평점 <span th:text="${board.rating}">5</span>점
+                </span>
+
+                <a th:href="@{/photoBoard/like(no=${board.no})}"
+                   class="like-badge">
+                    추천수 <span th:text="${board.likeCount}">0</span>
+                </a>
+            </div>
+
+            <div class="photo-box">
+                <img th:src="@{${board.imageUrl}}" alt="리뷰 사진">
+            </div>
+
+            <div class="content-box" th:text="${board.content}">
+                게시글 내용
+            </div>
+
+            <div class="comment-section">
+                <h2>댓글</h2>
+
+                <div th:if="${#lists.isEmpty(commentList)}" class="comment-empty">
+                    등록된 댓글이 없습니다.
+                </div>
+
+                <div th:if="${!#lists.isEmpty(commentList)}">
+                    <div th:each="comment : ${commentList}" class="comment-item">
+                        <div class="comment-meta">
+                            <span>회원번호 <b th:text="${comment.memberNo}">1</b></span>
+                            <span th:text="${comment.regdate}">작성일</span>
+                        </div>
+
+                        <div class="comment-content" th:text="${comment.content}">
+                            댓글 내용
+                        </div>
+                    </div>
+                </div>
+
+                <form action="/photoBoard/comment/write" method="post" class="comment-form">
+                    <input type="hidden" name="boardNo" th:value="${board.no}">
+
+                    <textarea name="content"
+                              placeholder="댓글을 입력하세요"
+                              required></textarea>
+
+                    <button type="submit">댓글 등록</button>
+                </form>
+            </div>
+
+            <div class="bottom-actions">
+                <a href="/photoBoard/list" class="btn btn-list">목록</a>
+
+                <div class="right-actions">
+                    <a th:href="@{/photoBoard/update(no=${board.no})}" class="btn btn-edit">수정</a>
+                    <a th:href="@{/photoBoard/delete(no=${board.no})}" class="btn btn-delete">삭제</a>
+                </div>
+            </div>
+
+        </section>
+
+    </section>
+</main>
+
+<footer>
+    © 2026 맛집모아모아. All rights reserved.
+</footer>
+
+</body>
+</html>

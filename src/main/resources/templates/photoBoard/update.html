@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>인증 게시글 수정</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+            height: 36px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .top-inner {
+            max-width: 1500px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-menu {
+            display: flex;
+            gap: 18px;
+        }
+
+        .top-menu a:hover { color: #2563eb; }
+
+        .brand-area {
+            max-width: 1500px;
+            height: 110px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 800;
+            color: #2563eb;
+        }
+
+        .logo span {
+            color: #111827;
+        }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .notice {
+            font-size: 14px;
+            color: #444;
+        }
+
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1500px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .main-menu a {
+            position: relative;
+            padding: 18px 0;
+        }
+
+        .main-menu a:hover,
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        main {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+        }
+
+        aside {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            background-color: #111827;
+            color: white;
+            font-size: 18px;
+        }
+
+        aside a {
+            display: block;
+            padding: 14px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        aside a:hover,
+        aside a.active {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .write-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 14px;
+            padding: 36px 40px;
+        }
+
+        .write-title {
+            padding-bottom: 22px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 26px;
+        }
+
+        .write-title h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #111827;
+        }
+
+        .write-title p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-control {
+            margin-bottom: 18px;
+        }
+
+        .form-control label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 13px 14px;
+            font-size: 15px;
+            outline: none;
+            background-color: #fff;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        textarea {
+            min-height: 260px;
+            resize: vertical;
+            line-height: 1.7;
+        }
+
+        .current-photo {
+            margin-bottom: 18px;
+            padding: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #f8fafc;
+        }
+
+        .current-photo p {
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .current-photo img {
+            width: 100%;
+            max-height: 360px;
+            object-fit: contain;
+            display: block;
+            border-radius: 10px;
+            background-color: white;
+        }
+
+        .bottom-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 9px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 15px;
+        }
+
+        .btn-list {
+            background-color: #111827;
+            color: white;
+        }
+
+        .btn-cancel {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+
+        .btn-submit {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .right-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="top-bar">
+        <div class="top-inner">
+            <div class="top-menu">
+                <a href="/">🏠 홈</a>
+                <a href="/notice">공지사항</a>
+                <a href="/event">이벤트</a>
+            </div>
+
+            <div class="top-menu">
+                <a href="/member/login">로그인</a>
+                <a href="/member/signup">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="brand-area">
+        <a href="/" class="logo">맛집<span>모아모아</span></a>
+
+        <form class="search-box">
+            <input type="text" placeholder="검색어를 입력하세요">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="notice">
+            <strong>실시간 인기글</strong> 인증게시판 새 글 확인하기
+        </div>
+    </div>
+
+    <nav class="nav-area">
+        <div class="nav-inner">
+            <ul class="main-menu">
+                <li><a href="/">🏠</a></li>
+                <li><a href="/board/free">자유게시판</a></li>
+                <li><a href="/photoBoard/list" class="active">인증게시판</a></li>
+                <li><a href="/member/info">내정보</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="content-grid">
+
+        <aside>
+            <h2>메뉴</h2>
+            <a href="/">홈</a>
+            <a href="/board/free">자유게시판</a>
+            <a href="/photoBoard/list" class="active">인증게시판</a>
+            <a href="/member/info">내정보</a>
+        </aside>
+
+        <section class="write-card">
+            <div class="write-title">
+                <h1>인증 게시글 수정</h1>
+                <p>작성한 맛집 리뷰 내용을 수정할 수 있습니다.</p>
+            </div>
+
+            <form action="/photoBoard/update" method="post">
+                <input type="hidden" name="no" th:value="${board.no}">
+
+                <div class="form-control">
+                    <label>제목</label>
+                    <input type="text" name="title" th:value="${board.title}">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-control">
+                        <label>맛집명</label>
+                        <input type="text" name="restaurantName" th:value="${board.restaurantName}">
+                    </div>
+
+                    <div class="form-control">
+                        <label>카테고리</label>
+                        <select name="category">
+                            <option value="한식" th:selected="${board.category == '한식'}">한식</option>
+                            <option value="중식" th:selected="${board.category == '중식'}">중식</option>
+                            <option value="일식" th:selected="${board.category == '일식'}">일식</option>
+                            <option value="양식" th:selected="${board.category == '양식'}">양식</option>
+                            <option value="카페" th:selected="${board.category == '카페'}">카페</option>
+                            <option value="기타" th:selected="${board.category == '기타'}">기타</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>주소</label>
+                    <input type="text" name="address" th:value="${board.address}">
+                </div>
+
+                <div class="form-control">
+                    <label>한 줄 설명</label>
+                    <input type="text" name="description" th:value="${board.description}">
+                </div>
+
+                <div class="form-control">
+                    <label>평점</label>
+                    <select name="rating">
+                        <option value="5" th:selected="${board.rating == 5}">5점</option>
+                        <option value="4" th:selected="${board.rating == 4}">4점</option>
+                        <option value="3" th:selected="${board.rating == 3}">3점</option>
+                        <option value="2" th:selected="${board.rating == 2}">2점</option>
+                        <option value="1" th:selected="${board.rating == 1}">1점</option>
+                    </select>
+                </div>
+
+                <div class="current-photo" th:if="${board.imageUrl != null}">
+                    <p>현재 등록된 사진</p>
+                    <img th:src="@{${board.imageUrl}}" alt="현재 사진">
+                </div>
+
+                <div class="form-control">
+                    <label>리뷰 내용</label>
+                    <textarea name="content" th:text="${board.content}"></textarea>
+                </div>
+
+                <div class="bottom-actions">
+                    <a th:href="@{/photoBoard/view(no=${board.no})}" class="btn btn-list">뒤로가기</a>
+
+                    <div class="right-actions">
+                        <a th:href="@{/photoBoard/view(no=${board.no})}" class="btn btn-cancel">취소</a>
+                        <button type="submit" class="btn btn-submit">수정</button>
+                    </div>
+                </div>
+
+            </form>
+        </section>
+
+    </section>
+</main>
+
+<footer>
+    © 2026 맛집모아모아. All rights reserved.
+</footer>
+
+</body>
+</html>
