@@ -35,7 +35,7 @@
          사용자 문의 목록
     ========================= -->
     <select id="findMyInquiryList"
-            resultType="InquiryDto">
+            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
 
         SELECT *
         FROM INQUIRY
@@ -49,7 +49,7 @@
          문의 상세 (안정형)
     ========================= -->
     <select id="findByNo"
-            resultType="InquiryDto">
+            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
 
         SELECT *
         FROM INQUIRY
@@ -62,7 +62,7 @@
          관리자 전체 목록
     ========================= -->
     <select id="findAllInquiry"
-            resultType="InquiryDto">
+            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
 
         SELECT *
         FROM INQUIRY
@@ -97,7 +97,7 @@
          답변 조회
     ========================= -->
     <select id="findAnswerByInquiryNo"
-            resultType="InquiryAnswerDto">
+            resultType="com.siyan1234.group_project.inquiry.dto.InquiryAnswerDto">
 
         SELECT *
         FROM INQUIRY_ANSWER
@@ -118,7 +118,7 @@
     </update>
 
     <select id="findMyInquiry"
-            resultType="InquiryDto">
+            resultType="com.siyan1234.group_project.inquiry.dto.InquiryDto">
 
         SELECT *
         FROM INQUIRY

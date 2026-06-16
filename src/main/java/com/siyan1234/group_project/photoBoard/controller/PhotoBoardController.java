@@ -1,8 +1,8 @@
 package com.siyan1234.group_project.photoBoard.controller;
 
-import com.siyan1234.group_project.photoBoard.dto.CommentDto;
+import com.siyan1234.group_project.photoBoard.dto.photoBoardCommentDto;
 import com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto;
-import com.siyan1234.group_project.photoBoard.service.CommentService;
+import com.siyan1234.group_project.photoBoard.service.photoBoardCommentService;
 import com.siyan1234.group_project.photoBoard.service.PhotoBoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class PhotoBoardController {
 
     private final PhotoBoardService photoBoardService;
-    private final CommentService commentService;
+    private final photoBoardCommentService commentService;
 
     @GetMapping("/list")
     public String list(Model model) {
@@ -70,7 +70,7 @@ public class PhotoBoardController {
         photoBoardService.increaseHit(no);
 
         PhotoBoardDto board = photoBoardService.getBoard(no);
-        List<CommentDto> commentList = commentService.getList(no);
+        List<photoBoardCommentDto> commentList = commentService.getList(no);
 
         model.addAttribute("board", board);
         model.addAttribute("commentList", commentList);
@@ -104,7 +104,7 @@ public class PhotoBoardController {
     }
 
     @PostMapping("/comment/write")
-    public String commentWrite(CommentDto commentDto) {
+    public String commentWrite(photoBoardCommentDto commentDto) {
         commentDto.setMemberNo(1);
         commentService.write(commentDto);
 

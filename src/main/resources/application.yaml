@@ -4,6 +4,9 @@ spring:
 
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
+    url: ${DB_URL:jdbc:oracle:thin:@localhost:1521:xe}
+    username: ${DB_USERNAME:spring}
+    password: ${DB_PASSWORD:1234}
     url: jdbc:oracle:thin:@//localhost:1521/xe
     username: minipro
     password: 1234
@@ -16,7 +19,6 @@ spring:
       enabled: true
     restart:
       enabled: true
-
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/**/*.xml
@@ -44,5 +46,10 @@ mybatis:
 mybatis:
   mapper-locations: classpath:/mybatis/mapper/**/*.xml
   type-aliases-package: com.siyan1234.group_project.member.dto,com.siyan1234.group_project.board.dto,com.siyan1234.group_project.photoBoard.dto
+  type-aliases-package: >
+    com.siyan1234.group_project.member.dto,
+    com.siyan1234.group_project.board.dto,
+    com.siyan1234.group_project.comment.dto,
+    com.siyan1234.group_project.inquiry.dto
   configuration:
     map-underscore-to-camel-case: true

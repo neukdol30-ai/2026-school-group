@@ -1,6 +1,6 @@
 package com.siyan1234.group_project.photoBoard.dao;
 
-import com.siyan1234.group_project.photoBoard.dto.CommentDto;
+import com.siyan1234.group_project.photoBoard.dto.photoBoardCommentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,11 +9,11 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentDao {
+public class photoBoardCommentDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public List<CommentDto> findByBoardNo(int boardNo) {
+    public List<photoBoardCommentDto> findByBoardNo(int boardNo) {
         String sql = """
                 SELECT *
                 FROM board_comment
@@ -22,7 +22,7 @@ public class CommentDao {
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
-                        CommentDto.builder()
+                        photoBoardCommentDto.builder()
                                 .no(rs.getInt("no"))
                                 .boardNo(rs.getInt("board_no"))
                                 .memberNo(rs.getInt("member_no"))
@@ -33,7 +33,7 @@ public class CommentDao {
         );
     }
 
-    public void write(CommentDto commentDto) {
+    public void write(photoBoardCommentDto commentDto) {
         String sql = """
                 INSERT INTO board_comment (
                     no,
