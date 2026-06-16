@@ -269,6 +269,52 @@
 
                 </table>
 
+                <div class="flex justify-center mt-6"
+                     th:if="${totalPage > 0}">
+
+                    <div class="join">
+
+                        <a class="join-item btn"
+                           th:classappend="${currentPage == 1} ? ' btn-disabled'"
+                           th:href="@{/admin/inquiry-list(
+                page=${currentPage - 1},
+                status=${search.status},
+                category=${search.category},
+                searchType=${search.searchType},
+                keyword=${search.keyword}
+           )}">
+                            이전
+                        </a>
+
+                        <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                           class="join-item btn"
+                           th:classappend="${i == currentPage} ? ' btn-active'"
+                           th:text="${i}"
+                           th:href="@{/admin/inquiry-list(
+                page=${i},
+                status=${search.status},
+                category=${search.category},
+                searchType=${search.searchType},
+                keyword=${search.keyword}
+           )}">
+                        </a>
+
+                        <a class="join-item btn"
+                           th:classappend="${currentPage == totalPage} ? ' btn-disabled'"
+                           th:href="@{/admin/inquiry-list(
+                page=${currentPage + 1},
+                status=${search.status},
+                category=${search.category},
+                searchType=${search.searchType},
+                keyword=${search.keyword}
+           )}">
+                            다음
+                        </a>
+
+                    </div>
+
+                </div>
+
             </div>
 
             <div class="divider"></div>

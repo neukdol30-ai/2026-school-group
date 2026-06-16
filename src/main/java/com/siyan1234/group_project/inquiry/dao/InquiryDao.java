@@ -25,6 +25,8 @@ public interface InquiryDao {
     // 관리자 문의 검색
     List<InquiryDto> searchInquiryList(InquiryDto inquiryDto);
 
+    int countSearchInquiryList(InquiryDto inquiryDto);
+
     int insertAnswer(InquiryAnswerDto answerDto);
 
     InquiryAnswerDto findAnswerByInquiryNo(Integer inquiryNo);

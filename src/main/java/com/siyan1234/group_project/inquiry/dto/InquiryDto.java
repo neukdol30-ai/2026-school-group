@@ -27,4 +27,8 @@ public class InquiryDto {
     // 관리자 검색용 필드
     private String searchType;
     private String keyword;
+    // 페이징용
+    private Integer page;
+    private Integer size;
+    private Integer offset;
 }

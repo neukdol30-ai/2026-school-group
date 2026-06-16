@@ -44,10 +44,31 @@ public class InquiryService {
     }
 
     /* =========================
-   관리자 문의 검색 목록
+   관리자 문의 검색 + 페이징 목록
 ========================= */
     public List<InquiryDto> searchInquiryList(InquiryDto inquiryDto){
+
+        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+            inquiryDto.setPage(1);
+        }
+
+        if(inquiryDto.getSize() == null || inquiryDto.getSize() < 1){
+            inquiryDto.setSize(10);
+        }
+
+        int offset =
+                (inquiryDto.getPage() - 1) * inquiryDto.getSize();
+
+        inquiryDto.setOffset(offset);
+
         return inquiryDao.searchInquiryList(inquiryDto);
+    }
+
+    /* =========================
+       관리자 문의 검색 결과 개수
+    ========================= */
+    public int countSearchInquiryList(InquiryDto inquiryDto){
+        return inquiryDao.countSearchInquiryList(inquiryDto);
     }
 
     /* =========================
