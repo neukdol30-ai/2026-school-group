@@ -99,6 +99,37 @@
         </if>
 
         ORDER BY NO DESC
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countSearchInquiryList"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM INQUIRY
+        WHERE IS_DELETED = 'N'
+
+        <if test="status != null and status != ''">
+            AND STATUS = #{status}
+        </if>
+
+        <if test="category != null and category != ''">
+            AND CATEGORY = #{category}
+        </if>
+
+        <if test="searchType == 'title'
+              and keyword != null
+              and keyword != ''">
+            AND TITLE LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberNo'
+              and keyword != null
+              and keyword != ''">
+            AND MEMBER_NO = TO_NUMBER(#{keyword})
+        </if>
 
     </select>
 
