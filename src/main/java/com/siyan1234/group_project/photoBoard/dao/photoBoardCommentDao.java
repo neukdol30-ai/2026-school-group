@@ -57,4 +57,17 @@ public class photoBoardCommentDao {
                 commentDto.getContent()
         );
     }
+
+    public void delete(int no, int memberNo) {
+        String sql = """
+                DELETE FROM board_comment
+                WHERE no = ?
+                AND member_no = ?
+                """;
+
+        jdbcTemplate.update(sql,
+                no,
+                memberNo
+        );
+    }
 }

@@ -20,4 +20,8 @@ public class photoBoardCommentService {
     public void write(photoBoardCommentDto commentDto) {
         commentDao.write(commentDto);
     }
+
+    public void delete(int no, int memberNo) {
+        commentDao.delete(no, memberNo);
+    }
 }

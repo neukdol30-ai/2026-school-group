@@ -33,12 +33,13 @@ public class PhotoBoardService {
         photoBoardDao.delete(no);
     }
 
-    public void like(int boardNo) {
-        int memberNo = 1;
+    public void like(int boardNo, int memberNo) {
 
         int count = photoBoardDao.countLike(boardNo, memberNo);
 
         if (count > 0) {
+            photoBoardDao.deleteLike(boardNo, memberNo);
+            photoBoardDao.decreaseLikeCount(boardNo);
             return;
         }
 

@@ -41,6 +41,7 @@
         .top-menu {
             display: flex;
             gap: 18px;
+            align-items: center;
         }
 
         .top-menu a:hover { color: #2563eb; }
@@ -295,9 +296,25 @@
         .comment-meta {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 13px;
             color: #64748b;
             margin-bottom: 10px;
+        }
+
+        .comment-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .comment-delete {
+            color: #ef4444;
+            font-weight: 800;
+        }
+
+        .comment-delete:hover {
+            text-decoration: underline;
         }
 
         .comment-content {
@@ -397,9 +414,17 @@
                 <a href="/event">이벤트</a>
             </div>
 
-            <div class="top-menu">
+            <div class="top-menu" th:if="${session.loginUser == null}">
                 <a href="/member/login">로그인</a>
                 <a href="/member/signup">회원가입</a>
+            </div>
+
+            <div class="top-menu" th:if="${session.loginUser != null}">
+                <span>
+                    <b th:text="${session.loginUser.name}"></b>님
+                </span>
+                <a href="/member/mypage">내정보</a>
+                <a href="/member/logout">로그아웃</a>
             </div>
         </div>
     </div>
@@ -463,11 +488,11 @@
 
                 <a th:href="@{/photoBoard/like(no=${board.no})}"
                    class="like-badge">
-                    추천수 <span th:text="${board.likeCount}">0</span>
+                    추천 <span th:text="${board.likeCount}">0</span>
                 </a>
             </div>
 
-            <div class="photo-box">
+            <div class="photo-box" th:if="${board.imageUrl != null}">
                 <img th:src="@{${board.imageUrl}}" alt="리뷰 사진">
             </div>
 
@@ -486,7 +511,16 @@
                     <div th:each="comment : ${commentList}" class="comment-item">
                         <div class="comment-meta">
                             <span>회원번호 <b th:text="${comment.memberNo}">1</b></span>
-                            <span th:text="${comment.regdate}">작성일</span>
+
+                            <div class="comment-right">
+                                <span th:text="${comment.regdate}">작성일</span>
+
+                                <a class="comment-delete"
+                                   th:href="@{/photoBoard/comment/delete(no=${comment.no}, boardNo=${board.no})}"
+                                   onclick="return confirm('댓글을 삭제하시겠습니까?')">
+                                    삭제
+                                </a>
+                            </div>
                         </div>
 
                         <div class="comment-content" th:text="${comment.content}">

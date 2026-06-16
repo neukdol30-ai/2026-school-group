@@ -198,12 +198,37 @@ public class PhotoBoardDao {
         );
     }
 
+    public void deleteLike(int boardNo, int memberNo) {
+        String sql = """
+                DELETE FROM board_like
+                WHERE board_no = ?
+                AND member_no = ?
+                """;
+
+        jdbcTemplate.update(sql,
+                boardNo,
+                memberNo
+        );
+    }
+
     public void increaseLikeCount(int boardNo) {
         String sql = """
                 UPDATE board
                 SET like_count = like_count + 1
                 WHERE no = ?
                 AND board_type = 'REVIEW'
+                """;
+
+        jdbcTemplate.update(sql, boardNo);
+    }
+
+    public void decreaseLikeCount(int boardNo) {
+        String sql = """
+                UPDATE board
+                SET like_count = like_count - 1
+                WHERE no = ?
+                AND board_type = 'REVIEW'
+                AND like_count > 0
                 """;
 
         jdbcTemplate.update(sql, boardNo);
