@@ -1,0 +1,155 @@
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+<!-- 로고 -->
+<div class="text-center mb-6">
+    <a href="/"
+       class="text-5xl font-bold text-blue-600">
+
+        맛집<span class="text-black">모아모아</span>
+
+    </a>
+</div>
+
+<div class="card bg-base-100 shadow-xl max-w-6xl mx-auto">
+
+    <div class="card-body">
+
+        <div class="flex justify-between items-center mb-4">
+
+            <h2 class="card-title text-3xl">
+                내 문의내역
+            </h2>
+
+            <div class="flex gap-2">
+
+                <a href="/member/mypage"
+                   class="btn btn-outline">
+
+                    마이페이지
+
+                </a>
+
+                <a href="/inquiry/write"
+                   class="btn btn-primary">
+
+                    + 문의 작성
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 문의 없음 -->
+        <div th:if="${#lists.isEmpty(inquiryList)}"
+             class="alert alert-info">
+
+            <span>
+                등록된 문의가 없습니다.
+            </span>
+
+        </div>
+
+        <!-- 문의 목록 -->
+        <div th:if="${!#lists.isEmpty(inquiryList)}"
+             class="overflow-x-auto">
+
+            <table class="table table-zebra">
+
+                <thead>
+
+                <tr>
+                    <th>번호</th>
+                    <th>유형</th>
+                    <th>제목</th>
+                    <th>상태</th>
+                    <th>작성일</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+
+                <tr th:each="inquiry : ${inquiryList}">
+
+                    <td th:text="${inquiry.no}"></td>
+
+                    <td>
+
+                        <span th:switch="${inquiry.category}">
+
+                            <span th:case="'GENERAL'">
+                                일반문의
+                            </span>
+
+                            <span th:case="'ACCOUNT'">
+                                계정문의
+                            </span>
+
+                            <span th:case="'BOARD'">
+                                게시판문의
+                            </span>
+
+                            <span th:case="'RESTAURANT'">
+                                맛집문의
+                            </span>
+
+                            <span th:case="'REPORT'">
+                                신고문의
+                            </span>
+
+                            <span th:case="'BUG'">
+                                버그신고
+                            </span>
+
+                            <span th:case="'ETC'">
+                                기타
+                            </span>
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <a class="link link-primary font-semibold"
+                           th:href="@{/inquiry/detail(no=${inquiry.no})}"
+                           th:text="${inquiry.title}">
+                        </a>
+
+                    </td>
+
+                    <td>
+
+                        <span th:if="${inquiry.status == 'WAITING'}"
+                              class="badge badge-error">
+
+                            답변대기
+
+                        </span>
+
+                        <span th:if="${inquiry.status == 'ANSWERED'}"
+                              class="badge badge-success">
+
+                            답변완료
+
+                        </span>
+
+                    </td>
+
+                    <td th:text="${#temporals.format(inquiry.regDate,'yyyy-MM-dd HH:mm')}">
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

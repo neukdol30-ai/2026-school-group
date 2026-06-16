@@ -10,4 +10,5 @@ public class CommentDto {
     private String content;
     private String regDate;
     private String name;
+    private String memberId; // 댓글 작성자 ID
 }

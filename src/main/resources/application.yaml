@@ -4,9 +4,9 @@ spring:
 
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//localhost:1521/xe
-    username: spring
-    password: 1234
+    url: ${DB_URL:jdbc:oracle:thin:@localhost:1521:xe}
+    username: ${DB_USERNAME:spring}
+    password: ${DB_PASSWORD:1234}
 
     thymeleaf:
       cache: false
@@ -17,9 +17,25 @@ spring:
       restart:
         enabled: true
 
+  web:
+    resources:
+      static-locations:
+        - classpath:/static/
+        - file:///D:/
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/**/*.xml
-  type-aliases-package: com.siyan1234.group_project.member.dto,com.siyan1234.group_project.board.dto,com.siyan1234.group_project.comment.dto
+
+  type-aliases-package: >
+    com.siyan1234.group_project.member.dto,
+    com.siyan1234.group_project.board.dto,
+    com.siyan1234.group_project.comment.dto,
+    com.siyan1234.group_project.inquiry.dto
+
   configuration:
     map-underscore-to-camel-case: true

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.siyan1234.group_project.member.dao.MemberDao">
+    <insert id="signup">
+        INSERT INTO MEMBER
+        (
+        MEMBER_ID,
+        PASSWORD,
+        NAME,
+        GENDER,
+        BIRTH_DATE,
+        PHONE,
+        ADDRESS,
+        DETAIL_ADDRESS,
+        ROLE
+        )
+
+        VALUES
+        (
+        #{memberId},
+        #{password},
+        #{name},
+        #{gender},
+        #{birthDate},
+        #{phone},
+        #{address},
+        #{detailAddress},
+        'USER'
+        )
+    </insert>
+
+    <!-- 비밀번호 암호화-->
+    <select id="login"
+            resultType="MemberDto"
+            parameterType="String">
+        SELECT *
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+        AND IS_DELETED = 'N'
+    </select>
+
+    <select id="findByMemberId"
+            resultType="MemberDto">
+        SELECT *
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+        AND IS_DELETED = 'N'
+    </select>
+
+    <!-- 비밀번호 암호화-->
+
+    <select id="idCheck"
+            resultType="Integer"
+            parameterType="String">
+        SELECT COUNT(*)
+        FROM MEMBER
+        WHERE MEMBER_ID = #{memberId}
+    </select>
+
+    <update id="deleteMember"
+            parameterType="Integer">
+        UPDATE MEMBER
+        SET IS_DELETED = 'Y'
+        WHERE NO = #{no}
+    </update>
+
+    <update id="updateMember">
+        UPDATE MEMBER
+        SET
+        PASSWORD = #{password},
+        PHONE = #{phone},
+        ADDRESS = #{address},
+        DETAIL_ADDRESS = #{detailAddress}
+        WHERE NO = #{no}
+    </update>
+
+    <select id="findByNo"
+            resultType="MemberDto"
+            parameterType="Integer">
+        SELECT *
+        FROM MEMBER
+        WHERE NO = #{no}
+    </select>
+
+    <insert id="insertWithdrawReason">
+        INSERT INTO MEMBER_WITHDRAW
+        (
+        MEMBER_ID,
+        REASON
+        )
+        VALUES
+        (
+        #{memberId},
+        #{reason}
+        )
+    </insert>
+
+    <!-- 보드 연동 후 memberStatistics 사용할 코드-->
+    <!--    <select id="memberStatistics"-->
+    <!--            resultType="MemberAdminDto">-->
+
+    <!--        SELECT-->
+    <!--        M.NO,-->
+    <!--        M.MEMBER_ID,-->
+    <!--        M.NAME,-->
+    <!--        M.ROLE,-->
+    <!--        M.IS_DELETED,-->
+
+    <!--        (-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM BOARD B-->
+    <!--        WHERE B.MEMBER_NO = M.NO-->
+    <!--        ) AS BOARD_COUNT,-->
+
+    <!--        (-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM BOARD_COMMENT C-->
+    <!--        WHERE C.MEMBER_NO = M.NO-->
+    <!--        ) AS COMMENT_COUNT,-->
+
+    <!--        (-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM BOARD_LIKE L-->
+    <!--        WHERE L.MEMBER_NO = M.NO-->
+    <!--        ) AS LIKE_COUNT-->
+
+    <!--        FROM MEMBER M-->
+
+    <!--        ORDER BY M.NO DESC-->
+    <!--    </select>-->
+
+    <!-- 보드 연동 전 사용할 코드-->
+    <select id="findAllMembers"
+            resultType="MemberDto">
+        SELECT *
+        FROM MEMBER
+        ORDER BY NO DESC
+    </select>
+
+</mapper>

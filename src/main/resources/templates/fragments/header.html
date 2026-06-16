@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="header">
+
+    <header>
+        <div class="top-bar">
+            <div class="top-inner">
+                <div class="top-menu">
+                    <a href="/">홈</a>
+                    <a href="/notice">공지사항</a>
+                </div>
+
+                <!-- 비회원 -->
+                <div class="top-menu"
+                     th:if="${session.loginUser == null}">
+                    <a href="/member/login">로그인</a>
+                    <a href="/member/signup">회원가입</a>
+                </div>
+
+                <!-- 회원 -->
+                <div class="top-menu"
+                     th:if="${session.loginUser != null}">
+                <span>
+                    <span th:text="${session.loginUser.name}"></span>님
+                </span>
+
+                    <a href="/member/mypage">내정보</a>
+                    <a href="/member/logout">로그아웃</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand-area">
+            <a href="/" class="logo">
+                맛집<span>모아모아</span>
+            </a>
+
+            <div class="notice">
+                <strong>맛집 추천 사이트</strong>
+            </div>
+        </div>
+
+        <nav class="nav-area">
+            <div class="nav-inner">
+
+                <ul class="main-menu">
+                    <li><a href="/" class="active">🏠</a></li>
+                    <li><a href="/board/free">자유게시판</a></li>
+                    <li><a href="/board/photo">인증게시판</a></li>
+                    <li><a href="/member/mypage">내정보</a></li>
+                </ul>
+
+            </div>
+        </nav>
+
+    </header>
+
+</th:block>
+
+</html>
+

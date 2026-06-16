@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 - 1:1 문의 관리</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" />
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+
+        <div class="card-body">
+
+            <div class="flex justify-between items-center">
+
+                <h1 class="text-4xl font-bold">
+                    1:1 문의 관리
+                </h1>
+
+                <a href="/admin"
+                   class="btn btn-primary">
+                    관리자 홈
+                </a>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="alert alert-info">
+
+                <form action="/admin/inquiry-list"
+                      method="get"
+                      class="grid grid-cols-1 md:grid-cols-5 gap-3 mt-5">
+
+                    <select name="status"
+                            class="select select-bordered w-full">
+
+                        <option value="">전체상태</option>
+
+                        <option value="WAITING"
+                                th:selected="${search != null and search.status == 'WAITING'}">
+                            답변대기
+                        </option>
+
+                        <option value="ANSWERED"
+                                th:selected="${search != null and search.status == 'ANSWERED'}">
+                            답변완료
+                        </option>
+
+                    </select>
+
+                    <select name="category"
+                            class="select select-bordered w-full">
+
+                        <option value="">전체유형</option>
+
+                        <option value="GENERAL"
+                                th:selected="${search != null and search.category == 'GENERAL'}">
+                            일반문의
+                        </option>
+
+                        <option value="ACCOUNT"
+                                th:selected="${search != null and search.category == 'ACCOUNT'}">
+                            계정문의
+                        </option>
+
+                        <option value="BOARD"
+                                th:selected="${search != null and search.category == 'BOARD'}">
+                            게시판문의
+                        </option>
+
+                        <option value="RESTAURANT"
+                                th:selected="${search != null and search.category == 'RESTAURANT'}">
+                            맛집문의
+                        </option>
+
+                        <option value="REPORT"
+                                th:selected="${search != null and search.category == 'REPORT'}">
+                            신고문의
+                        </option>
+
+                        <option value="ETC"
+                                th:selected="${search != null and search.category == 'ETC'}">
+                            기타
+                        </option>
+
+                    </select>
+
+                    <select name="searchType"
+                            class="select select-bordered w-full">
+
+                        <option value="">검색조건</option>
+
+                        <option value="title"
+                                th:selected="${search != null and search.searchType == 'title'}">
+                            제목검색
+                        </option>
+
+                        <option value="memberNo"
+                                th:selected="${search != null and search.searchType == 'memberNo'}">
+                            회원번호검색
+                        </option>
+
+                    </select>
+
+                    <input type="text"
+                           name="keyword"
+                           th:value="${search != null ? search.keyword : ''}"
+                           class="input input-bordered w-full"
+                           placeholder="검색어 입력">
+
+                    <div class="flex gap-2">
+
+                        <button type="submit"
+                                class="btn btn-primary flex-1">
+                            검색
+                        </button>
+
+                        <a href="/admin/inquiry-list"
+                           class="btn btn-outline flex-1">
+                            초기화
+                        </a>
+
+                    </div>
+
+                </form>
+
+                <span>
+                    회원이 작성한 문의를 확인하고 답변할 수 있습니다.
+                </span>
+
+            </div>
+
+            <div class="overflow-x-auto mt-5">
+
+                <table class="table table-zebra">
+
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>회원번호</th>
+                        <th>유형</th>
+                        <th>제목</th>
+                        <th>내용</th>
+                        <th>상태</th>
+                        <th>작성일</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:if="${#lists.isEmpty(inquiryList)}">
+
+                        <td colspan="8"
+                            class="text-center py-10">
+
+                            등록된 문의가 없습니다.
+
+                        </td>
+
+                    </tr>
+
+                    <tr th:each="inquiry : ${inquiryList}">
+
+                        <td th:text="${inquiry.no}"></td>
+
+                        <td th:text="${inquiry.memberNo}"></td>
+
+                        <!-- 문의 유형 -->
+                        <td>
+
+                            <span th:switch="${inquiry.category}">
+
+                                <span th:case="'GENERAL'">
+                                    일반문의
+                                </span>
+
+                                <span th:case="'ACCOUNT'">
+                                    계정문의
+                                </span>
+
+                                <span th:case="'BOARD'">
+                                    게시판문의
+                                </span>
+
+                                <span th:case="'RESTAURANT'">
+                                    맛집문의
+                                </span>
+
+                                <span th:case="'REPORT'">
+                                    신고문의
+                                </span>
+
+                                <span th:case="'BUG'">
+                                    버그신고
+                                </span>
+
+                                <span th:case="'ETC'">
+                                    기타
+                                </span>
+
+                            </span>
+
+                        </td>
+
+                        <!-- 제목 -->
+                        <td>
+
+                            <a class="link link-primary font-semibold"
+                               th:href="@{/admin/inquiry-detail(no=${inquiry.no})}"
+                               th:text="${inquiry.title}">
+                            </a>
+
+                        </td>
+
+                        <!-- 내용 -->
+                        <td>
+
+                            <span th:text="${#strings.abbreviate(inquiry.content,25)}">
+                            </span>
+
+                        </td>
+
+                        <!-- 상태 -->
+                        <td>
+
+                            <span th:if="${inquiry.status == 'WAITING'}"
+                                  class="badge badge-error">
+
+                                답변대기
+
+                            </span>
+
+                            <span th:if="${inquiry.status == 'ANSWERED'}"
+                                  class="badge badge-success">
+
+                                답변완료
+
+                            </span>
+
+                        </td>
+
+                        <!-- 작성일 -->
+                        <td th:text="${#temporals.format(inquiry.regDate,'yyyy-MM-dd HH:mm')}">
+                        </td>
+
+                        <!-- 관리 -->
+                        <td>
+
+                            <a th:href="@{/admin/inquiry-detail(no=${inquiry.no})}"
+                               class="btn btn-sm btn-outline btn-primary">
+
+                                상세 / 답변
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+                <div class="flex justify-center mt-6"
+                     th:if="${totalPage > 0}">
+
+                    <div class="join">
+
+                        <a class="join-item btn"
+                           th:classappend="${currentPage == 1} ? ' btn-disabled'"
+                           th:href="@{/admin/inquiry-list(
+                page=${currentPage - 1},
+                status=${search.status},
+                category=${search.category},
+                searchType=${search.searchType},
+                keyword=${search.keyword}
+           )}">
+                            이전
+                        </a>
+
+                        <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                           class="join-item btn"
+                           th:classappend="${i == currentPage} ? ' btn-active'"
+                           th:text="${i}"
+                           th:href="@{/admin/inquiry-list(
+                page=${i},
+                status=${search.status},
+                category=${search.category},
+                searchType=${search.searchType},
+                keyword=${search.keyword}
+           )}">
+                        </a>
+
+                        <a class="join-item btn"
+                           th:classappend="${currentPage == totalPage} ? ' btn-disabled'"
+                           th:href="@{/admin/inquiry-list(
+                page=${currentPage + 1},
+                status=${search.status},
+                category=${search.category},
+                searchType=${search.searchType},
+                keyword=${search.keyword}
+           )}">
+                            다음
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="flex gap-3">
+
+                <a href="/admin"
+                   class="btn btn-primary">
+
+                    관리자 홈
+
+                </a>
+
+                <a href="/"
+                   class="btn btn-outline">
+
+                    메인페이지
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
