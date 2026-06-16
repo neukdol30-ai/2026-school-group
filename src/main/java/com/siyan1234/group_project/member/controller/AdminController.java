@@ -50,20 +50,36 @@ public class AdminController {
        회원 목록
     ========================= */
     @GetMapping("/member-list")
-    public String memberList(HttpSession session, Model model) {
+    public String memberList(
+            MemberDto memberDto,
+            HttpSession session,
+            Model model) {
 
         if (!isAdmin(session)) {
             return "redirect:/";
         }
 
+        if(memberDto.getPage() == null || memberDto.getPage() < 1){
+            memberDto.setPage(1);
+        }
+
+        memberDto.setSize(10);
+
+        int totalCount =
+                memberService.countSearchMemberList(memberDto);
+
+        int totalPage =
+                (int) Math.ceil((double) totalCount / memberDto.getSize());
+
         model.addAttribute(
                 "memberList",
-                memberService.findAllMembers()
+                memberService.searchMemberList(memberDto)
         );
-        ///보드 연동후 사용할 코드 memberStatistics
-//        model.addAttribute(
-//        "memberList",
-//        memberService.memberStatistics());
+
+        model.addAttribute("search", memberDto);
+        model.addAttribute("currentPage", memberDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
 
         return "admin/member-list";
     }

@@ -142,4 +142,26 @@ public class MemberService {
         return memberDao.findAllMembers();
     }
 
+    public List<MemberDto> searchMemberList(MemberDto memberDto){
+
+        if(memberDto.getPage() == null || memberDto.getPage() < 1){
+            memberDto.setPage(1);
+        }
+
+        if(memberDto.getSize() == null || memberDto.getSize() < 1){
+            memberDto.setSize(10);
+        }
+
+        int offset =
+                (memberDto.getPage() - 1) * memberDto.getSize();
+
+        memberDto.setOffset(offset);
+
+        return memberDao.searchMemberList(memberDto);
+    }
+
+    public int countSearchMemberList(MemberDto memberDto){
+        return memberDao.countSearchMemberList(memberDto);
+    }
+
 }
