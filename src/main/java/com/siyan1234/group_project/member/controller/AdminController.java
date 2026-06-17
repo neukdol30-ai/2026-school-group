@@ -81,15 +81,27 @@ public class AdminController {
             return "redirect:/";
         }
 
+        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+            inquiryDto.setPage(1);
+        }
+
+        inquiryDto.setSize(10);
+
+        int totalCount =
+                inquiryService.countSearchInquiryList(inquiryDto);
+
+        int totalPage =
+                (int) Math.ceil((double) totalCount / inquiryDto.getSize());
+
         model.addAttribute(
                 "inquiryList",
                 inquiryService.searchInquiryList(inquiryDto)
         );
 
-        model.addAttribute(
-                "search",
-                inquiryDto
-        );
+        model.addAttribute("search", inquiryDto);
+        model.addAttribute("currentPage", inquiryDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
 
         return "admin/inquiry-list";
     }
