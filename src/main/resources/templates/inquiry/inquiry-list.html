@@ -148,6 +148,34 @@
 
             </table>
 
+            <div class="flex justify-center mt-6"
+                 th:if="${totalPage > 0}">
+
+                <div class="join">
+
+                    <a class="join-item btn"
+                       th:classappend="${currentPage == 1} ? ' btn-disabled'"
+                       th:href="@{/inquiry/list(page=${currentPage - 1})}">
+                        이전
+                    </a>
+
+                    <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                       class="join-item btn"
+                       th:classappend="${i == currentPage} ? ' btn-active'"
+                       th:text="${i}"
+                       th:href="@{/inquiry/list(page=${i})}">
+                    </a>
+
+                    <a class="join-item btn"
+                       th:classappend="${currentPage == totalPage} ? ' btn-disabled'"
+                       th:href="@{/inquiry/list(page=${currentPage + 1})}">
+                        다음
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>

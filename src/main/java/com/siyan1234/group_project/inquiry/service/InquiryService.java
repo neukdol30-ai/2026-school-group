@@ -129,4 +129,26 @@ public class InquiryService {
                 memberNo
         );
     }
+
+    public List<InquiryDto> findMyInquiryPage(InquiryDto inquiryDto){
+
+        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+            inquiryDto.setPage(1);
+        }
+
+        if(inquiryDto.getSize() == null || inquiryDto.getSize() < 1){
+            inquiryDto.setSize(10);
+        }
+
+        int offset =
+                (inquiryDto.getPage() - 1) * inquiryDto.getSize();
+
+        inquiryDto.setOffset(offset);
+
+        return inquiryDao.findMyInquiryPage(inquiryDto);
+    }
+
+    public int countMyInquiryList(Integer memberNo){
+        return inquiryDao.countMyInquiryList(memberNo);
+    }
 }

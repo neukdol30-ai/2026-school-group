@@ -86,6 +86,7 @@ public class InquiryController {
 
     @GetMapping("/list")
     public String myInquiryList(
+            InquiryDto inquiryDto,
             HttpSession session,
             Model model){
 
@@ -96,12 +97,34 @@ public class InquiryController {
             return "redirect:/member/login";
         }
 
+        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+            inquiryDto.setPage(1);
+        }
+
+        inquiryDto.setSize(10);
+
+        inquiryDto.setMemberNo(
+                loginUser.getNo()
+        );
+
+        int totalCount =
+                inquiryService.countMyInquiryList(
+                        loginUser.getNo()
+                );
+
+        int totalPage =
+                (int) Math.ceil(
+                        (double) totalCount / inquiryDto.getSize()
+                );
+
         model.addAttribute(
                 "inquiryList",
-                inquiryService.findMyInquiryList(
-                        loginUser.getNo()
-                )
+                inquiryService.findMyInquiryPage(inquiryDto)
         );
+
+        model.addAttribute("currentPage", inquiryDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
 
         return "inquiry/inquiry-list";
     }
