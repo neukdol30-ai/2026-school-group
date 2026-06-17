@@ -163,5 +163,32 @@ public class AdminController {
                 + dto.getInquiryNo()
                 + "&success=true";
     }
+
+    @PostMapping("/inquiry-answer-update")
+    public String updateAnswer(
+            InquiryAnswerDto dto){
+
+        if(dto == null
+                || dto.getNo() == null
+                || dto.getInquiryNo() == null
+                || dto.getContent() == null
+                || dto.getContent().trim().isEmpty()){
+
+            return "redirect:/admin/inquiry-list";
+        }
+
+        int result =
+                inquiryService.updateAnswer(dto);
+
+        if(result <= 0){
+            return "redirect:/admin/inquiry-detail?no="
+                    + dto.getInquiryNo()
+                    + "&error=answerUpdateFail";
+        }
+
+        return "redirect:/admin/inquiry-detail?no="
+                + dto.getInquiryNo()
+                + "&success=answerUpdate";
+    }
 }
 

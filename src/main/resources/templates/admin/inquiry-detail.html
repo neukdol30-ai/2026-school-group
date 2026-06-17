@@ -140,7 +140,7 @@
                 관리자 답변
             </h2>
 
-            <!-- 답변 완료 -->
+            <!-- 답변 완료 / 수정 -->
 
             <div th:if="${answer != null}"
                  class="card bg-base-200 mt-4">
@@ -151,13 +151,58 @@
                         답변 완료
                     </div>
 
-                    <p style="white-space: pre-line;"
-                       th:text="${answer.content}">
-                    </p>
+                    <form action="/admin/inquiry-answer-update"
+                          method="post">
 
-                    <div class="text-sm text-gray-500 mt-3"
-                         th:text="${#temporals.format(answer.regDate,'yyyy-MM-dd HH:mm')}">
-                    </div>
+                        <input type="hidden"
+                               name="no"
+                               th:value="${answer.no}">
+
+                        <input type="hidden"
+                               name="inquiryNo"
+                               th:value="${inquiry.no}">
+
+                        <label class="label">
+                <span class="label-text">
+                    답변 내용
+                </span>
+                        </label>
+
+                        <textarea name="content"
+                                  rows="8"
+                                  required
+                                  class="textarea textarea-bordered w-full"
+                                  th:text="${answer.content}">
+            </textarea>
+
+                        <div class="text-sm text-gray-500 mt-3">
+
+                <span>
+                    등록일 :
+                </span>
+
+                            <span th:text="${#temporals.format(answer.regDate,'yyyy-MM-dd HH:mm')}">
+                </span>
+
+                            <span th:if="${answer.updateDate != null}">
+                    / 수정일 :
+                </span>
+
+                            <span th:if="${answer.updateDate != null}"
+                                  th:text="${#temporals.format(answer.updateDate,'yyyy-MM-dd HH:mm')}">
+                </span>
+
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary mt-4"
+                                onclick="return confirm('답변을 수정하시겠습니까?');">
+
+                            답변 수정
+
+                        </button>
+
+                    </form>
 
                 </div>
 

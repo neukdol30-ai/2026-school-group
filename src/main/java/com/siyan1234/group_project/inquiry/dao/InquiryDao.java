@@ -36,4 +36,6 @@ public interface InquiryDao {
     List<InquiryDto> findMyInquiryPage(InquiryDto inquiryDto);
 
     int countMyInquiryList(Integer memberNo);
+
+    int updateAnswer(InquiryAnswerDto answerDto);
 }

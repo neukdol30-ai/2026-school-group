@@ -26,16 +26,8 @@ public interface MemberDao {
     int insertWithdrawReason(
             @Param("memberId") String memberId,
             @Param("reason") String reason);
-
-    List<MemberDto> searchMemberList(MemberDto memberDto);
-
-    int countSearchMemberList(MemberDto memberDto);
-
     List<MemberAdminDto> searchMemberStatistics(MemberAdminDto memberAdminDto);
 
     int countMemberStatistics(MemberAdminDto memberAdminDto);
-
-    ////보드 연동전 사용할 코드
-    List<MemberDto> findAllMembers();
 
 }

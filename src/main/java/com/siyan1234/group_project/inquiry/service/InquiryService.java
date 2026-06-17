@@ -18,41 +18,41 @@ public class InquiryService {
     /* =========================
        문의 등록
     ========================= */
-    public int insertInquiry(InquiryDto inquiryDto){
+    public int insertInquiry(InquiryDto inquiryDto) {
         return inquiryDao.insertInquiry(inquiryDto);
     }
 
     /* =========================
        사용자 문의 목록
     ========================= */
-    public List<InquiryDto> findMyInquiryList(Integer memberNo){
+    public List<InquiryDto> findMyInquiryList(Integer memberNo) {
         return inquiryDao.findMyInquiryList(memberNo);
     }
 
     /* =========================
        문의 상세
     ========================= */
-    public InquiryDto findByNo(Integer no){
+    public InquiryDto findByNo(Integer no) {
         return inquiryDao.findByNo(no);
     }
 
     /* =========================
        관리자 전체 문의 목록
     ========================= */
-    public List<InquiryDto> findAllInquiry(){
+    public List<InquiryDto> findAllInquiry() {
         return inquiryDao.findAllInquiry();
     }
 
     /* =========================
    관리자 문의 검색 + 페이징 목록
 ========================= */
-    public List<InquiryDto> searchInquiryList(InquiryDto inquiryDto){
+    public List<InquiryDto> searchInquiryList(InquiryDto inquiryDto) {
 
-        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+        if (inquiryDto.getPage() == null || inquiryDto.getPage() < 1) {
             inquiryDto.setPage(1);
         }
 
-        if(inquiryDto.getSize() == null || inquiryDto.getSize() < 1){
+        if (inquiryDto.getSize() == null || inquiryDto.getSize() < 1) {
             inquiryDto.setSize(10);
         }
 
@@ -67,7 +67,7 @@ public class InquiryService {
     /* =========================
        관리자 문의 검색 결과 개수
     ========================= */
-    public int countSearchInquiryList(InquiryDto inquiryDto){
+    public int countSearchInquiryList(InquiryDto inquiryDto) {
         return inquiryDao.countSearchInquiryList(inquiryDto);
     }
 
@@ -75,7 +75,7 @@ public class InquiryService {
        답변 등록 + 상태 변경 (핵심)
     ========================= */
     @Transactional
-    public int insertAnswer(InquiryAnswerDto answerDto){
+    public int insertAnswer(InquiryAnswerDto answerDto) {
 
         InquiryAnswerDto answer =
                 inquiryDao.findAnswerByInquiryNo(
@@ -83,7 +83,7 @@ public class InquiryService {
                 );
 
         // 이미 답변 존재
-        if(answer != null){
+        if (answer != null) {
             return 0;
         }
 
@@ -93,7 +93,7 @@ public class InquiryService {
                 );
 
         // 문의 상태 변경 실패
-        if(updateResult <= 0){
+        if (updateResult <= 0) {
             throw new RuntimeException(
                     "문의 상태 변경 실패"
             );
@@ -105,7 +105,7 @@ public class InquiryService {
                 );
 
         // 답변 등록 실패
-        if(insertResult <= 0){
+        if (insertResult <= 0) {
             throw new RuntimeException(
                     "답변 등록 실패"
             );
@@ -117,12 +117,13 @@ public class InquiryService {
     /* =========================
        답변 조회
     ========================= */
-    public InquiryAnswerDto findAnswerByInquiryNo(Integer inquiryNo){
+    public InquiryAnswerDto findAnswerByInquiryNo(Integer inquiryNo) {
         return inquiryDao.findAnswerByInquiryNo(inquiryNo);
     }
+
     public InquiryDto findMyInquiry(
             Integer no,
-            Integer memberNo){
+            Integer memberNo) {
 
         return inquiryDao.findMyInquiry(
                 no,
@@ -130,13 +131,13 @@ public class InquiryService {
         );
     }
 
-    public List<InquiryDto> findMyInquiryPage(InquiryDto inquiryDto){
+    public List<InquiryDto> findMyInquiryPage(InquiryDto inquiryDto) {
 
-        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+        if (inquiryDto.getPage() == null || inquiryDto.getPage() < 1) {
             inquiryDto.setPage(1);
         }
 
-        if(inquiryDto.getSize() == null || inquiryDto.getSize() < 1){
+        if (inquiryDto.getSize() == null || inquiryDto.getSize() < 1) {
             inquiryDto.setSize(10);
         }
 
@@ -148,7 +149,27 @@ public class InquiryService {
         return inquiryDao.findMyInquiryPage(inquiryDto);
     }
 
-    public int countMyInquiryList(Integer memberNo){
+    public int countMyInquiryList(Integer memberNo) {
         return inquiryDao.countMyInquiryList(memberNo);
+    }
+
+    /* =========================
+   답변 수정
+========================= */
+    public int updateAnswer(InquiryAnswerDto answerDto) {
+
+        if (answerDto == null
+                || answerDto.getNo() == null) {
+
+            return 0;
+        }
+
+        if (answerDto.getContent() == null
+                || answerDto.getContent().trim().isEmpty()) {
+
+            return 0;
+        }
+
+        return inquiryDao.updateAnswer(answerDto);
     }
 }

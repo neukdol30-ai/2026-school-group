@@ -190,6 +190,16 @@
 
     </select>
 
+    <update id="updateAnswer">
+
+        UPDATE INQUIRY_ANSWER
+        SET CONTENT = #{content},
+        UPDATE_DATE = SYSDATE
+        WHERE NO = #{no}
+        AND IS_DELETED = 'N'
+
+    </update>
+
     <!-- =========================
          상태 변경
     ========================= -->
