@@ -1,5 +1,9 @@
 package com.siyan1234.group_project.member.controller;
 
+import com.siyan1234.group_project.board.dto.BoardDto;
+import com.siyan1234.group_project.board.service.BoardService;
+import com.siyan1234.group_project.comment.dto.CommentDto;
+import com.siyan1234.group_project.comment.service.CommentService;
 import com.siyan1234.group_project.inquiry.dto.InquiryAnswerDto;
 import com.siyan1234.group_project.inquiry.dto.InquiryDto;
 import com.siyan1234.group_project.inquiry.service.InquiryService;
@@ -21,6 +25,9 @@ public class AdminController {
 
     private final MemberService memberService;
     private final InquiryService inquiryService;
+    // 필드 추가
+    private final BoardService boardService;
+    private final CommentService commentService;
 
     /* =========================
        공통 ADMIN 체크
@@ -173,5 +180,96 @@ public class AdminController {
                 + dto.getInquiryNo()
                 + "&success=true";
     }
+
+    // 게시글 목록 (관리자)
+    @GetMapping("/board-list")
+    public String boardList(
+            BoardDto boardDto,
+            HttpSession session,
+            Model model) {
+
+        if (!isAdmin(session)) {
+            return "redirect:/";
+        }
+
+        if (boardDto.getPage() == null || boardDto.getPage() < 1) {
+            boardDto.setPage(1);
+        }
+
+        boardDto.setSize(10);
+
+        int totalCount = boardService.countAdminBoardList(boardDto);
+        int totalPage = (int) Math.ceil((double) totalCount / boardDto.getSize());
+
+        model.addAttribute("boardList", boardService.searchAdminBoardList(boardDto));
+        model.addAttribute("search", boardDto);
+        model.addAttribute("currentPage", boardDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
+        return "admin/board-list";
+    }
+
+    // 게시글 삭제 (관리자)
+    @GetMapping("/board-delete")
+    public String boardDelete(
+            @RequestParam int no,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return "redirect:/member/login";
+        }
+
+        boardService.adminDeletedBoard(no);
+
+        return "redirect:/admin/board-list";
+    }
+
+    // 댓글 목록 (관리자)
+    @GetMapping("/comment-list")
+    public String commentList(
+            CommentDto commentDto,
+            HttpSession session,
+            Model model) {
+
+        if (!isAdmin(session)) {
+            return "redirect:/";
+        }
+
+        if (commentDto.getPage() == null || commentDto.getPage() < 1) {
+            commentDto.setPage(1);
+        }
+
+        commentDto.setSize(10);
+
+        int totalCount = commentService.countAdminCommentList(commentDto);
+
+        int totalPage = (int) Math.ceil((double) totalCount / commentDto.getSize());
+
+        model.addAttribute("commentList", commentService.searchAdminCommentList(commentDto));
+        model.addAttribute("search", commentDto);
+        model.addAttribute("currentPage", commentDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
+
+        return "admin/comment-list";
+    }
+
+    /* =========================
+   댓글 삭제 (관리자)
+========================= */
+    @GetMapping("/comment-delete")
+    public String commentDelete(
+            @RequestParam int no,
+            HttpSession session) {
+
+        if (!isAdmin(session)) {
+            return "redirect:/member/login";
+        }
+
+        commentService.adminDeleteComment(no);
+
+        return "redirect:/admin/comment-list";
+    }
+
 }
 
