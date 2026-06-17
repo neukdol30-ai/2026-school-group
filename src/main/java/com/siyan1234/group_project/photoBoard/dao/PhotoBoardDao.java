@@ -181,14 +181,14 @@ public class PhotoBoardDao {
     public void insertLike(int boardNo, int memberNo) {
         String sql = """
                 INSERT INTO board_like (
-                    no,
                     board_no,
-                    member_no
+                    member_no,
+                    regdate
                 )
                 VALUES (
-                    board_like_seq.nextval,
                     ?,
-                    ?
+                    ?,
+                    SYSDATE
                 )
                 """;
 
