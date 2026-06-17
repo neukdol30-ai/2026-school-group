@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 관리</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+
+        <div class="card-body">
+
+            <div class="flex justify-between items-center">
+
+                <h1 class="text-3xl font-bold">게시글 관리</h1>
+
+                <a href="/admin" class="btn btn-primary">관리자 홈</a>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- 검색 폼: GET 방식으로 같은 페이지에 조건 다시 요청 -->
+            <form method="get" action="/admin/board-list" class="flex flex-wrap gap-2 mb-4">
+
+                <select name="searchBoardType" class="select select-bordered">
+                    <option value="" th:selected="${search.searchBoardType == null}">전체 게시판</option>
+                    <option value="FREE" th:selected="${search.searchBoardType == 'FREE'}">자유게시판</option>
+                    <option value="REVIEW" th:selected="${search.searchBoardType == 'REVIEW'}">인증게시판</option>
+                </select>
+
+                <select name="searchDeleted" class="select select-bordered">
+                    <option value="" th:selected="${search.searchDeleted == null}">전체 상태</option>
+                    <option value="N" th:selected="${search.searchDeleted == 'N'}">정상</option>
+                    <option value="Y" th:selected="${search.searchDeleted == 'Y'}">삭제됨</option>
+                </select>
+
+                <select name="searchType" class="select select-bordered">
+                    <option value="title" th:selected="${search.searchType == 'title'}">제목</option>
+                    <option value="memberId" th:selected="${search.searchType == 'memberId'}">작성자 ID</option>
+                </select>
+
+                <input type="text" name="keyword" th:value="${search.keyword}"
+                       placeholder="검색어" class="input input-bordered flex-1">
+
+                <button type="submit" class="btn btn-primary">검색</button>
+
+            </form>
+
+            <div class="overflow-x-auto">
+
+                <table class="table table-zebra">
+
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>게시판</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>조회수</th>
+                        <th>추천수</th>
+                        <th>상태</th>
+                        <th>작성일</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:if="${#lists.isEmpty(boardList)}">
+                        <td colspan="9" class="text-center py-10">검색 결과가 없습니다.</td>
+                    </tr>
+
+                    <tr th:each="board : ${boardList}">
+
+                        <td th:text="${board.no}"></td>
+
+                        <td>
+                            <span class="badge badge-primary" th:if="${board.boardType == 'FREE'}">자유게시판</span>
+                            <span class="badge badge-secondary" th:if="${board.boardType == 'REVIEW'}">인증게시판</span>
+                        </td>
+
+                        <td th:text="${board.title}"></td>
+                        <td th:text="${board.memberId}"></td>
+                        <td th:text="${board.hit}"></td>
+                        <td th:text="${board.likeCount}"></td>
+
+                        <td>
+                            <span class="badge badge-success" th:if="${board.isDeleted == 'N'}">정상</span>
+                            <span class="badge badge-error" th:if="${board.isDeleted == 'Y'}">삭제됨</span>
+                        </td>
+
+                        <td th:text="${board.regDate}"></td>
+
+                        <td>
+                            <!-- 이미 삭제된 글은 삭제 버튼 숨김 -->
+                            <a th:if="${board.isDeleted == 'N'}"
+                               th:href="@{/admin/board-delete(no=${board.no})}"
+                               onclick="return confirm('이 게시글을 삭제 처리하시겠습니까?')"
+                               class="btn btn-sm btn-error">
+                                삭제
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <!-- 페이징: 검색 조건 유지한 채 페이지 번호만 바꿔서 이동 -->
+            <div class="join mt-5" th:if="${totalPage > 0}">
+
+                <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                   th:href="@{/admin/board-list(
+                                page=${i},
+                                searchType=${search.searchType},
+                                keyword=${search.keyword},
+                                searchBoardType=${search.searchBoardType},
+                                searchDeleted=${search.searchDeleted})}"
+                   th:class="${i == currentPage} ? 'join-item btn btn-primary' : 'join-item btn'"
+                   th:text="${i}">
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -161,49 +161,9 @@ DROP SEQUENCE board_comment_seq;
 DROP SEQUENCE inquiry_seq;
 DROP SEQUENCE inquiry_answer_seq;
 
---admin 계정--
-INSERT INTO MEMBER (
-    MEMBER_ID,
-    PASSWORD,
-    NAME,
-    GENDER,
-    BIRTH_DATE,
-    PHONE,
-    ADDRESS,
-    DETAIL_ADDRESS,
-    ROLE
-) VALUES (
-             'admin',
-             'qwer1234',
-             '관리자',
-             'M',
-             DATE '1990-01-01',
-             '010-1111-1111',
-             '서울특별시 강남구',
-             '1층',
-             'ADMIN'
-         );
---user 계정--
-INSERT INTO MEMBER (
-    MEMBER_ID,
-    PASSWORD,
-    NAME,
-    GENDER,
-    BIRTH_DATE,
-    PHONE,
-    ADDRESS,
-    DETAIL_ADDRESS,
-    ROLE
-) VALUES (
-             'user',
-             'qwer1234',
-             '홍길동',
-             'M',
-             DATE '2000-05-15',
-             '010-2222-2222',
-             '서울특별시 송파구',
-             '101동 1001호',
-             'USER'
-         );
 
+-- admin 계정으로 회원 가입 후 아래 SQL 진행
+UPDATE MEMBER
+SET ROLE = 'ADMIN'
+WHERE MEMBER_ID = 'admin';
 COMMIT;
