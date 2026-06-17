@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.siyan1234.group_project.member.dto.MemberAdminDto;
+import com.siyan1234.group_project.board.dto.BoardDto;
+import com.siyan1234.group_project.board.service.BoardService;
+import com.siyan1234.group_project.comment.dto.CommentDto;
+import com.siyan1234.group_project.comment.service.CommentService;
 
 @Controller
 @RequestMapping("/admin")
@@ -22,6 +26,8 @@ public class AdminController {
 
     private final MemberService memberService;
     private final InquiryService inquiryService;
+    private final BoardService boardService;
+    private final CommentService commentService;
 
     /* =========================
        관리자 메인
@@ -189,6 +195,103 @@ public class AdminController {
         return "redirect:/admin/inquiry-detail?no="
                 + dto.getInquiryNo()
                 + "&success=answerUpdate";
+    }
+    @GetMapping("/board-list")
+    public String boardList(
+            BoardDto boardDto,
+            Model model) {
+
+        if(boardDto.getPage() == null || boardDto.getPage() < 1){
+            boardDto.setPage(1);
+        }
+
+        boardDto.setSize(10);
+
+        int totalCount =
+                boardService.countAdminBoardList(boardDto);
+
+        int totalPage =
+                (int) Math.ceil(
+                        (double) totalCount / boardDto.getSize()
+                );
+
+        model.addAttribute(
+                "boardList",
+                boardService.searchAdminBoardList(boardDto)
+        );
+
+        model.addAttribute("search", boardDto);
+        model.addAttribute("currentPage", boardDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
+
+        return "admin/board-list";
+    }
+
+    @PostMapping("/board-delete")
+    public String boardDelete(Integer no){
+
+        if(no == null){
+            return "redirect:/admin/board-list";
+        }
+
+        boardService.adminDeleteBoard(no);
+
+        return "redirect:/admin/board-list";
+    }
+    @GetMapping("/comment-list")
+    public String commentList(
+            CommentDto commentDto,
+            Model model) {
+
+        if(commentDto.getPage() == null || commentDto.getPage() < 1){
+            commentDto.setPage(1);
+        }
+
+        commentDto.setSize(10);
+
+        int totalCount =
+                commentService.countAdminCommentList(commentDto);
+
+        int totalPage =
+                (int) Math.ceil(
+                        (double) totalCount / commentDto.getSize()
+                );
+
+        model.addAttribute(
+                "commentList",
+                commentService.searchAdminCommentList(commentDto)
+        );
+
+        model.addAttribute("search", commentDto);
+        model.addAttribute("currentPage", commentDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
+
+        return "admin/comment-list";
+    }
+
+    @PostMapping("/comment-delete")
+    public String commentDelete(Integer no){
+
+        if(no == null){
+            return "redirect:/admin/comment-list";
+        }
+
+        commentService.adminDeleteComment(no);
+
+        return "redirect:/admin/comment-list";
+    }
+
+    @GetMapping("/board-detail")
+    public String boardDetail(
+            @RequestParam Integer no,
+            Model model) {
+
+        model.addAttribute("board", boardService.findAdminBoardByNo(no));
+        model.addAttribute("commentList", commentService.findAdminCommentListByBoardNo(no));
+
+        return "admin/board-detail";
     }
 }
 
