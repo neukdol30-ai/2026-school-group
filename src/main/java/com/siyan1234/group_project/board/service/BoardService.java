@@ -66,4 +66,8 @@ public class BoardService {
             boardDto.setRating(Math.round(avg * 10) / 10.0);
         }
     }
+
+    public List<BoardDto> recentPosts() {
+        return boardDao.recentPosts();
+    }
 }

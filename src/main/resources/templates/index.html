@@ -326,21 +326,11 @@
             <h2>최근 게시글</h2>
 
             <ul class="post-list">
-                <li>
-                    <a href="#">첫 번째 자유게시판 글입니다.</a>
-                    <span>06.12</span>
-                </li>
-                <li>
-                    <a href="#">인증게시판 테스트 글입니다.</a>
-                    <span>06.12</span>
-                </li>
-                <li>
-                    <a href="#">맛집모아모아 이용 안내입니다.</a>
-                    <span>06.11</span>
-                </li>
-                <li>
-                    <a href="#">내정보 페이지는 로그인 후 이용 가능합니다.</a>
-                    <span>06.10</span>
+                <li th:each="post : ${recentPosts}">
+                    <a th:href="@{/board/view(no=${post.no})}"
+                       th:text="${post.title}">
+                    </a>
+                    <span th:text="${#temporals.format(post.regDate, 'MM.dd')}"></span>
                 </li>
             </ul>
         </section>
