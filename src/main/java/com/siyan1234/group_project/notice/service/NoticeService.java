@@ -17,13 +17,11 @@ public class NoticeService {
         return noticeDao.findAll();
     }
 
-    // 조회수 증가 O
     public NoticeDto getNotice(int no) {
         noticeDao.increaseHit(no);
         return noticeDao.findByNo(no);
     }
 
-    // 조회수 증가 X
     public NoticeDto findByNo(int no) {
         return noticeDao.findByNo(no);
     }

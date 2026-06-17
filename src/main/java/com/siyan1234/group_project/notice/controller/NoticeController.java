@@ -19,8 +19,7 @@ public class NoticeController {
     @GetMapping({"", "/", "/list"})
     public String list(Model model, HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -36,8 +35,7 @@ public class NoticeController {
                        Model model,
                        HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -51,8 +49,7 @@ public class NoticeController {
     @GetMapping("/write")
     public String write(HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -65,8 +62,7 @@ public class NoticeController {
     public String writeProcess(@ModelAttribute NoticeDto noticeDto,
                                HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -84,8 +80,7 @@ public class NoticeController {
                        Model model,
                        HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -100,8 +95,7 @@ public class NoticeController {
     public String editProcess(@ModelAttribute NoticeDto noticeDto,
                               HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -116,8 +110,7 @@ public class NoticeController {
     public String delete(@RequestParam("no") int no,
                          HttpSession session) {
 
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
