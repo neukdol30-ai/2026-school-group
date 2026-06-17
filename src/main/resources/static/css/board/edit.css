@@ -1,0 +1,104 @@
+/* =========================
+   Board Edit / Write Form
+========================= */
+
+.write-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 36px 40px;
+}
+
+.write-title {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 22px;
+    margin-bottom: 26px;
+}
+
+.write-title h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.write-title p {
+    color: #64748b;
+}
+
+.form-control {
+    margin-bottom: 18px;
+}
+
+.form-control label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+}
+
+/* edit 화면 폼 내부 input만 적용 */
+.write-card input,
+.write-card select,
+.write-card textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-size: 15px;
+    outline: none;
+}
+
+.write-card input:focus,
+.write-card select:focus,
+.write-card textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.write-card textarea {
+    min-height: 300px;
+    resize: vertical;
+    line-height: 1.7;
+}
+
+.bottom-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #eee;
+}
+
+.btn {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-list {
+    background-color: #111827;
+    color: #fff;
+}
+
+.btn-cancel {
+    background-color: #f1f5f9;
+    color: #334155;
+}
+
+.btn-submit {
+    background-color: #2563eb;
+    color: #fff;
+}
+
+.right-actions {
+    display: flex;
+    gap: 10px;
+}
