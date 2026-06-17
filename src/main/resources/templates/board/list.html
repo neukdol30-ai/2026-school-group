@@ -435,13 +435,14 @@
 
             <div class="board-table">
                 <div class="board-head"
-                     style="grid-template-columns:80px 100px 1fr 120px 100px 140px;">
+                     style="grid-template-columns:80px 100px 1fr 120px 90px 90px 140px;">
 
                     <div>번호</div>
                     <div>머릿말</div>
                     <div>제목</div>
                     <div>작성자</div>
                     <div>조회수</div>
+                    <div>추천수</div>
                     <div>작성일</div>
 
                 </div>
@@ -457,7 +458,7 @@
 
                     <div th:each="item : ${boardList}"
                          class="board-row"
-                         style="grid-template-columns:80px 100px 1fr 120px 100px 140px;">
+                         style="grid-template-columns:80px 100px 1fr 120px 90px 90px 140px;">
 
                         <div class="board-no"
                              th:text="${item.no}">
@@ -484,7 +485,11 @@
                         </div>
 
                         <div class="board-data"
-                             th:text="${item.regDate}">
+                             th:text="${item.likeCount}">
+                        </div>
+
+                        <div class="board-data"
+                             th:text="${#temporals.format(item.regDate,'yyyy-MM-dd')}">
                         </div>
 
                     </div>
