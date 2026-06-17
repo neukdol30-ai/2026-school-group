@@ -81,7 +81,18 @@ public class BoardController {
             return "redirect:/member/login";
         }
 
-        model.addAttribute("board", boardService.getBoard(no)); // 수정 화면은 조회수 올라가면 X => getBoard 사용
+        BoardDto board = boardService.getBoard(no);
+
+        if (board == null) {
+            return "redirect:/board/list";
+        }
+
+        if (board.getMemberNo() != loginUser.getNo()) {
+            return "redirect:/board/view?no=" + no;
+        }
+
+        model.addAttribute("board", board);
+
         return "board/edit";
     }
 
@@ -91,11 +102,14 @@ public class BoardController {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
-        if(loginUser == null) {
+        if (loginUser == null) {
             return "redirect:/member/login";
         }
 
+        boardDto.setMemberNo(loginUser.getNo());
+
         boardService.editBoard(boardDto);
+
         return "redirect:/board/view?no=" + boardDto.getNo();
     }
 

@@ -15,10 +15,10 @@ public interface LikeDao {
     void deleteLike(@Param("boardNo") int boardNo,
                     @Param("memberNo") int memberNo);
 
-    void incrementLikeCount(int boardNO);
+    void incrementLikeCount(@Param("boardNo") int boardNo);
 
-    void decrementLikeCount(int boardNo);
+    void decrementLikeCount(@Param("boardNo") int boardNo);
 
-    int getLikeCount(int boardNo);
+    int getLikeCount(@Param("boardNo") int boardNo);
 
 }
