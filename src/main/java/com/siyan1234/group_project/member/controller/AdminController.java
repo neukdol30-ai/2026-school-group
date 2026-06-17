@@ -23,26 +23,10 @@ public class AdminController {
     private final InquiryService inquiryService;
 
     /* =========================
-       공통 ADMIN 체크
-    ========================= */
-    private boolean isAdmin(HttpSession session) {
-
-        MemberDto loginUser =
-                (MemberDto) session.getAttribute("loginUser");
-
-        return loginUser != null && "ADMIN".equals(loginUser.getRole());
-    }
-
-    /* =========================
        관리자 메인
     ========================= */
     @GetMapping("")
-    public String adminPage(HttpSession session) {
-
-        if (!isAdmin(session)) {
-            return "redirect:/member/login";
-        }
-
+    public String adminPage() {
         return "admin/admin";
     }
 
@@ -52,13 +36,7 @@ public class AdminController {
     @GetMapping("/member-list")
     public String memberList(
             MemberDto memberDto,
-            HttpSession session,
             Model model) {
-
-        if (!isAdmin(session)) {
-            return "redirect:/";
-        }
-
         if(memberDto.getPage() == null || memberDto.getPage() < 1){
             memberDto.setPage(1);
         }
@@ -90,12 +68,7 @@ public class AdminController {
     @GetMapping("/inquiry-list")
     public String inquiryList(
             InquiryDto inquiryDto,
-            HttpSession session,
             Model model) {
-
-        if (!isAdmin(session)) {
-            return "redirect:/";
-        }
 
         if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
             inquiryDto.setPage(1);
@@ -128,14 +101,8 @@ public class AdminController {
     @GetMapping("/inquiry-detail")
     public String inquiryDetail(
             @RequestParam(required = false) Integer no,
-            HttpSession session,
             Model model
     ) {
-
-        if (!isAdmin(session)) {
-            return "redirect:/";
-        }
-
         if (no == null) {
             return "redirect:/admin/inquiry-list";
         }
@@ -156,10 +123,6 @@ public class AdminController {
     public String insertAnswer(
             InquiryAnswerDto dto,
             HttpSession session){
-
-        if (!isAdmin(session)) {
-            return "redirect:/member/login";
-        }
 
         if(dto == null
                 || dto.getInquiryNo() == null
