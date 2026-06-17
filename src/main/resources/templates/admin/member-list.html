@@ -129,6 +129,9 @@
                         <th>성별</th>
                         <th>전화번호</th>
                         <th>권한</th>
+                        <th>게시글 수</th>
+                        <th>댓글 수</th>
+                        <th>좋아요 수</th>
                         <th>탈퇴여부</th>
                         <th>가입일</th>
                     </tr>
@@ -183,6 +186,12 @@
                             </span>
 
                         </td>
+
+                        <td th:text="${member.boardCount}"></td>
+
+                        <td th:text="${member.commentCount}"></td>
+
+                        <td th:text="${member.likeCount}"></td>
 
                         <td th:text="${member.regDate}"></td>
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.siyan1234.group_project.member.dto.MemberAdminDto;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,27 +36,37 @@ public class AdminController {
     ========================= */
     @GetMapping("/member-list")
     public String memberList(
-            MemberDto memberDto,
+            MemberAdminDto memberAdminDto,
             Model model) {
-        if(memberDto.getPage() == null || memberDto.getPage() < 1){
-            memberDto.setPage(1);
+
+        if(memberAdminDto.getPage() == null
+                || memberAdminDto.getPage() < 1){
+
+            memberAdminDto.setPage(1);
         }
 
-        memberDto.setSize(10);
+        memberAdminDto.setSize(10);
 
         int totalCount =
-                memberService.countSearchMemberList(memberDto);
+                memberService.countMemberStatistics(
+                        memberAdminDto
+                );
 
         int totalPage =
-                (int) Math.ceil((double) totalCount / memberDto.getSize());
+                (int) Math.ceil(
+                        (double) totalCount
+                                / memberAdminDto.getSize()
+                );
 
         model.addAttribute(
                 "memberList",
-                memberService.searchMemberList(memberDto)
+                memberService.searchMemberStatistics(
+                        memberAdminDto
+                )
         );
 
-        model.addAttribute("search", memberDto);
-        model.addAttribute("currentPage", memberDto.getPage());
+        model.addAttribute("search", memberAdminDto);
+        model.addAttribute("currentPage", memberAdminDto.getPage());
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("totalCount", totalCount);
 

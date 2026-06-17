@@ -31,8 +31,9 @@ public interface MemberDao {
 
     int countSearchMemberList(MemberDto memberDto);
 
-/// 보드 연동후 사용할 코드
-//    List<MemberAdminDto> memberStatistics();
+    List<MemberAdminDto> searchMemberStatistics(MemberAdminDto memberAdminDto);
+
+    int countMemberStatistics(MemberAdminDto memberAdminDto);
 
     ////보드 연동전 사용할 코드
     List<MemberDto> findAllMembers();

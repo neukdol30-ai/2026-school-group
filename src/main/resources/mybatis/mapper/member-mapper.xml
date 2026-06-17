@@ -97,39 +97,96 @@
         )
     </insert>
 
-    <!-- 보드 연동 후 memberStatistics 사용할 코드-->
-    <!--    <select id="memberStatistics"-->
-    <!--            resultType="MemberAdminDto">-->
+    <select id="searchMemberStatistics"
+            resultType="MemberAdminDto">
 
-    <!--        SELECT-->
-    <!--        M.NO,-->
-    <!--        M.MEMBER_ID,-->
-    <!--        M.NAME,-->
-    <!--        M.ROLE,-->
-    <!--        M.IS_DELETED,-->
+        SELECT
+        M.NO,
+        M.MEMBER_ID,
+        M.NAME,
+        M.GENDER,
+        M.PHONE,
+        M.ROLE,
+        M.IS_DELETED,
+        M.REGDATE,
 
-    <!--        (-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM BOARD B-->
-    <!--        WHERE B.MEMBER_NO = M.NO-->
-    <!--        ) AS BOARD_COUNT,-->
+        (
+        SELECT COUNT(*)
+        FROM BOARD B
+        WHERE B.MEMBER_NO = M.NO
+        AND B.IS_DELETED = 'N'
+        ) AS BOARD_COUNT,
 
-    <!--        (-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM BOARD_COMMENT C-->
-    <!--        WHERE C.MEMBER_NO = M.NO-->
-    <!--        ) AS COMMENT_COUNT,-->
+        (
+        SELECT COUNT(*)
+        FROM BOARD_COMMENT C
+        WHERE C.MEMBER_NO = M.NO
+        AND C.IS_DELETED = 'N'
+        ) AS COMMENT_COUNT,
 
-    <!--        (-->
-    <!--        SELECT COUNT(*)-->
-    <!--        FROM BOARD_LIKE L-->
-    <!--        WHERE L.MEMBER_NO = M.NO-->
-    <!--        ) AS LIKE_COUNT-->
+        (
+        SELECT COUNT(*)
+        FROM BOARD_LIKE L
+        WHERE L.MEMBER_NO = M.NO
+        ) AS LIKE_COUNT
 
-    <!--        FROM MEMBER M-->
+        FROM MEMBER M
+        WHERE 1 = 1
 
-    <!--        ORDER BY M.NO DESC-->
-    <!--    </select>-->
+        <if test="searchRole != null and searchRole != ''">
+            AND M.ROLE = #{searchRole}
+        </if>
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND M.IS_DELETED = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'memberId'
+          and keyword != null
+          and keyword != ''">
+            AND M.MEMBER_ID = #{keyword}
+        </if>
+
+        <if test="searchType == 'name'
+          and keyword != null
+          and keyword != ''">
+            AND M.NAME LIKE '%' || #{keyword} || '%'
+        </if>
+
+        ORDER BY M.NO DESC
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countMemberStatistics"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM MEMBER M
+        WHERE 1 = 1
+
+        <if test="searchRole != null and searchRole != ''">
+            AND M.ROLE = #{searchRole}
+        </if>
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND M.IS_DELETED = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'memberId'
+          and keyword != null
+          and keyword != ''">
+            AND M.MEMBER_ID = #{keyword}
+        </if>
+
+        <if test="searchType == 'name'
+          and keyword != null
+          and keyword != ''">
+            AND M.NAME LIKE '%' || #{keyword} || '%'
+        </if>
+
+    </select>
 
     <!-- 보드 연동 전 사용할 코드-->
     <select id="findAllMembers"
