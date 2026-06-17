@@ -52,6 +52,7 @@
             service_rating = #{serviceRating},
             update_date = SYSDATE
         WHERE no = #{no}
+            AND member_no = #{memberNo}
     </update>
     <!-- 글 삭제 -->
     <delete id="deleteBoard">
