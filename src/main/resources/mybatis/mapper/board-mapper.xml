@@ -69,4 +69,17 @@
             AND b.title LIKE '%' || #{keyword} || '%'
         </if>
     </select>
+    <!-- 홈 화면 최신 글 5건 -->
+    <select id="recentPosts" resultType="BoardDto">
+        SELECT b.no,
+               b.board_type,
+               b.title,
+               b.regdate,
+               m.name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.board_type IN ('FREE', 'REVIEW')
+        ORDER BY b.no DESC
+        FETCH FIRST 5 ROWS ONLY
+    </select>
 </mapper>

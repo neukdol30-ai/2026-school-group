@@ -26,5 +26,8 @@ public interface BoardDao {
     void deleteBoard(@Param("no") int no,
                      @Param("memberNo") int memberNo);
 
+    // 홈 화면 최신 글 5건 조회
+    List<BoardDto> recentPosts();
+
 }
 
