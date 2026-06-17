@@ -23,4 +23,29 @@ public class CommentService {
     public void deleteComment(int no, int memberNo) {
         commentDao.deleteComment(no, memberNo);
     }
+
+    public List<CommentDto> searchAdminCommentList(CommentDto commentDto) {
+
+        if (commentDto.getPage() == null || commentDto.getPage() < 1) {
+            commentDto.setPage(1);
+        }
+
+        if (commentDto.getSize() == null || commentDto.getSize() < 1) {
+            commentDto.setSize(10);
+        }
+
+        int offset = (commentDto.getPage() - 1) * commentDto.getSize();
+
+        commentDto.setOffset(offset);
+
+        return commentDao.searchAdminCommentList(commentDto);
+    }
+
+    public int countAdminCommentList(CommentDto commentDto) {
+        return commentDao.countAdminCommentList(commentDto);
+    }
+
+    public int adminDeleteComment(Integer no) {
+        return commentDao.adminDeleteComment(no);
+    }
 }
