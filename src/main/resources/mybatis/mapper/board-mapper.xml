@@ -9,6 +9,7 @@
         FROM board b
         JOIN member m ON b.member_no = m.NO
         WHERE b.board_type = 'FREE'
+        AND b.is_deleted = 'N'
         <if test="keyword != null and keyword != ''">
             AND b.title LIKE '%' || #{keyword} || '%'
         </if>
@@ -22,12 +23,14 @@
         FROM board b
         JOIN member m ON b.member_no = m.no
         WHERE b.no = #{no}
+        AND b.is_deleted = 'N'
     </select>
     <!-- 조회수 + 1 -->
     <update id="updateHit" parameterType="int">
         UPDATE board
         SET hit = hit + 1
         WHERE no = #{no}
+        AND is_deleted = 'N'
     </update>
     <!-- 글 저장 -->
     <insert id="writeBoard" parameterType="BoardDto">
@@ -65,6 +68,7 @@
         SELECT COUNT(*)
         FROM board b
         WHERE b.board_type = 'FREE'
+        AND b.is_deleted = 'N'
         <if test="keyword != null and keyword != ''">
             AND b.title LIKE '%' || #{keyword} || '%'
         </if>
@@ -79,6 +83,7 @@
         FROM board b
         JOIN member m ON b.member_no = m.no
         WHERE b.board_type IN ('FREE', 'REVIEW')
+        AND b.is_deleted = 'N'
         ORDER BY b.no DESC
         FETCH FIRST 5 ROWS ONLY
     </select>

@@ -288,10 +288,9 @@ public class AdminController {
             @RequestParam Integer no,
             Model model) {
 
-        model.addAttribute("board", boardService.findAdminBoardByNo(no));
-        model.addAttribute("commentList", commentService.findAdminCommentListByBoardNo(no));
+//        model.addAttribute("board", boardService.findAdminBoardByNo(no));
+//        model.addAttribute("commentList", commentService.findAdminCommentListByBoardNo(no));
 
         return "admin/board-detail";
     }
 }
-

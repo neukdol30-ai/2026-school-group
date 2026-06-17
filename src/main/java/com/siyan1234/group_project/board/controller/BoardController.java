@@ -41,7 +41,14 @@ public class BoardController {
 
     @GetMapping("/view")
     public String view(@RequestParam int no, Model model) {
-        model.addAttribute("board", boardService.viewBoard(no));
+
+        BoardDto board = boardService.viewBoard(no);
+
+        if (board == null) {
+            return "redirect:/board/list";
+        }
+
+        model.addAttribute("board", board);
 
         return "board/view";
     }

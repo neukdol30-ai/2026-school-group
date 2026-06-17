@@ -88,7 +88,7 @@ public class BoardService {
         return boardDao.countAdminBoardList(boardDto);
     }
 
-    public int adminDeletedBoard(Integer no) {
+    public int adminDeleteBoard(Integer no) {
         return boardDao.adminDeleteBoard(no);
     }
 }
