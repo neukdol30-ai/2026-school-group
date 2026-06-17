@@ -35,9 +35,30 @@ header {
     color: #2563eb;
 }
 
+.banner {
+    height: 220px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #dbeafe, #ede9fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.banner h1 {
+    font-size: 34px;
+    margin-bottom: 12px;
+}
+
+.banner p {
+    color: #555;
+    font-size: 17px;
+}
+
 /* 로고 영역 */
 .brand-area {
-    max-width: 1200px;
+    max-width: 1300px;
     height: 110px;
     margin: 0 auto;
     padding: 0 20px;
@@ -136,3 +157,14 @@ header {
         white-space: nowrap;
     }
 }
+
+footer {
+    margin-top: 60px;
+    padding: 30px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}
+

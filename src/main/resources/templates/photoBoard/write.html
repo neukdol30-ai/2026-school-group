@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>인증 게시글 작성</title>
 
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <link rel="stylesheet" th:href="@{/css/components.css}">
     <link rel="stylesheet" th:href="@{/css/photoBoard/write.css}">
 
@@ -15,7 +16,14 @@
 
 <main>
 
-    <div th:replace="~{fragments/banner :: banner}"></div>
+    <section class="page-title">
+        <div>
+            <h1>인증 게시판</h1>
+            <p>방문한 맛집 사진과 후기를 인증하는 공간입니다.</p>
+        </div>
+
+        <a href="/photoBoard/write" class="write-btn">글쓰기</a>
+    </section>
 
     <section class="content-grid">
 
