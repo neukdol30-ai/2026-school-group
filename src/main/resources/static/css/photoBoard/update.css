@@ -1,0 +1,183 @@
+/* =========================
+   PhotoBoard List
+========================= */
+
+.page-title {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-title h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.page-title p {
+    color: #666;
+}
+
+/* =========================
+   Write Button
+========================= */
+
+.write-btn {
+    background-color: #2563eb;
+    color: white;
+    padding: 13px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+}
+
+.write-btn:hover {
+    background-color: #1d4ed8;
+}
+
+/* =========================
+   PhotoBoard Update / Form
+========================= */
+
+.write-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 36px 40px;
+}
+
+.write-title {
+    padding-bottom: 22px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 26px;
+}
+
+.write-title h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.write-title p {
+    color: #64748b;
+    font-size: 15px;
+}
+
+/* =========================
+   Form
+========================= */
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.form-control {
+    margin-bottom: 18px;
+}
+
+.form-control label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 800;
+    color: #111827;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-size: 15px;
+    outline: none;
+    background-color: #fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+textarea {
+    min-height: 260px;
+    resize: vertical;
+    line-height: 1.7;
+}
+
+/* =========================
+   Current Photo
+========================= */
+
+.current-photo {
+    margin-bottom: 18px;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    background-color: #f8fafc;
+}
+
+.current-photo p {
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+.current-photo img {
+    width: 100%;
+    max-height: 360px;
+    object-fit: contain;
+    display: block;
+    border-radius: 10px;
+    background-color: white;
+}
+
+/* =========================
+   Bottom Actions
+========================= */
+
+.bottom-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #eee;
+}
+
+.right-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 9px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+}
+
+.btn-list {
+    background-color: #111827;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #f1f5f9;
+    color: #334155;
+}
+
+.btn-submit {
+    background-color: #2563eb;
+    color: white;
+}

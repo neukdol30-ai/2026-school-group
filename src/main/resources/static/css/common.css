@@ -1,0 +1,82 @@
+/* =========================
+   Reset / Base
+========================= */
+html {
+    scrollbar-gutter: stable;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, "Noto Sans KR", sans-serif;
+    background-color: #f3f4f6;
+    color: #222;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+/* =========================
+   Layout
+========================= */
+main {
+    max-width: 1500px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 32px;
+}
+
+/* =========================
+   Aside Menu
+========================= */
+aside {
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    height: fit-content;
+}
+
+aside h2 {
+    padding: 18px 20px;
+    font-size: 18px;
+    background-color: #111827;
+    color: #fff;
+}
+
+aside a {
+    display: block;
+    padding: 14px 20px;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+}
+
+aside a:hover,
+aside a.active {
+    background-color: #f3f4f6;
+    color: #2563eb;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 900px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
