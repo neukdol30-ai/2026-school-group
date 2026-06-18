@@ -1,6 +1,10 @@
 /* =========================
    Reset / Base
 ========================= */
+html {
+    scrollbar-gutter: stable;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -26,7 +30,7 @@ ul {
    Layout
 ========================= */
 main {
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 30px auto;
     padding: 0 20px;
 }
@@ -34,7 +38,7 @@ main {
 .content-grid {
     display: grid;
     grid-template-columns: 260px 1fr;
-    gap: 24px;
+    gap: 32px;
 }
 
 /* =========================
