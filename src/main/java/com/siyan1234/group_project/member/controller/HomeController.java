@@ -14,6 +14,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
+        model.addAttribute("menu","home");
         model.addAttribute("recentPosts", boardService.recentPosts());
         return "index";
     }

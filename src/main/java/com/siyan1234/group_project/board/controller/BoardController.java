@@ -25,6 +25,7 @@ public class BoardController {
 
     @GetMapping("/list")
     public String listBoard(PageDto pageDto, Model model, HttpSession session) {
+        model.addAttribute("menu","board");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -41,13 +42,16 @@ public class BoardController {
 
     @GetMapping("/view")
     public String view(@RequestParam int no, Model model) {
+        model.addAttribute("menu","board");
         model.addAttribute("board", boardService.viewBoard(no));
 
         return "board/view";
     }
 
-    @GetMapping("/write") // 글쓰기 화면
-    public String writeForm(HttpSession session) {
+    @GetMapping("/write")
+    public String writeForm(HttpSession session, Model model) {
+
+        model.addAttribute("menu","board");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -74,6 +78,7 @@ public class BoardController {
 
     @GetMapping("/edit") // 수정 화면
     public String editForm(@RequestParam int no, Model model, HttpSession session) {
+        model.addAttribute("menu","board");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
