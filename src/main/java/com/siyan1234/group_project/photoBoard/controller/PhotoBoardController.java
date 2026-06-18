@@ -77,7 +77,8 @@ public class PhotoBoardController {
         }
 
         photoBoardDto.setMemberNo(loginUser.getNo());
-        photoBoardDto.setRestaurantNo(1);
+
+
 
         if (!file.isEmpty()) {
             String uploadPath = "D:/upload/";

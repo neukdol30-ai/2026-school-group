@@ -44,6 +44,44 @@
 
     </select>
 
+    <select id="findRestaurantByName" resultType="int">
+
+        SELECT no
+        FROM restaurant
+        WHERE name = #{name}
+
+    </select>
+
+    <insert id="insertRestaurant"
+            parameterType="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto">
+
+        <selectKey keyProperty="restaurantNo" resultType="int" order="BEFORE">
+            SELECT restaurant_seq.NEXTVAL FROM dual
+        </selectKey>
+
+        INSERT INTO restaurant
+        (
+        no,
+        name,
+        region,
+        category,
+        address,
+        phone,
+        description
+        )
+        VALUES
+        (
+        #{restaurantNo},
+        #{restaurantName},
+        #{region,jdbcType=VARCHAR},
+        #{category},
+        #{address},
+        #{phone,jdbcType=VARCHAR},
+        #{description,jdbcType=VARCHAR}
+        )
+
+    </insert>
+
     <insert id="write"
             parameterType="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto">
 

@@ -18,7 +18,17 @@ public class PhotoBoardService {
         return photoBoardDao.findAll(keyword);
     }
 
+    @Transactional
     public void write(PhotoBoardDto photoBoardDto) {
+
+        Integer existingRestaurantNo = photoBoardDao.findRestaurantByName(photoBoardDto.getRestaurantName());
+
+        if (existingRestaurantNo != null) {
+            photoBoardDto.setRestaurantNo(existingRestaurantNo);
+        } else {
+            photoBoardDao.insertRestaurant(photoBoardDto);
+        }
+
         photoBoardDao.write(photoBoardDto);
     }
 
@@ -29,6 +39,7 @@ public class PhotoBoardService {
     public void update(PhotoBoardDto photoBoardDto) {
         photoBoardDao.update(photoBoardDto);
     }
+
 
     @Transactional
     public void delete(int no) {

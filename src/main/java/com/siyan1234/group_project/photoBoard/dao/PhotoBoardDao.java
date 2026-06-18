@@ -11,6 +11,10 @@ public interface PhotoBoardDao {
 
     List<PhotoBoardDto> findAll(@Param("keyword") String keyword);
 
+    Integer findRestaurantByName(@Param("name") String name);
+
+    void insertRestaurant(PhotoBoardDto photoBoardDto);
+
     void write(PhotoBoardDto photoBoardDto);
 
     PhotoBoardDto findByNo(@Param("no") int no);
