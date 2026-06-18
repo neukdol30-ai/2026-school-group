@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>댓글 관리</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+
+        <div class="card-body">
+
+            <div class="flex justify-between items-center">
+
+                <h1 class="text-3xl font-bold">댓글 관리</h1>
+
+                <a href="/admin" class="btn btn-primary">관리자 홈</a>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <form method="get" action="/admin/comment-list" class="flex flex-wrap gap-2 mb-4">
+
+                <select name="searchDeleted" class="select select-bordered">
+                    <option value="" th:selected="${search.searchDeleted == null}">전체 상태</option>
+                    <option value="N" th:selected="${search.searchDeleted == 'N'}">정상</option>
+                    <option value="Y" th:selected="${search.searchDeleted == 'Y'}">삭제됨</option>
+                </select>
+
+                <select name="searchType" class="select select-bordered">
+                    <option value="content" th:selected="${search.searchType == 'content'}">내용</option>
+                    <option value="memberId" th:selected="${search.searchType == 'memberId'}">작성자 ID</option>
+                </select>
+
+                <input type="text" name="keyword" th:value="${search.keyword}"
+                       placeholder="검색어" class="input input-bordered flex-1">
+
+                <button type="submit" class="btn btn-primary">검색</button>
+
+            </form>
+
+            <div class="overflow-x-auto">
+
+                <table class="table table-zebra">
+
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>게시글 번호</th>
+                        <th>내용</th>
+                        <th>작성자</th>
+                        <th>상태</th>
+                        <th>작성일</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:if="${#lists.isEmpty(commentList)}">
+                        <td colspan="7" class="text-center py-10">검색 결과가 없습니다.</td>
+                    </tr>
+
+                    <tr th:each="comment : ${commentList}">
+
+                        <td th:text="${comment.no}"></td>
+
+                        <td>
+                            <!-- 게시글 번호를 누르면 실제 글로 바로 이동 -->
+                            <a th:href="@{/board/view(no=${comment.boardNo})}"
+                               th:text="${comment.boardNo}"
+                               class="link link-primary">
+                            </a>
+                        </td>
+
+                        <td th:text="${comment.content}"></td>
+                        <td th:text="${comment.memberId}"></td>
+
+                        <td>
+                            <span class="badge badge-success" th:if="${comment.isDeleted == 'N'}">정상</span>
+                            <span class="badge badge-error" th:if="${comment.isDeleted == 'Y'}">삭제됨</span>
+                        </td>
+
+                        <td th:text="${comment.regDate}"></td>
+
+                        <td>
+                            <a th:if="${comment.isDeleted == 'N'}"
+                               th:href="@{/admin/comment-delete(no=${comment.no})}"
+                               onclick="return confirm('이 댓글을 삭제 처리하시겠습니까?')"
+                               class="btn btn-sm btn-error">
+                                삭제
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="join mt-5" th:if="${totalPage > 0}">
+
+                <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                   th:href="@{/admin/comment-list(
+                                page=${i},
+                                searchType=${search.searchType},
+                                keyword=${search.keyword},
+                                searchDeleted=${search.searchDeleted})}"
+                   th:class="${i == currentPage} ? 'join-item btn btn-primary' : 'join-item btn'"
+                   th:text="${i}">
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -29,4 +29,15 @@ public class BoardDto {
     // board 테이블에 없는 화면 표시 (JOIN 결과)
     private String memberId;
     private String name;
+
+    // admin 계정 관리자 페이지 추가
+    private String isDeleted;
+    private String searchType;
+    private String keyword;
+    private String searchBoardType;
+    private String searchDeleted;
+    private Integer page;
+    private Integer size;
+    private Integer offset;
+
 }

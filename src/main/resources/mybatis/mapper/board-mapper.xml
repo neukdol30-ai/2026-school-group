@@ -82,4 +82,60 @@
         ORDER BY b.no DESC
         FETCH FIRST 5 ROWS ONLY
     </select>
+
+    <select id="searchAdminBoardList" parameterType="BoardDto" resultType="BoardDto">
+        SELECT b.*, m.member_id, m.name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE 1 = 1
+
+        <if test="searchBoardType != null and searchBoardType !=''">
+            AND b.board_type = #{searchBoardType}
+        </if>
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND b.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'title' and keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+        ORDER BY b.no DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="countAdminBoardList" parameterType="BoardDto" resultType="int">
+        SELECT COUNT(*)
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE 1 = 1
+
+        <if test="searchBoardType != null and searchBoardType != ''">
+            AND b.board_type = #{searchBoardType}
+        </if>
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND b.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'title' and keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+    </select>
+
+    <update id="adminDeleteBoard" parameterType="int">
+        UPDATE board
+        SET is_deleted = 'Y',
+            update_date = SYSDATE
+        WHERE no = #{no}
+    </update>
 </mapper>

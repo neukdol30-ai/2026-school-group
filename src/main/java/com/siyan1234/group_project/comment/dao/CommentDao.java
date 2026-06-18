@@ -14,4 +14,9 @@ public interface CommentDao {
 
     void deleteComment(@Param("no") int no,
                        @Param("memberNo") int memberNo);
+    List<CommentDto> searchAdminCommentList(CommentDto commentDto);
+    int countAdminCommentList(CommentDto commentDto);
+    int adminDeleteComment(Integer no);
 }
+
+

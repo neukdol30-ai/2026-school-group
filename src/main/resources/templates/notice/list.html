@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, "Noto Sans KR", sans-serif;
+            background-color: #f3f4f6;
+            color: #222;
+        }
+
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .top-bar {
+            height: 40px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .top-inner {
+            max-width: 1500px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-menu {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .top-menu a:hover { color: #2563eb; }
+
+        .brand-area {
+            max-width: 1500px;
+            height: 112px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 260px 1fr 300px;
+            align-items: center;
+            column-gap: 30px;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 900;
+            color: #2563eb;
+        }
+
+        .logo span { color: #111827; }
+
+        .search-box {
+            width: 420px;
+            height: 48px;
+            justify-self: center;
+            border: 2px solid #2563eb;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            padding: 0 18px;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .search-box button {
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .notice-text {
+            justify-self: end;
+            font-size: 14px;
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .nav-area {
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .nav-inner {
+            max-width: 1500px;
+            height: 58px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .main-menu {
+            display: flex;
+            align-items: center;
+            gap: 38px;
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .main-menu a {
+            position: relative;
+            padding: 18px 0;
+        }
+
+        .main-menu a:hover,
+        .main-menu a.active {
+            color: #2563eb;
+        }
+
+        .main-menu a.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            width: 100%;
+            height: 3px;
+            background-color: #2563eb;
+            border-radius: 999px;
+        }
+
+        main {
+            max-width: 1500px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .page-title p {
+            color: #666;
+        }
+
+        .write-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 88px;
+            height: 50px;
+            padding: 0 24px;
+            background-color: #2563eb;
+            color: white;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+        }
+
+        .write-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 32px;
+        }
+
+        aside {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            height: fit-content;
+        }
+
+        aside h2 {
+            padding: 18px 20px;
+            background-color: #111827;
+            color: white;
+            font-size: 18px;
+        }
+
+        aside a {
+            display: block;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            font-weight: 700;
+        }
+
+        aside a:hover,
+        aside a.active {
+            background-color: #f3f4f6;
+            color: #2563eb;
+        }
+
+        .board-box {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 36px 40px;
+        }
+
+        .board-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .board-top h2 {
+            font-size: 26px;
+            font-weight: 900;
+        }
+
+        .board-count {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .board-table {
+            width: 100%;
+            border-top: 2px solid #111827;
+        }
+
+        .board-head,
+        .board-row {
+            display: grid;
+            grid-template-columns: 90px 1fr 140px 160px;
+            text-align: center;
+            align-items: center;
+        }
+
+        .board-head {
+            min-height: 58px;
+            border-bottom: 1px solid #d1d5db;
+            background-color: #f8fafc;
+            color: #111827;
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .board-row {
+            min-height: 70px;
+            border-bottom: 1px solid #e5e7eb;
+            color: #374151;
+            font-size: 15px;
+        }
+
+        .board-row:hover {
+            background-color: #f9fafb;
+        }
+
+        .board-no {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .board-title {
+            text-align: left;
+            padding: 0 32px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .board-title a:hover {
+            color: #2563eb;
+        }
+
+        .board-data {
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background-color: #2563eb;
+            color: white;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .empty-notice {
+            padding: 40px;
+            text-align: center;
+            color: #888;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding: 30px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="top-bar">
+        <div class="top-inner">
+            <div class="top-menu">
+                <a th:href="@{/}">🏠 홈</a>
+                <a th:href="@{/notice/list}">공지사항</a>
+            </div>
+
+            <div class="top-menu" th:if="${session.loginUser != null}">
+                <span>
+                    <b th:text="${session.loginUser.name}">사용자</b>님
+                </span>
+                <a th:href="@{/member/mypage}">내정보</a>
+                <a th:href="@{/member/logout}">로그아웃</a>
+            </div>
+
+            <div class="top-menu" th:if="${session.loginUser == null}">
+                <a th:href="@{/member/login}">로그인</a>
+                <a th:href="@{/member/signup}">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="brand-area">
+        <a th:href="@{/}" class="logo">맛집<span>모아모아</span></a>
+
+        <form class="search-box" th:action="@{/board/list}" method="get">
+            <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+            <button type="submit">🔍</button>
+        </form>
+
+        <div class="notice-text">
+            실시간 인기글 공지사항 새 글 확인하기
+        </div>
+    </div>
+
+    <nav class="nav-area">
+        <div class="nav-inner">
+            <ul class="main-menu">
+                <li><a th:href="@{/}">🏠</a></li>
+                <li><a th:href="@{/board/list}">자유게시판</a></li>
+                <li><a th:href="@{/photoBoard/list}">인증게시판</a></li>
+                <li><a th:href="@{/member/mypage}">내정보</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="page-title">
+        <div>
+            <h1>공지사항</h1>
+            <p>맛집모아모아의 중요한 소식과 안내사항을 확인하는 공간입니다.</p>
+        </div>
+
+        <a th:href="@{/notice/write}" class="write-btn">
+            글쓰기
+        </a>
+    </section>
+
+    <section class="content-grid">
+        <aside>
+            <h2>메뉴</h2>
+            <a th:href="@{/}">홈</a>
+            <a th:href="@{/board/list}">자유게시판</a>
+            <a th:href="@{/photoBoard/list}">인증게시판</a>
+            <a th:href="@{/member/mypage}">내정보</a>
+        </aside>
+
+        <section class="board-box">
+            <div class="board-top">
+                <h2>공지사항 목록</h2>
+
+                <span class="board-count"
+                      th:text="'전체 ' + ${#lists.size(noticeList)} + '건'">
+                    전체 0건
+                </span>
+            </div>
+
+            <div class="board-table">
+                <div class="board-head">
+                    <div>번호</div>
+                    <div>제목</div>
+                    <div>작성자</div>
+                    <div>작성일</div>
+                </div>
+
+                <div class="board-row"
+                     th:each="notice : ${noticeList}">
+
+                    <div class="board-no"
+                         th:text="${notice.no}">
+                        1
+                    </div>
+
+                    <div class="board-title">
+                        <span class="badge">공지</span>
+
+                        <a th:href="@{/notice/view(no=${notice.no})}"
+                           th:text="${notice.title}">
+                            공지 제목
+                        </a>
+                    </div>
+
+                    <div class="board-data">
+                        관리자
+                    </div>
+
+                    <div class="board-data"
+                         th:text="${notice.regdate}">
+                        2026-06-17
+                    </div>
+                </div>
+
+                <div class="empty-notice"
+                     th:if="${#lists.isEmpty(noticeList)}">
+                    등록된 공지사항이 없습니다.
+                </div>
+            </div>
+        </section>
+    </section>
+</main>
+
+<footer>
+    © 2026 맛집모아모아. All rights reserved.
+</footer>
+
+</body>
+</html>
