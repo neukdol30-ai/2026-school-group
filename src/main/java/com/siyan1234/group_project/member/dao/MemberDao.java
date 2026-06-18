@@ -23,11 +23,11 @@ public interface MemberDao {
 
     int updateMember(MemberDto memberDto);
 
-    int insertWithdrawReason(@Param("memberId") String memberId, @Param("reason") String reason);
-/// 보드 연동후 사용할 코드
-//    List<MemberAdminDto> memberStatistics();
+    int insertWithdrawReason(
+            @Param("memberId") String memberId,
+            @Param("reason") String reason);
+    List<MemberAdminDto> searchMemberStatistics(MemberAdminDto memberAdminDto);
 
-    ////보드 연동전 사용할 코드
-    List<MemberDto> findAllMembers();
+    int countMemberStatistics(MemberAdminDto memberAdminDto);
 
 }

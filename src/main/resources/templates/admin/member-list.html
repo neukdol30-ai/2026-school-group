@@ -33,7 +33,90 @@
 
             <div class="divider"></div>
 
-            <div class="overflow-x-auto">
+            <form action="/admin/member-list"
+                  method="get"
+                  class="grid grid-cols-1 md:grid-cols-5 gap-3">
+
+                <select name="searchRole"
+                        class="select select-bordered w-full">
+
+                    <option value="">전체권한</option>
+
+                    <option value="USER"
+                            th:selected="${search != null and search.searchRole == 'USER'}">
+                        USER
+                    </option>
+
+                    <option value="ADMIN"
+                            th:selected="${search != null and search.searchRole == 'ADMIN'}">
+                        ADMIN
+                    </option>
+
+                </select>
+
+                <select name="searchDeleted"
+                        class="select select-bordered w-full">
+
+                    <option value="">전체상태</option>
+
+                    <option value="N"
+                            th:selected="${search != null and search.searchDeleted == 'N'}">
+                        정상회원
+                    </option>
+
+                    <option value="Y"
+                            th:selected="${search != null and search.searchDeleted == 'Y'}">
+                        탈퇴회원
+                    </option>
+
+                </select>
+
+                <select name="searchType"
+                        class="select select-bordered w-full">
+
+                    <option value="">검색조건</option>
+
+                    <option value="memberId"
+                            th:selected="${search != null and search.searchType == 'memberId'}">
+                        아이디검색
+                    </option>
+
+                    <option value="name"
+                            th:selected="${search != null and search.searchType == 'name'}">
+                        이름검색
+                    </option>
+
+                </select>
+
+                <input type="text"
+                       name="keyword"
+                       th:value="${search != null ? search.keyword : ''}"
+                       class="input input-bordered w-full"
+                       placeholder="검색어 입력">
+
+                <div class="flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary flex-1 whitespace-nowrap">
+                        검색
+                    </button>
+
+                    <a href="/admin/member-list"
+                       class="btn btn-outline flex-1 whitespace-nowrap">
+                        초기화
+                    </a>
+
+                </div>
+
+            </form>
+
+            <div class="mt-4 text-sm text-gray-500">
+                총 회원 수 :
+                <span th:text="${totalCount}"></span>
+                명
+            </div>
+
+            <div class="overflow-x-auto mt-5">
 
                 <table class="table table-zebra">
 
@@ -46,6 +129,9 @@
                         <th>성별</th>
                         <th>전화번호</th>
                         <th>권한</th>
+                        <th>게시글 수</th>
+                        <th>댓글 수</th>
+                        <th>좋아요 수</th>
                         <th>탈퇴여부</th>
                         <th>가입일</th>
                     </tr>
@@ -53,6 +139,15 @@
                     </thead>
 
                     <tbody>
+
+                    <tr th:if="${#lists.isEmpty(memberList)}">
+
+                        <td colspan="8"
+                            class="text-center py-10">
+                            조회된 회원이 없습니다.
+                        </td>
+
+                    </tr>
 
                     <tr th:each="member : ${memberList}">
 
@@ -79,7 +174,9 @@
                             </span>
 
                         </td>
+
                         <td>
+
                             <span th:if="${member.isDeleted == 'N'}">
                                 정상회원
                             </span>
@@ -87,11 +184,14 @@
                             <span th:if="${member.isDeleted == 'Y'}">
                                 탈퇴회원
                             </span>
+
                         </td>
-                        <!--보드연동후 사용할 코드-->
-                        <!--        <td th:text="${member.boardCount}"></td>-->
-                        <!--        <td th:text="${member.commentCount}"></td>-->
-                        <!--        <td th:text="${member.likeCount}"></td>-->
+
+                        <td th:text="${member.boardCount}"></td>
+
+                        <td th:text="${member.commentCount}"></td>
+
+                        <td th:text="${member.likeCount}"></td>
 
                         <td th:text="${member.regDate}"></td>
 
@@ -103,6 +203,52 @@
 
             </div>
 
+            <div class="flex justify-center mt-6"
+                 th:if="${totalPage > 0}">
+
+                <div class="join">
+
+                    <a class="join-item btn"
+                       th:classappend="${currentPage == 1} ? ' btn-disabled'"
+                       th:href="@{/admin/member-list(
+                            page=${currentPage - 1},
+                            searchRole=${search.searchRole},
+                            searchDeleted=${search.searchDeleted},
+                            searchType=${search.searchType},
+                            keyword=${search.keyword}
+                       )}">
+                        이전
+                    </a>
+
+                    <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                       class="join-item btn"
+                       th:classappend="${i == currentPage} ? ' btn-active'"
+                       th:text="${i}"
+                       th:href="@{/admin/member-list(
+                            page=${i},
+                            searchRole=${search.searchRole},
+                            searchDeleted=${search.searchDeleted},
+                            searchType=${search.searchType},
+                            keyword=${search.keyword}
+                       )}">
+                    </a>
+
+                    <a class="join-item btn"
+                       th:classappend="${currentPage == totalPage} ? ' btn-disabled'"
+                       th:href="@{/admin/member-list(
+                            page=${currentPage + 1},
+                            searchRole=${search.searchRole},
+                            searchDeleted=${search.searchDeleted},
+                            searchType=${search.searchType},
+                            keyword=${search.keyword}
+                       )}">
+                        다음
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
@@ -111,5 +257,3 @@
 
 </body>
 </html>
-
-

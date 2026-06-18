@@ -76,6 +76,15 @@
                       th:text="${board.likeCount}">
                 0
             </span>
+                <a th:href="@{/report/write(
+        targetType='BOARD',
+        targetNo=${board.no},
+        returnUrl=${'/board/view?no=' + board.no}
+   )}"
+                   class="btn btn-delete"
+                   style="margin-left:10px;">
+                    게시글 신고
+                </a>
 
             </div>
 
@@ -222,6 +231,15 @@
                                 삭제
 
                             </button>
+                            <a
+    href="/report/write?targetType=COMMENT&targetNo=${comment.no}&returnUrl=/board/view?no=${boardNo}"
+    style="
+        margin-left:8px;
+        color:#f97316;
+        font-weight:700;
+    ">
+    신고
+</a>
 
                         </div>
 

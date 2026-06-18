@@ -386,7 +386,9 @@
             <p>맛집모아모아의 중요한 소식과 안내사항을 확인하는 공간입니다.</p>
         </div>
 
-        <a th:href="@{/notice/write}" class="write-btn">
+        <a th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}"
+           th:href="@{/notice/write}"
+           class="write-btn">
             글쓰기
         </a>
     </section>

@@ -7,7 +7,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -17,55 +21,73 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     @GetMapping({"", "/", "/list"})
-    public String list(Model model, HttpSession session) {
+    public String list(
+            Model model,
+            HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
         }
 
-        model.addAttribute("noticeList", noticeService.getList());
+        model.addAttribute(
+                "noticeList",
+                noticeService.getList()
+        );
 
         return "notice/list";
     }
 
     @GetMapping("/view")
-    public String view(@RequestParam("no") int no,
-                       Model model,
-                       HttpSession session) {
+    public String view(
+            @RequestParam("no") int no,
+            Model model,
+            HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
         }
 
-        model.addAttribute("notice", noticeService.getNotice(no));
+        NoticeDto notice =
+                noticeService.getNotice(no);
+
+        if (notice == null) {
+            return "redirect:/notice/list";
+        }
+
+        model.addAttribute("notice", notice);
 
         return "notice/view";
     }
 
     @GetMapping("/write")
-    public String write(HttpSession session) {
+    public String writeForm(HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
-            return "redirect:/member/login";
+        if (!isAdmin(loginUser)) {
+            return "redirect:/notice/list";
         }
 
         return "notice/write";
     }
 
     @PostMapping("/write")
-    public String writeProcess(@ModelAttribute NoticeDto noticeDto,
-                               HttpSession session) {
+    public String writeProcess(
+            @ModelAttribute NoticeDto noticeDto,
+            HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
-            return "redirect:/member/login";
+        if (!isAdmin(loginUser)) {
+            return "redirect:/notice/list";
         }
 
         noticeDto.setMemberNo(loginUser.getNo());
@@ -76,29 +98,44 @@ public class NoticeController {
     }
 
     @GetMapping("/edit")
-    public String edit(@RequestParam("no") int no,
-                       Model model,
-                       HttpSession session) {
+    public String editForm(
+            @RequestParam(required = false) Integer no,
+            Model model,
+            HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
-            return "redirect:/member/login";
+        if (!isAdmin(loginUser)) {
+            return "redirect:/notice/list";
         }
 
-        model.addAttribute("notice", noticeService.findByNo(no));
+        if (no == null) {
+            return "redirect:/notice/list";
+        }
+
+        NoticeDto notice =
+                noticeService.findByNo(no);
+
+        if (notice == null) {
+            return "redirect:/notice/list";
+        }
+
+        model.addAttribute("notice", notice);
 
         return "notice/edit";
     }
 
     @PostMapping("/edit")
-    public String editProcess(@ModelAttribute NoticeDto noticeDto,
-                              HttpSession session) {
+    public String editProcess(
+            @ModelAttribute NoticeDto noticeDto,
+            HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
-            return "redirect:/member/login";
+        if (!isAdmin(loginUser)) {
+            return "redirect:/notice/list";
         }
 
         noticeService.update(noticeDto);
@@ -107,17 +144,25 @@ public class NoticeController {
     }
 
     @PostMapping("/delete")
-    public String delete(@RequestParam("no") int no,
-                         HttpSession session) {
+    public String delete(
+            @RequestParam("no") int no,
+            HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
-        if (loginUser == null) {
-            return "redirect:/member/login";
+        if (!isAdmin(loginUser)) {
+            return "redirect:/notice/list";
         }
 
         noticeService.delete(no);
 
         return "redirect:/notice/list";
+    }
+
+    private boolean isAdmin(MemberDto loginUser) {
+
+        return loginUser != null
+                && "ADMIN".equals(loginUser.getRole());
     }
 }

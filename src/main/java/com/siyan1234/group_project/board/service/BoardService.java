@@ -49,6 +49,7 @@ public class BoardService {
 
     // 글 삭제
     public void deleteBoard(int no, int memberNo) {
+        boardDao.deleteBoardComments(no);
         boardDao.deleteBoard(no, memberNo);
     }
 
@@ -88,7 +89,14 @@ public class BoardService {
         return boardDao.countAdminBoardList(boardDto);
     }
 
-    public int adminDeletedBoard(Integer no) {
+    public int adminDeleteBoard(Integer no) {
+
+        boardDao.deleteBoardComments(no);
+
         return boardDao.adminDeleteBoard(no);
+    }
+
+    public BoardDto findAdminBoardByNo(Integer no) {
+        return boardDao.findAdminBoardByNo(no);
     }
 }
