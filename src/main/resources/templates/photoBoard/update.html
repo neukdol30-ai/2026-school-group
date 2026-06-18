@@ -12,46 +12,7 @@
 
 <body>
 
-<header>
-    <div class="top-bar">
-        <div class="top-inner">
-            <div class="top-menu">
-                <a href="/">🏠 홈</a>
-                <a href="/notice">공지사항</a>
-                <a href="/event">이벤트</a>
-            </div>
-
-            <div class="top-menu">
-                <a href="/member/login">로그인</a>
-                <a href="/member/signup">회원가입</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="brand-area">
-        <a href="/" class="logo">맛집<span>모아모아</span></a>
-
-        <form class="search-box">
-            <input type="text" placeholder="검색어를 입력하세요">
-            <button type="submit">🔍</button>
-        </form>
-
-        <div class="notice">
-            <strong>실시간 인기글</strong> 인증게시판 새 글 확인하기
-        </div>
-    </div>
-
-    <nav class="nav-area">
-        <div class="nav-inner">
-            <ul class="main-menu">
-                <li><a href="/">🏠</a></li>
-                <li><a href="/board/list">자유게시판</a></li>
-                <li><a href="/photoBoard/list" class="active">인증게시판</a></li>
-                <li><a href="/member/mypage">내정보</a></li>
-            </ul>
-        </div>
-    </nav>
-</header>
+<div th:replace="~{fragments/header :: header}"></div>
 
 <main>
     <section class="content-grid">
