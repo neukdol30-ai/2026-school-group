@@ -37,4 +37,7 @@ public class MemberAdminDto {
     private Integer page;
     private Integer size;
     private Integer offset;
+
+    private String status;
+    private String searchStatus;
 }

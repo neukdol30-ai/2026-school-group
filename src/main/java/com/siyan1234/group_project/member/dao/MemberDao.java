@@ -29,5 +29,10 @@ public interface MemberDao {
     List<MemberAdminDto> searchMemberStatistics(MemberAdminDto memberAdminDto);
 
     int countMemberStatistics(MemberAdminDto memberAdminDto);
+    int suspendMember(@Param("no") Integer no);
+
+    int releaseMember(@Param("no") Integer no);
+
+    int adminDeleteMember(@Param("no") Integer no);
 
 }

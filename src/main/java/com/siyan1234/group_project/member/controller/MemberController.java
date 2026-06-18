@@ -111,16 +111,48 @@ public class MemberController {
     @PostMapping("/login")
     public String login(
             LoginDto loginDto,
-            HttpSession session, RedirectAttributes redirectAttributes){
-        MemberDto member = memberService.login(loginDto);
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
-        if (member == null){
+        String loginResult =
+                memberService.loginCheck(loginDto);
+
+        if ("NOT_FOUND".equals(loginResult)
+                || "PASSWORD_FAIL".equals(loginResult)) {
+
             redirectAttributes.addFlashAttribute(
                     "errorMessage",
-                    "아이디 또는 비밀번호를 다시 확인해주세요.");
+                    "아이디 또는 비밀번호를 확인해주세요."
+            );
+
             return "redirect:/member/login";
         }
-        session.setAttribute("loginUser",member);
+
+        if ("DELETED".equals(loginResult)) {
+
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "탈퇴한 계정입니다."
+            );
+
+            return "redirect:/member/login";
+        }
+
+        if ("SUSPENDED".equals(loginResult)) {
+
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "정지된 계정입니다."
+            );
+
+            return "redirect:/member/login";
+        }
+
+        MemberDto member =
+                memberService.login(loginDto);
+
+        session.setAttribute("loginUser", member);
+
         return "redirect:/";
     }
 

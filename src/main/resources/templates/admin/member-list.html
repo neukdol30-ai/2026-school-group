@@ -35,7 +35,7 @@
 
             <form action="/admin/member-list"
                   method="get"
-                  class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                  class="grid grid-cols-1 md:grid-cols-6 gap-3">
 
                 <select name="searchRole"
                         class="select select-bordered w-full">
@@ -57,16 +57,33 @@
                 <select name="searchDeleted"
                         class="select select-bordered w-full">
 
-                    <option value="">전체상태</option>
+                    <option value="">전체탈퇴상태</option>
 
                     <option value="N"
                             th:selected="${search != null and search.searchDeleted == 'N'}">
-                        정상회원
+                        미탈퇴
                     </option>
 
                     <option value="Y"
                             th:selected="${search != null and search.searchDeleted == 'Y'}">
-                        탈퇴회원
+                        탈퇴
+                    </option>
+
+                </select>
+
+                <select name="searchStatus"
+                        class="select select-bordered w-full">
+
+                    <option value="">전체계정상태</option>
+
+                    <option value="ACTIVE"
+                            th:selected="${search != null and search.searchStatus == 'ACTIVE'}">
+                        정상
+                    </option>
+
+                    <option value="SUSPENDED"
+                            th:selected="${search != null and search.searchStatus == 'SUSPENDED'}">
+                        정지
                     </option>
 
                 </select>
@@ -121,7 +138,6 @@
                 <table class="table table-zebra">
 
                     <thead>
-
                     <tr>
                         <th>회원번호</th>
                         <th>아이디</th>
@@ -129,24 +145,23 @@
                         <th>성별</th>
                         <th>전화번호</th>
                         <th>권한</th>
+                        <th>계정상태</th>
+                        <th>탈퇴여부</th>
                         <th>게시글 수</th>
                         <th>댓글 수</th>
                         <th>좋아요 수</th>
-                        <th>탈퇴여부</th>
                         <th>가입일</th>
+                        <th>관리</th>
                     </tr>
-
                     </thead>
 
                     <tbody>
 
                     <tr th:if="${#lists.isEmpty(memberList)}">
-
-                        <td colspan="8"
+                        <td colspan="13"
                             class="text-center py-10">
                             조회된 회원이 없습니다.
                         </td>
-
                     </tr>
 
                     <tr th:each="member : ${memberList}">
@@ -162,7 +177,6 @@
                         <td th:text="${member.phone}"></td>
 
                         <td>
-
                             <span class="badge badge-primary"
                                   th:if="${member.role == 'USER'}">
                                 USER
@@ -172,19 +186,30 @@
                                   th:if="${member.role == 'ADMIN'}">
                                 ADMIN
                             </span>
-
                         </td>
 
                         <td>
-
-                            <span th:if="${member.isDeleted == 'N'}">
-                                정상회원
+                            <span class="badge badge-success"
+                                  th:if="${member.status == 'ACTIVE'}">
+                                정상
                             </span>
 
-                            <span th:if="${member.isDeleted == 'Y'}">
-                                탈퇴회원
+                            <span class="badge badge-warning"
+                                  th:if="${member.status == 'SUSPENDED'}">
+                                정지
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="badge badge-info"
+                                  th:if="${member.isDeleted == 'N'}">
+                                미탈퇴
                             </span>
 
+                            <span class="badge badge-neutral"
+                                  th:if="${member.isDeleted == 'Y'}">
+                                탈퇴
+                            </span>
                         </td>
 
                         <td th:text="${member.boardCount}"></td>
@@ -194,6 +219,75 @@
                         <td th:text="${member.likeCount}"></td>
 
                         <td th:text="${member.regDate}"></td>
+
+                        <td>
+                            <div class="flex gap-1 flex-wrap">
+
+                                <form th:if="${member.role != 'ADMIN'
+                                               and member.isDeleted == 'N'
+                                               and member.status == 'ACTIVE'}"
+                                      action="/admin/member-suspend"
+                                      method="post"
+                                      onsubmit="return confirm('이 회원을 정지하시겠습니까?');">
+
+                                    <input type="hidden"
+                                           name="no"
+                                           th:value="${member.no}">
+
+                                    <button type="submit"
+                                            class="btn btn-warning btn-xs">
+                                        정지
+                                    </button>
+
+                                </form>
+
+                                <form th:if="${member.role != 'ADMIN'
+                                               and member.isDeleted == 'N'
+                                               and member.status == 'SUSPENDED'}"
+                                      action="/admin/member-release"
+                                      method="post"
+                                      onsubmit="return confirm('이 회원의 정지를 해제하시겠습니까?');">
+
+                                    <input type="hidden"
+                                           name="no"
+                                           th:value="${member.no}">
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-xs">
+                                        정지해제
+                                    </button>
+
+                                </form>
+
+                                <form th:if="${member.role != 'ADMIN'
+                                               and member.isDeleted == 'N'}"
+                                      action="/admin/member-delete"
+                                      method="post"
+                                      onsubmit="return confirm('정말 이 회원을 탈퇴 처리하시겠습니까?');">
+
+                                    <input type="hidden"
+                                           name="no"
+                                           th:value="${member.no}">
+
+                                    <button type="submit"
+                                            class="btn btn-error btn-xs">
+                                        탈퇴처리
+                                    </button>
+
+                                </form>
+
+                                <span th:if="${member.role == 'ADMIN'}"
+                                      class="text-xs text-gray-400">
+                                    관리자 보호
+                                </span>
+
+                                <span th:if="${member.isDeleted == 'Y'}"
+                                      class="text-xs text-gray-400">
+                                    처리완료
+                                </span>
+
+                            </div>
+                        </td>
 
                     </tr>
 
@@ -214,6 +308,7 @@
                             page=${currentPage - 1},
                             searchRole=${search.searchRole},
                             searchDeleted=${search.searchDeleted},
+                            searchStatus=${search.searchStatus},
                             searchType=${search.searchType},
                             keyword=${search.keyword}
                        )}">
@@ -228,6 +323,7 @@
                             page=${i},
                             searchRole=${search.searchRole},
                             searchDeleted=${search.searchDeleted},
+                            searchStatus=${search.searchStatus},
                             searchType=${search.searchType},
                             keyword=${search.keyword}
                        )}">
@@ -239,6 +335,7 @@
                             page=${currentPage + 1},
                             searchRole=${search.searchRole},
                             searchDeleted=${search.searchDeleted},
+                            searchStatus=${search.searchStatus},
                             searchType=${search.searchType},
                             keyword=${search.keyword}
                        )}">

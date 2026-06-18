@@ -2,7 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.siyan1234.group_project.member.dao.MemberDao">
+
     <insert id="signup">
         INSERT INTO MEMBER
         (
@@ -14,9 +16,9 @@
         PHONE,
         ADDRESS,
         DETAIL_ADDRESS,
-        ROLE
+        ROLE,
+        STATUS
         )
-
         VALUES
         (
         #{memberId},
@@ -27,29 +29,17 @@
         #{phone},
         #{address},
         #{detailAddress},
-        'USER'
+        'USER',
+        'ACTIVE'
         )
     </insert>
-
-    <!-- 비밀번호 암호화-->
-    <select id="login"
-            resultType="MemberDto"
-            parameterType="String">
-        SELECT *
-        FROM MEMBER
-        WHERE MEMBER_ID = #{memberId}
-        AND IS_DELETED = 'N'
-    </select>
 
     <select id="findByMemberId"
             resultType="MemberDto">
         SELECT *
         FROM MEMBER
         WHERE MEMBER_ID = #{memberId}
-        AND IS_DELETED = 'N'
     </select>
-
-    <!-- 비밀번호 암호화-->
 
     <select id="idCheck"
             resultType="Integer"
@@ -107,6 +97,7 @@
         M.GENDER,
         M.PHONE,
         M.ROLE,
+        M.STATUS,
         M.IS_DELETED,
         M.REGDATE,
 
@@ -141,15 +132,19 @@
             AND M.IS_DELETED = #{searchDeleted}
         </if>
 
+        <if test="searchStatus != null and searchStatus != ''">
+            AND M.STATUS = #{searchStatus}
+        </if>
+
         <if test="searchType == 'memberId'
-          and keyword != null
-          and keyword != ''">
+                  and keyword != null
+                  and keyword != ''">
             AND M.MEMBER_ID = #{keyword}
         </if>
 
         <if test="searchType == 'name'
-          and keyword != null
-          and keyword != ''">
+                  and keyword != null
+                  and keyword != ''">
             AND M.NAME LIKE '%' || #{keyword} || '%'
         </if>
 
@@ -174,17 +169,45 @@
             AND M.IS_DELETED = #{searchDeleted}
         </if>
 
+        <if test="searchStatus != null and searchStatus != ''">
+            AND M.STATUS = #{searchStatus}
+        </if>
+
         <if test="searchType == 'memberId'
-          and keyword != null
-          and keyword != ''">
+                  and keyword != null
+                  and keyword != ''">
             AND M.MEMBER_ID = #{keyword}
         </if>
 
         <if test="searchType == 'name'
-          and keyword != null
-          and keyword != ''">
+                  and keyword != null
+                  and keyword != ''">
             AND M.NAME LIKE '%' || #{keyword} || '%'
         </if>
+
     </select>
+
+    <update id="suspendMember">
+        UPDATE MEMBER
+        SET STATUS = 'SUSPENDED'
+        WHERE NO = #{no}
+        AND IS_DELETED = 'N'
+        AND ROLE != 'ADMIN'
+    </update>
+
+    <update id="releaseMember">
+        UPDATE MEMBER
+        SET STATUS = 'ACTIVE'
+        WHERE NO = #{no}
+        AND IS_DELETED = 'N'
+        AND ROLE != 'ADMIN'
+    </update>
+
+    <update id="adminDeleteMember">
+        UPDATE MEMBER
+        SET IS_DELETED = 'Y'
+        WHERE NO = #{no}
+        AND ROLE != 'ADMIN'
+    </update>
 
 </mapper>

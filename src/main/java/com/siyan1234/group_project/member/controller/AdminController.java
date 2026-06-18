@@ -374,4 +374,39 @@ public class AdminController {
 
         return "redirect:/admin/report-detail?no=" + no;
     }
+    @PostMapping("/member-suspend")
+    public String suspendMember(Integer no) {
+
+        if (no == null) {
+            return "redirect:/admin/member-list";
+        }
+
+        memberService.suspendMember(no);
+
+        return "redirect:/admin/member-list";
+    }
+
+    @PostMapping("/member-release")
+    public String releaseMember(Integer no) {
+
+        if (no == null) {
+            return "redirect:/admin/member-list";
+        }
+
+        memberService.releaseMember(no);
+
+        return "redirect:/admin/member-list";
+    }
+
+    @PostMapping("/member-delete")
+    public String adminDeleteMember(Integer no) {
+
+        if (no == null) {
+            return "redirect:/admin/member-list";
+        }
+
+        memberService.adminDeleteMember(no);
+
+        return "redirect:/admin/member-list";
+    }
 }

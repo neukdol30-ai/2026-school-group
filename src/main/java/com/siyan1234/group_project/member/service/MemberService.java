@@ -43,18 +43,36 @@ public class MemberService {
         return memberDao.signup(memberDto);
     }
 
-    public MemberDto login(LoginDto loginDto) {
-        MemberDto member = memberDao.findByMemberId(loginDto.getMemberId());
+    public String loginCheck(LoginDto loginDto) {
+
+        MemberDto member =
+                memberDao.findByMemberId(loginDto.getMemberId());
+
         if (member == null) {
-            return null;
+            return "NOT_FOUND";
         }
+
+        if ("Y".equals(member.getIsDeleted())) {
+            return "DELETED";
+        }
+
+        if ("SUSPENDED".equals(member.getStatus())) {
+            return "SUSPENDED";
+        }
+
         if (!passwordEncoder.matches(
                 loginDto.getPassword(),
                 member.getPassword()
         )) {
-            return null;
+            return "PASSWORD_FAIL";
         }
-        return member;
+
+        return "SUCCESS";
+    }
+
+    public MemberDto login(LoginDto loginDto) {
+
+        return memberDao.findByMemberId(loginDto.getMemberId());
     }
 
     /// //////////////////////////////////////////////////////////////////////
@@ -160,5 +178,16 @@ public class MemberService {
             MemberAdminDto memberAdminDto){
 
         return memberDao.countMemberStatistics(memberAdminDto);
+    }
+    public int suspendMember(Integer no) {
+        return memberDao.suspendMember(no);
+    }
+
+    public int releaseMember(Integer no) {
+        return memberDao.releaseMember(no);
+    }
+
+    public int adminDeleteMember(Integer no) {
+        return memberDao.adminDeleteMember(no);
     }
 }
