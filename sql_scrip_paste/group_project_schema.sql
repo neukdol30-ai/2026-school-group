@@ -24,6 +24,7 @@ CREATE TABLE MEMBER_WITHDRAW (
     REGDATE     DATE DEFAULT SYSDATE
 );
 
+
 CREATE TABLE restaurant (
     no          NUMBER          CONSTRAINT restaurant_no_pk PRIMARY KEY,
     name        VARCHAR2(100)   CONSTRAINT restaurant_name_nn NOT NULL,
@@ -198,6 +199,7 @@ CREATE TABLE NOTICE (
     CONSTRAINT NOTICE_DELETED_CK
         CHECK (IS_DELETED IN ('Y', 'N'))
 );
+
 
 -- 공지사항 시퀀스
 CREATE SEQUENCE NOTICE_SEQ
