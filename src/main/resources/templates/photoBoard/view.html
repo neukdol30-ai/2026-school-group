@@ -544,8 +544,29 @@
                 <a href="/photoBoard/list" class="btn btn-list">목록</a>
 
                 <div class="right-actions">
-                    <a th:href="@{/photoBoard/update(no=${board.no})}" class="btn btn-edit">수정</a>
-                    <a th:href="@{/photoBoard/delete(no=${board.no})}" class="btn btn-delete">삭제</a>
+
+                    <a th:href="@{/photoBoard/update(no=${board.no})}"
+                       class="btn btn-edit">
+                        수정
+                    </a>
+
+                    <form th:action="@{/photoBoard/delete}"
+                          method="post"
+                          style="display:inline;"
+                          onsubmit="return confirm('정말 삭제하시겠습니까?')">
+
+                        <input type="hidden"
+                               name="no"
+                               th:value="${board.no}">
+
+                        <button type="submit"
+                                class="btn btn-delete"
+                                style="border:none;cursor:pointer;">
+                            삭제
+                        </button>
+
+                    </form>
+
                 </div>
             </div>
 

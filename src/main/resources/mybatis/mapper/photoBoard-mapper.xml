@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siyan1234.group_project.photoBoard.dao.PhotoBoardDao">
+
+    <resultMap id="photoBoardResultMap"
+               type="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto">
+
+        <id property="no" column="NO"/>
+        <result property="memberNo" column="MEMBER_NO"/>
+        <result property="boardType" column="BOARD_TYPE"/>
+        <result property="restaurantNo" column="RESTAURANT_NO"/>
+        <result property="title" column="TITLE"/>
+        <result property="content" column="CONTENT"/>
+        <result property="rating" column="RATING"/>
+        <result property="hit" column="HIT"/>
+        <result property="likeCount" column="LIKE_COUNT"/>
+        <result property="regdate" column="REGDATE"/>
+        <result property="updateDate" column="UPDATE_DATE"/>
+        <result property="isDeleted" column="IS_DELETED"/>
+        <result property="imageUrl" column="IMAGE_URL"/>
+        <result property="memberId" column="MEMBER_ID"/>
+        <result property="memberName" column="MEMBER_NAME"/>
+
+    </resultMap>
+
+    <select id="findAll" resultMap="photoBoardResultMap">
+
+        SELECT b.*,
+        m.member_id,
+        m.name AS member_name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+        AND b.is_deleted = 'N'
+
+        <if test="keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+        ORDER BY b.no DESC
+
+    </select>
+
+    <insert id="write"
+            parameterType="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto">
+
+        INSERT INTO board
+        (
+        no,
+        member_no,
+        board_type,
+        restaurant_no,
+        title,
+        content,
+        rating,
+        hit,
+        like_count,
+        regdate,
+        update_date,
+        is_deleted,
+        image_url
+        )
+        VALUES
+        (
+        board_seq.nextval,
+        #{memberNo},
+        'REVIEW',
+        #{restaurantNo},
+        #{title},
+        #{content},
+        #{rating},
+        0,
+        0,
+        SYSDATE,
+        SYSDATE,
+        'N',
+        #{imageUrl,jdbcType=VARCHAR}
+        )
+
+    </insert>
+
+    <select id="findByNo"
+            parameterType="int"
+            resultMap="photoBoardResultMap">
+
+        SELECT b.*,
+        m.member_id,
+        m.name AS member_name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.no = #{no}
+        AND b.board_type = 'REVIEW'
+        AND b.is_deleted = 'N'
+
+    </select>
+
+    <update id="increaseHit"
+            parameterType="int">
+
+        UPDATE board
+        SET hit = hit + 1
+        WHERE no = #{no}
+        AND board_type = 'REVIEW'
+        AND is_deleted = 'N'
+
+    </update>
+
+    <update id="update"
+            parameterType="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto">
+
+        UPDATE board
+        SET title = #{title},
+        content = #{content},
+        rating = #{rating},
+        update_date = SYSDATE
+        WHERE no = #{no}
+        AND board_type = 'REVIEW'
+        AND is_deleted = 'N'
+
+    </update>
+
+    <delete id="deleteLikeByBoardNo">
+
+        DELETE FROM board_like
+        WHERE board_no = #{boardNo}
+
+    </delete>
+
+    <update id="deleteCommentByBoardNo">
+
+        UPDATE board_comment
+        SET is_deleted = 'Y',
+        update_date = SYSDATE
+        WHERE board_no = #{boardNo}
+        AND is_deleted = 'N'
+
+    </update>
+
+    <update id="deleteBoard">
+
+        UPDATE board
+        SET is_deleted = 'Y',
+        update_date = SYSDATE
+        WHERE no = #{no}
+        AND board_type = 'REVIEW'
+        AND is_deleted = 'N'
+
+    </update>
+
+    <select id="countLike" resultType="int">
+
+        SELECT COUNT(*)
+        FROM board_like
+        WHERE board_no = #{boardNo}
+        AND member_no = #{memberNo}
+
+    </select>
+
+    <insert id="insertLike">
+
+        INSERT INTO board_like
+        (
+        board_no,
+        member_no,
+        regdate
+        )
+        VALUES
+        (
+        #{boardNo},
+        #{memberNo},
+        SYSDATE
+        )
+
+    </insert>
+
+    <delete id="deleteLike">
+
+        DELETE FROM board_like
+        WHERE board_no = #{boardNo}
+        AND member_no = #{memberNo}
+
+    </delete>
+
+    <update id="increaseLikeCount">
+
+        UPDATE board
+        SET like_count = like_count + 1
+        WHERE no = #{boardNo}
+        AND board_type = 'REVIEW'
+        AND is_deleted = 'N'
+
+    </update>
+
+    <update id="decreaseLikeCount">
+
+        UPDATE board
+        SET like_count = like_count - 1
+        WHERE no = #{boardNo}
+        AND board_type = 'REVIEW'
+        AND is_deleted = 'N'
+        AND like_count > 0
+
+    </update>
+
+    <update id="adminDeleteComment">
+
+        UPDATE board_comment
+        SET is_deleted = 'Y',
+        update_date = SYSDATE
+        WHERE no = #{commentNo}
+        AND is_deleted = 'N'
+
+    </update>
+
+</mapper>

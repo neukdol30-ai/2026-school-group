@@ -1,236 +1,42 @@
 package com.siyan1234.group_project.photoBoard.dao;
 
 import com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-@Repository
-@RequiredArgsConstructor
-public class PhotoBoardDao {
+@Mapper
+public interface PhotoBoardDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    List<PhotoBoardDto> findAll(@Param("keyword") String keyword);
 
-    public List<PhotoBoardDto> findAll() {
-        String sql = """
-                SELECT *
-                FROM board
-                WHERE board_type = 'REVIEW'
-                ORDER BY no DESC
-                """;
+    void write(PhotoBoardDto photoBoardDto);
 
-        return jdbcTemplate.query(sql, (rs, rowNum) ->
-                PhotoBoardDto.builder()
-                        .no(rs.getInt("no"))
-                        .memberNo(rs.getInt("member_no"))
-                        .boardType(rs.getString("board_type"))
-                        .restaurantNo(rs.getInt("restaurant_no"))
-                        .title(rs.getString("title"))
-                        .content(rs.getString("content"))
-                        .rating(rs.getDouble("rating"))
-                        .hit(rs.getInt("hit"))
-                        .likeCount(rs.getInt("like_count"))
-                        .regdate(rs.getString("regdate"))
-                        .updateDate(rs.getString("update_date"))
-                        .imageUrl(rs.getString("image_url"))
-                        .build()
-        );
-    }
+    PhotoBoardDto findByNo(@Param("no") int no);
 
-    public void write(PhotoBoardDto photoBoardDto) {
-        String sql = """
-                INSERT INTO board (
-                    no,
-                    member_no,
-                    board_type,
-                    restaurant_no,
-                    title,
-                    content,
-                    rating,
-                    hit,
-                    like_count,
-                    regdate,
-                    update_date,
-                    image_url
-                )
-                VALUES (
-                    board_seq.nextval,
-                    ?,
-                    'REVIEW',
-                    ?,
-                    ?,
-                    ?,
-                    ?,
-                    0,
-                    0,
-                    SYSDATE,
-                    SYSDATE,
-                    ?
-                )
-                """;
+    void increaseHit(@Param("no") int no);
 
-        jdbcTemplate.update(sql,
-                photoBoardDto.getMemberNo(),
-                photoBoardDto.getRestaurantNo(),
-                photoBoardDto.getTitle(),
-                photoBoardDto.getContent(),
-                photoBoardDto.getRating(),
-                photoBoardDto.getImageUrl()
-        );
-    }
+    void update(PhotoBoardDto photoBoardDto);
 
-    public PhotoBoardDto findByNo(int no) {
-        String sql = """
-                SELECT *
-                FROM board
-                WHERE no = ?
-                AND board_type = 'REVIEW'
-                """;
+    void deleteLikeByBoardNo(@Param("boardNo") int boardNo);
 
-        return jdbcTemplate.queryForObject(sql, (rs, rowNum) ->
-                        PhotoBoardDto.builder()
-                                .no(rs.getInt("no"))
-                                .memberNo(rs.getInt("member_no"))
-                                .boardType(rs.getString("board_type"))
-                                .restaurantNo(rs.getInt("restaurant_no"))
-                                .title(rs.getString("title"))
-                                .content(rs.getString("content"))
-                                .rating(rs.getDouble("rating"))
-                                .hit(rs.getInt("hit"))
-                                .likeCount(rs.getInt("like_count"))
-                                .regdate(rs.getString("regdate"))
-                                .updateDate(rs.getString("update_date"))
-                                .imageUrl(rs.getString("image_url"))
-                                .build(),
-                no
-        );
-    }
+    void deleteCommentByBoardNo(@Param("boardNo") int boardNo);
 
-    public void increaseHit(int no) {
-        String sql = """
-                UPDATE board
-                SET hit = hit + 1
-                WHERE no = ?
-                AND board_type = 'REVIEW'
-                """;
+    void deleteBoard(@Param("no") int no);
 
-        jdbcTemplate.update(sql, no);
-    }
+    int countLike(@Param("boardNo") int boardNo,
+                  @Param("memberNo") int memberNo);
 
-    public void update(PhotoBoardDto photoBoardDto) {
-        String sql = """
-                UPDATE board
-                SET title = ?,
-                    content = ?,
-                    rating = ?,
-                    update_date = SYSDATE
-                WHERE no = ?
-                AND board_type = 'REVIEW'
-                """;
+    void insertLike(@Param("boardNo") int boardNo,
+                    @Param("memberNo") int memberNo);
 
-        jdbcTemplate.update(sql,
-                photoBoardDto.getTitle(),
-                photoBoardDto.getContent(),
-                photoBoardDto.getRating(),
-                photoBoardDto.getNo()
-        );
-    }
+    void deleteLike(@Param("boardNo") int boardNo,
+                    @Param("memberNo") int memberNo);
 
-    public void delete(int no) {
-        String deleteLikeSql = """
-                DELETE FROM board_like
-                WHERE board_no = ?
-                """;
+    void increaseLikeCount(@Param("boardNo") int boardNo);
 
-        jdbcTemplate.update(deleteLikeSql, no);
+    void decreaseLikeCount(@Param("boardNo") int boardNo);
 
-        String deleteCommentSql = """
-                DELETE FROM board_comment
-                WHERE board_no = ?
-                """;
-
-        jdbcTemplate.update(deleteCommentSql, no);
-
-        String deleteBoardSql = """
-                DELETE FROM board
-                WHERE no = ?
-                AND board_type = 'REVIEW'
-                """;
-
-        jdbcTemplate.update(deleteBoardSql, no);
-    }
-
-    public int countLike(int boardNo, int memberNo) {
-        String sql = """
-                SELECT COUNT(*)
-                FROM board_like
-                WHERE board_no = ?
-                AND member_no = ?
-                """;
-
-        return jdbcTemplate.queryForObject(
-                sql,
-                Integer.class,
-                boardNo,
-                memberNo
-        );
-    }
-
-    public void insertLike(int boardNo, int memberNo) {
-        String sql = """
-                INSERT INTO board_like (
-                    board_no,
-                    member_no,
-                    regdate
-                )
-                VALUES (
-                    ?,
-                    ?,
-                    SYSDATE
-                )
-                """;
-
-        jdbcTemplate.update(sql,
-                boardNo,
-                memberNo
-        );
-    }
-
-    public void deleteLike(int boardNo, int memberNo) {
-        String sql = """
-                DELETE FROM board_like
-                WHERE board_no = ?
-                AND member_no = ?
-                """;
-
-        jdbcTemplate.update(sql,
-                boardNo,
-                memberNo
-        );
-    }
-
-    public void increaseLikeCount(int boardNo) {
-        String sql = """
-                UPDATE board
-                SET like_count = like_count + 1
-                WHERE no = ?
-                AND board_type = 'REVIEW'
-                """;
-
-        jdbcTemplate.update(sql, boardNo);
-    }
-
-    public void decreaseLikeCount(int boardNo) {
-        String sql = """
-                UPDATE board
-                SET like_count = like_count - 1
-                WHERE no = ?
-                AND board_type = 'REVIEW'
-                AND like_count > 0
-                """;
-
-        jdbcTemplate.update(sql, boardNo);
-    }
+    void adminDeleteComment(@Param("commentNo") int commentNo);
 }

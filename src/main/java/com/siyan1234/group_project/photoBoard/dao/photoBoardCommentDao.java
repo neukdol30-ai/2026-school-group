@@ -15,10 +15,14 @@ public class photoBoardCommentDao {
 
     public List<photoBoardCommentDto> findByBoardNo(int boardNo) {
         String sql = """
-                SELECT *
-                FROM board_comment
-                WHERE board_no = ?
-                ORDER BY no ASC
+                SELECT c.*,
+                       m.member_id,
+                       m.name AS member_name
+                FROM board_comment c
+                JOIN member m ON c.member_no = m.no
+                WHERE c.board_no = ?
+                AND c.is_deleted = 'N'
+                ORDER BY c.no ASC
                 """;
 
         return jdbcTemplate.query(sql, (rs, rowNum) ->
@@ -28,6 +32,10 @@ public class photoBoardCommentDao {
                                 .memberNo(rs.getInt("member_no"))
                                 .content(rs.getString("content"))
                                 .regdate(rs.getString("regdate"))
+                                .updateDate(rs.getString("update_date"))
+                                .isDeleted(rs.getString("is_deleted"))
+                                .memberId(rs.getString("member_id"))
+                                .memberName(rs.getString("member_name"))
                                 .build(),
                 boardNo
         );
@@ -40,14 +48,16 @@ public class photoBoardCommentDao {
                     board_no,
                     member_no,
                     content,
-                    regdate
+                    regdate,
+                    is_deleted
                 )
                 VALUES (
                     board_comment_seq.nextval,
                     ?,
                     ?,
                     ?,
-                    SYSDATE
+                    SYSDATE,
+                    'N'
                 )
                 """;
 
@@ -60,14 +70,14 @@ public class photoBoardCommentDao {
 
     public void delete(int no, int memberNo) {
         String sql = """
-                DELETE FROM board_comment
+                UPDATE board_comment
+                SET is_deleted = 'Y',
+                    update_date = SYSDATE
                 WHERE no = ?
                 AND member_no = ?
+                AND is_deleted = 'N'
                 """;
 
-        jdbcTemplate.update(sql,
-                no,
-                memberNo
-        );
+        jdbcTemplate.update(sql, no, memberNo);
     }
 }

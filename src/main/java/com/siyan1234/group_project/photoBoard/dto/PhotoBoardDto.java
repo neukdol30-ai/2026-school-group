@@ -7,33 +7,33 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class PhotoBoardDto {
-    // board 테이블
-    private int no;              // 게시글 번호
-    private int memberNo;        // 회원 번호
-    private String boardType;    // FREE / REVIEW
-    private int restaurantNo;    // 맛집 번호
-    private String title;        // 제목
-    private String content;      // 내용
-    private double rating;       // 평점
-    private int hit;             // 조회수
-    private int likeCount;       // 좋아요 수
-    private String regdate;      // 작성일
-    private String updateDate;   // 수정일
 
-    // restaurant 테이블
-    private String restaurantName; // 맛집명
-    private String region;         // 지역
-    private String category;       // 음식종류
-    private String address;        // 주소
-    private String phone;          // 전화번호
-    private String description;    // 소개글
+    private int no;
+    private int memberNo;
+    private String boardType;
+    private int restaurantNo;
 
-    // board_image 테이블
-    private String imageUrl;       // 사진 경로
+    private String title;
+    private String content;
+    private double rating;
 
-    // member 테이블
-    private String memberName;     // 작성자 이름
+    private int hit;
+    private int likeCount;
+
+    private String regdate;
+    private String updateDate;
+    private String isDeleted;
+
+    private String imageUrl;
+
+    private String restaurantName;
+    private String region;
+    private String category;
+    private String address;
+    private String phone;
+    private String description;
+
+    private String memberId;
+    private String memberName;
 }
-

@@ -25,8 +25,16 @@ public class PhotoBoardController {
     private final PhotoBoardService photoBoardService;
     private final photoBoardCommentService commentService;
 
+    private boolean isAdmin(MemberDto loginUser) {
+        return loginUser != null
+                && loginUser.getRole() != null
+                && loginUser.getRole().equalsIgnoreCase("ADMIN");
+    }
+
     @GetMapping("/list")
-    public String list(Model model, HttpSession session) {
+    public String list(@RequestParam(required = false) String keyword,
+                       Model model,
+                       HttpSession session) {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -34,8 +42,10 @@ public class PhotoBoardController {
             return "redirect:/member/login";
         }
 
-        List<PhotoBoardDto> boardList = photoBoardService.getList();
+        List<PhotoBoardDto> boardList = photoBoardService.getList(keyword);
+
         model.addAttribute("boardList", boardList);
+        model.addAttribute("keyword", keyword);
 
         return "photoBoard/list";
     }
@@ -81,6 +91,8 @@ public class PhotoBoardController {
             file.transferTo(saveFile);
 
             photoBoardDto.setImageUrl("/upload/" + savedFileName);
+        } else {
+            photoBoardDto.setImageUrl(null);
         }
 
         photoBoardService.write(photoBoardDto);
@@ -100,10 +112,17 @@ public class PhotoBoardController {
         photoBoardService.increaseHit(no);
 
         PhotoBoardDto board = photoBoardService.getBoard(no);
+
+        if (board == null) {
+            return "redirect:/photoBoard/list";
+        }
+
         List<photoBoardCommentDto> commentList = commentService.getList(no);
 
         model.addAttribute("board", board);
         model.addAttribute("commentList", commentList);
+        model.addAttribute("loginUser", loginUser);
+        model.addAttribute("isAdmin", isAdmin(loginUser));
 
         return "photoBoard/view";
     }
@@ -118,6 +137,15 @@ public class PhotoBoardController {
         }
 
         PhotoBoardDto board = photoBoardService.getBoard(no);
+
+        if (board == null) {
+            return "redirect:/photoBoard/list";
+        }
+
+        if (board.getMemberNo() != loginUser.getNo() && !isAdmin(loginUser)) {
+            return "redirect:/photoBoard/view?no=" + no;
+        }
+
         model.addAttribute("board", board);
 
         return "photoBoard/update";
@@ -132,18 +160,38 @@ public class PhotoBoardController {
             return "redirect:/member/login";
         }
 
+        PhotoBoardDto board = photoBoardService.getBoard(photoBoardDto.getNo());
+
+        if (board == null) {
+            return "redirect:/photoBoard/list";
+        }
+
+        if (board.getMemberNo() != loginUser.getNo() && !isAdmin(loginUser)) {
+            return "redirect:/photoBoard/view?no=" + photoBoardDto.getNo();
+        }
+
         photoBoardService.update(photoBoardDto);
 
         return "redirect:/photoBoard/view?no=" + photoBoardDto.getNo();
     }
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     public String delete(@RequestParam int no, HttpSession session) {
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
+        }
+
+        PhotoBoardDto board = photoBoardService.getBoard(no);
+
+        if (board == null) {
+            return "redirect:/photoBoard/list";
+        }
+
+        if (board.getMemberNo() != loginUser.getNo() && !isAdmin(loginUser)) {
+            return "redirect:/photoBoard/view?no=" + no;
         }
 
         photoBoardService.delete(no);
@@ -191,7 +239,11 @@ public class PhotoBoardController {
             return "redirect:/member/login";
         }
 
-        commentService.delete(no, loginUser.getNo());
+        if (isAdmin(loginUser)) {
+            photoBoardService.adminDeleteComment(no);
+        } else {
+            commentService.delete(no, loginUser.getNo());
+        }
 
         return "redirect:/photoBoard/view?no=" + boardNo;
     }

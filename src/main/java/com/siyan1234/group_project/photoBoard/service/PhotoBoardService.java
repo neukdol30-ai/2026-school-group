@@ -4,6 +4,7 @@ import com.siyan1234.group_project.photoBoard.dao.PhotoBoardDao;
 import com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ public class PhotoBoardService {
 
     private final PhotoBoardDao photoBoardDao;
 
-    public List<PhotoBoardDto> getList() {
-        return photoBoardDao.findAll();
+    public List<PhotoBoardDto> getList(String keyword) {
+        return photoBoardDao.findAll(keyword);
     }
 
     public void write(PhotoBoardDto photoBoardDto) {
@@ -29,8 +30,11 @@ public class PhotoBoardService {
         photoBoardDao.update(photoBoardDto);
     }
 
+    @Transactional
     public void delete(int no) {
-        photoBoardDao.delete(no);
+        photoBoardDao.deleteLikeByBoardNo(no);
+        photoBoardDao.deleteCommentByBoardNo(no);
+        photoBoardDao.deleteBoard(no);
     }
 
     public void like(int boardNo, int memberNo) {
@@ -49,5 +53,16 @@ public class PhotoBoardService {
 
     public void increaseHit(int no) {
         photoBoardDao.increaseHit(no);
+    }
+
+    @Transactional
+    public void adminDeleteBoard(int boardNo) {
+        photoBoardDao.deleteLikeByBoardNo(boardNo);
+        photoBoardDao.deleteCommentByBoardNo(boardNo);
+        photoBoardDao.deleteBoard(boardNo);
+    }
+
+    public void adminDeleteComment(int commentNo) {
+        photoBoardDao.adminDeleteComment(commentNo);
     }
 }

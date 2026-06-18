@@ -29,7 +29,7 @@
         }
 
         .top-inner {
-            max-width: 1500px;
+            max-width: 1200px;
             height: 100%;
             margin: 0 auto;
             padding: 0 20px;
@@ -41,12 +41,13 @@
         .top-menu {
             display: flex;
             gap: 18px;
+            align-items: center;
         }
 
         .top-menu a:hover { color: #2563eb; }
 
         .brand-area {
-            max-width: 1500px;
+            max-width: 1200px;
             height: 110px;
             margin: 0 auto;
             padding: 0 20px;
@@ -65,31 +66,6 @@
             color: #111827;
         }
 
-        .search-box {
-            width: 420px;
-            height: 48px;
-            border: 2px solid #2563eb;
-            border-radius: 999px;
-            display: flex;
-            align-items: center;
-            padding: 0 18px;
-            gap: 10px;
-        }
-
-        .search-box input {
-            flex: 1;
-            border: none;
-            outline: none;
-            font-size: 15px;
-        }
-
-        .search-box button {
-            border: none;
-            background: none;
-            font-size: 22px;
-            cursor: pointer;
-        }
-
         .notice {
             font-size: 14px;
             color: #444;
@@ -101,7 +77,7 @@
         }
 
         .nav-inner {
-            max-width: 1500px;
+            max-width: 1200px;
             height: 58px;
             margin: 0 auto;
             padding: 0 20px;
@@ -138,7 +114,7 @@
         }
 
         main {
-            max-width: 1500px;
+            max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
@@ -146,7 +122,7 @@
         .content-grid {
             display: grid;
             grid-template-columns: 260px 1fr;
-            gap: 32px;
+            gap: 24px;
         }
 
         aside {
@@ -181,7 +157,7 @@
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 14px;
-            padding: 36px 40px;
+            padding: 30px;
         }
 
         .write-title {
@@ -199,12 +175,6 @@
         .write-title p {
             color: #64748b;
             font-size: 15px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
         }
 
         .form-control {
@@ -275,6 +245,11 @@
             border-top: 1px solid #eee;
         }
 
+        .right-actions {
+            display: flex;
+            gap: 10px;
+        }
+
         .btn {
             border: none;
             padding: 12px 22px;
@@ -300,11 +275,6 @@
             color: white;
         }
 
-        .right-actions {
-            display: flex;
-            gap: 10px;
-        }
-
         footer {
             margin-top: 60px;
             padding: 30px;
@@ -323,14 +293,16 @@
     <div class="top-bar">
         <div class="top-inner">
             <div class="top-menu">
-                <a href="/">🏠 홈</a>
+                <a href="/">홈</a>
                 <a href="/notice">공지사항</a>
-                <a href="/event">이벤트</a>
             </div>
 
-            <div class="top-menu">
-                <a href="/member/login">로그인</a>
-                <a href="/member/signup">회원가입</a>
+            <div class="top-menu" th:if="${session.loginUser != null}">
+                <span>
+                    <b th:text="${session.loginUser.name}"></b>님
+                </span>
+                <a href="/member/mypage">내정보</a>
+                <a href="/member/logout">로그아웃</a>
             </div>
         </div>
     </div>
@@ -338,13 +310,8 @@
     <div class="brand-area">
         <a href="/" class="logo">맛집<span>모아모아</span></a>
 
-        <form class="search-box">
-            <input type="text" placeholder="검색어를 입력하세요">
-            <button type="submit">🔍</button>
-        </form>
-
         <div class="notice">
-            <strong>실시간 인기글</strong> 인증게시판 새 글 확인하기
+            <strong>맛집 추천 사이트</strong>
         </div>
     </div>
 
@@ -382,36 +349,10 @@
 
                 <div class="form-control">
                     <label>제목</label>
-                    <input type="text" name="title" th:value="${board.title}">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-control">
-                        <label>맛집명</label>
-                        <input type="text" name="restaurantName" th:value="${board.restaurantName}">
-                    </div>
-
-                    <div class="form-control">
-                        <label>카테고리</label>
-                        <select name="category">
-                            <option value="한식" th:selected="${board.category == '한식'}">한식</option>
-                            <option value="중식" th:selected="${board.category == '중식'}">중식</option>
-                            <option value="일식" th:selected="${board.category == '일식'}">일식</option>
-                            <option value="양식" th:selected="${board.category == '양식'}">양식</option>
-                            <option value="카페" th:selected="${board.category == '카페'}">카페</option>
-                            <option value="기타" th:selected="${board.category == '기타'}">기타</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-control">
-                    <label>주소</label>
-                    <input type="text" name="address" th:value="${board.address}">
-                </div>
-
-                <div class="form-control">
-                    <label>한 줄 설명</label>
-                    <input type="text" name="description" th:value="${board.description}">
+                    <input type="text"
+                           name="title"
+                           th:value="${board.title}"
+                           required>
                 </div>
 
                 <div class="form-control">
@@ -432,15 +373,26 @@
 
                 <div class="form-control">
                     <label>리뷰 내용</label>
-                    <textarea name="content" th:text="${board.content}"></textarea>
+                    <textarea name="content"
+                              required
+                              th:text="${board.content}"></textarea>
                 </div>
 
                 <div class="bottom-actions">
-                    <a th:href="@{/photoBoard/view(no=${board.no})}" class="btn btn-list">뒤로가기</a>
+                    <a th:href="@{/photoBoard/view(no=${board.no})}"
+                       class="btn btn-list">
+                        뒤로가기
+                    </a>
 
                     <div class="right-actions">
-                        <a th:href="@{/photoBoard/view(no=${board.no})}" class="btn btn-cancel">취소</a>
-                        <button type="submit" class="btn btn-submit">수정</button>
+                        <a th:href="@{/photoBoard/view(no=${board.no})}"
+                           class="btn btn-cancel">
+                            취소
+                        </a>
+
+                        <button type="submit" class="btn btn-submit">
+                            수정
+                        </button>
                     </div>
                 </div>
 

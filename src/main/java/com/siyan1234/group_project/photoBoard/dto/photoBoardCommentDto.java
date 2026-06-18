@@ -12,6 +12,12 @@ public class photoBoardCommentDto {
     private int no;
     private int boardNo;
     private int memberNo;
+
     private String content;
     private String regdate;
+    private String updateDate;
+    private String isDeleted;
+
+    private String memberId;
+    private String memberName;
 }
