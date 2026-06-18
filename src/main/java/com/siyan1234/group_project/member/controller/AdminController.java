@@ -1,10 +1,17 @@
 package com.siyan1234.group_project.member.controller;
 
+import com.siyan1234.group_project.board.dto.BoardDto;
+import com.siyan1234.group_project.board.service.BoardService;
+import com.siyan1234.group_project.comment.dto.CommentDto;
+import com.siyan1234.group_project.comment.service.CommentService;
 import com.siyan1234.group_project.inquiry.dto.InquiryAnswerDto;
 import com.siyan1234.group_project.inquiry.dto.InquiryDto;
 import com.siyan1234.group_project.inquiry.service.InquiryService;
+import com.siyan1234.group_project.member.dto.MemberAdminDto;
 import com.siyan1234.group_project.member.dto.MemberDto;
 import com.siyan1234.group_project.member.service.MemberService;
+import com.siyan1234.group_project.report.dto.ReportDto;
+import com.siyan1234.group_project.report.service.ReportService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,11 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.siyan1234.group_project.member.dto.MemberAdminDto;
-import com.siyan1234.group_project.board.dto.BoardDto;
-import com.siyan1234.group_project.board.service.BoardService;
-import com.siyan1234.group_project.comment.dto.CommentDto;
-import com.siyan1234.group_project.comment.service.CommentService;
 
 @Controller
 @RequestMapping("/admin")
@@ -28,47 +30,34 @@ public class AdminController {
     private final InquiryService inquiryService;
     private final BoardService boardService;
     private final CommentService commentService;
+    private final ReportService reportService;
 
-    /* =========================
-       관리자 메인
-    ========================= */
     @GetMapping("")
     public String adminPage() {
         return "admin/admin";
     }
 
-    /* =========================
-       회원 목록
-    ========================= */
     @GetMapping("/member-list")
     public String memberList(
             MemberAdminDto memberAdminDto,
             Model model) {
 
-        if(memberAdminDto.getPage() == null
-                || memberAdminDto.getPage() < 1){
-
+        if (memberAdminDto.getPage() == null
+                || memberAdminDto.getPage() < 1) {
             memberAdminDto.setPage(1);
         }
 
         memberAdminDto.setSize(10);
 
         int totalCount =
-                memberService.countMemberStatistics(
-                        memberAdminDto
-                );
+                memberService.countMemberStatistics(memberAdminDto);
 
         int totalPage =
-                (int) Math.ceil(
-                        (double) totalCount
-                                / memberAdminDto.getSize()
-                );
+                (int) Math.ceil((double) totalCount / memberAdminDto.getSize());
 
         model.addAttribute(
                 "memberList",
-                memberService.searchMemberStatistics(
-                        memberAdminDto
-                )
+                memberService.searchMemberStatistics(memberAdminDto)
         );
 
         model.addAttribute("search", memberAdminDto);
@@ -79,15 +68,12 @@ public class AdminController {
         return "admin/member-list";
     }
 
-    /* =========================
-       문의 목록
-    ========================= */
     @GetMapping("/inquiry-list")
     public String inquiryList(
             InquiryDto inquiryDto,
             Model model) {
 
-        if(inquiryDto.getPage() == null || inquiryDto.getPage() < 1){
+        if (inquiryDto.getPage() == null || inquiryDto.getPage() < 1) {
             inquiryDto.setPage(1);
         }
 
@@ -112,14 +98,11 @@ public class AdminController {
         return "admin/inquiry-list";
     }
 
-    /* =========================
-       문의 상세
-    ========================= */
     @GetMapping("/inquiry-detail")
     public String inquiryDetail(
             @RequestParam(required = false) Integer no,
-            Model model
-    ) {
+            Model model) {
+
         if (no == null) {
             return "redirect:/admin/inquiry-list";
         }
@@ -136,30 +119,28 @@ public class AdminController {
 
         return "admin/inquiry-detail";
     }
+
     @PostMapping("/inquiry-answer")
     public String insertAnswer(
             InquiryAnswerDto dto,
-            HttpSession session){
+            HttpSession session) {
 
-        if(dto == null
+        if (dto == null
                 || dto.getInquiryNo() == null
                 || dto.getContent() == null
-                || dto.getContent().trim().isEmpty()){
-
+                || dto.getContent().trim().isEmpty()) {
             return "redirect:/admin/inquiry-list";
         }
 
         MemberDto loginUser =
                 (MemberDto) session.getAttribute("loginUser");
 
-        dto.setAdminNo(
-                loginUser.getNo()
-        );
+        dto.setAdminNo(loginUser.getNo());
 
         int result =
                 inquiryService.insertAnswer(dto);
 
-        if(result <= 0){
+        if (result <= 0) {
             return "redirect:/admin/inquiry-detail?no="
                     + dto.getInquiryNo()
                     + "&error=answerFail";
@@ -171,22 +152,20 @@ public class AdminController {
     }
 
     @PostMapping("/inquiry-answer-update")
-    public String updateAnswer(
-            InquiryAnswerDto dto){
+    public String updateAnswer(InquiryAnswerDto dto) {
 
-        if(dto == null
+        if (dto == null
                 || dto.getNo() == null
                 || dto.getInquiryNo() == null
                 || dto.getContent() == null
-                || dto.getContent().trim().isEmpty()){
-
+                || dto.getContent().trim().isEmpty()) {
             return "redirect:/admin/inquiry-list";
         }
 
         int result =
                 inquiryService.updateAnswer(dto);
 
-        if(result <= 0){
+        if (result <= 0) {
             return "redirect:/admin/inquiry-detail?no="
                     + dto.getInquiryNo()
                     + "&error=answerUpdateFail";
@@ -196,12 +175,25 @@ public class AdminController {
                 + dto.getInquiryNo()
                 + "&success=answerUpdate";
     }
+
+    @PostMapping("/inquiry-delete")
+    public String inquiryDelete(Integer no) {
+
+        if (no == null) {
+            return "redirect:/admin/inquiry-list";
+        }
+
+        inquiryService.adminDeleteInquiry(no);
+
+        return "redirect:/admin/inquiry-list";
+    }
+
     @GetMapping("/board-list")
     public String boardList(
             BoardDto boardDto,
             Model model) {
 
-        if(boardDto.getPage() == null || boardDto.getPage() < 1){
+        if (boardDto.getPage() == null || boardDto.getPage() < 1) {
             boardDto.setPage(1);
         }
 
@@ -211,9 +203,7 @@ public class AdminController {
                 boardService.countAdminBoardList(boardDto);
 
         int totalPage =
-                (int) Math.ceil(
-                        (double) totalCount / boardDto.getSize()
-                );
+                (int) Math.ceil((double) totalCount / boardDto.getSize());
 
         model.addAttribute(
                 "boardList",
@@ -229,9 +219,9 @@ public class AdminController {
     }
 
     @PostMapping("/board-delete")
-    public String boardDelete(Integer no){
+    public String boardDelete(Integer no) {
 
-        if(no == null){
+        if (no == null) {
             return "redirect:/admin/board-list";
         }
 
@@ -239,12 +229,53 @@ public class AdminController {
 
         return "redirect:/admin/board-list";
     }
+
+    @GetMapping("/board-detail")
+    public String boardDetail(
+            @RequestParam(required = false) Integer no,
+            Model model) {
+
+        if (no == null) {
+            return "redirect:/admin/board-list";
+        }
+
+        BoardDto board =
+                boardService.findAdminBoardByNo(no);
+
+        if (board == null) {
+            return "redirect:/admin/board-list";
+        }
+
+        model.addAttribute("board", board);
+
+        model.addAttribute(
+                "commentList",
+                commentService.findAdminCommentListByBoardNo(no)
+        );
+
+        return "admin/board-detail";
+    }
+
+    @PostMapping("/board-detail-comment-delete")
+    public String boardDetailCommentDelete(
+            Integer no,
+            Integer boardNo) {
+
+        if (no == null || boardNo == null) {
+            return "redirect:/admin/board-list";
+        }
+
+        commentService.adminDeleteComment(no);
+
+        return "redirect:/admin/board-detail?no=" + boardNo;
+    }
+
     @GetMapping("/comment-list")
     public String commentList(
             CommentDto commentDto,
             Model model) {
 
-        if(commentDto.getPage() == null || commentDto.getPage() < 1){
+        if (commentDto.getPage() == null || commentDto.getPage() < 1) {
             commentDto.setPage(1);
         }
 
@@ -254,9 +285,7 @@ public class AdminController {
                 commentService.countAdminCommentList(commentDto);
 
         int totalPage =
-                (int) Math.ceil(
-                        (double) totalCount / commentDto.getSize()
-                );
+                (int) Math.ceil((double) totalCount / commentDto.getSize());
 
         model.addAttribute(
                 "commentList",
@@ -272,9 +301,9 @@ public class AdminController {
     }
 
     @PostMapping("/comment-delete")
-    public String commentDelete(Integer no){
+    public String commentDelete(Integer no) {
 
-        if(no == null){
+        if (no == null) {
             return "redirect:/admin/comment-list";
         }
 
@@ -283,53 +312,66 @@ public class AdminController {
         return "redirect:/admin/comment-list";
     }
 
-    @GetMapping("/board-detail")
-    public String boardDetail(
+    @GetMapping("/report-list")
+    public String reportList(
+            ReportDto reportDto,
+            Model model) {
+
+        if (reportDto.getPage() == null || reportDto.getPage() < 1) {
+            reportDto.setPage(1);
+        }
+
+        reportDto.setSize(10);
+
+        int totalCount =
+                reportService.countAdminReportList(reportDto);
+
+        int totalPage =
+                (int) Math.ceil((double) totalCount / reportDto.getSize());
+
+        model.addAttribute(
+                "reportList",
+                reportService.searchAdminReportList(reportDto)
+        );
+
+        model.addAttribute("search", reportDto);
+        model.addAttribute("currentPage", reportDto.getPage());
+        model.addAttribute("totalPage", totalPage);
+        model.addAttribute("totalCount", totalCount);
+
+        return "admin/report-list";
+    }
+
+    @GetMapping("/report-detail")
+    public String reportDetail(
             @RequestParam(required = false) Integer no,
             Model model) {
 
         if (no == null) {
-            return "redirect:/admin/board-list";
+            return "redirect:/admin/report-list";
         }
 
-        BoardDto board = boardService.findAdminBoardByNo(no);
+        ReportDto report =
+                reportService.findAdminReportByNo(no);
 
-        if (board == null) {
-            return "redirect:/admin/board-list";
+        if (report == null) {
+            return "redirect:/admin/report-list";
         }
 
-        model.addAttribute("board", board);
-        model.addAttribute(
-                "commentList",
-                commentService.findAdminCommentListByBoardNo(no)
-        );
+        model.addAttribute("report", report);
 
-        return "admin/board-detail";
+        return "admin/report-detail";
     }
 
-    @PostMapping("/board-detail-comment-delete")
-    public String boardDetailCommentDelete(
-            Integer no,
-            Integer boardNo){
-
-        if(no == null || boardNo == null){
-            return "redirect:/admin/board-list";
-        }
-
-        commentService.adminDeleteComment(no);
-
-        return "redirect:/admin/board-detail?no=" + boardNo;
-    }
-
-    @PostMapping("/inquiry-delete")
-    public String inquiryDelete(Integer no) {
+    @PostMapping("/report-done")
+    public String reportDone(Integer no) {
 
         if (no == null) {
-            return "redirect:/admin/inquiry-list";
+            return "redirect:/admin/report-list";
         }
 
-        inquiryService.adminDeleteInquiry(no);
+        reportService.updateReportDone(no);
 
-        return "redirect:/admin/inquiry-list";
+        return "redirect:/admin/report-detail?no=" + no;
     }
 }

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 상세</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+
+        <div class="card-body">
+
+            <div class="flex justify-between items-center">
+
+                <h1 class="text-4xl font-bold">
+                    신고 상세
+                </h1>
+
+                <div class="flex gap-2">
+
+                    <a href="/admin/report-list"
+                       class="btn btn-outline">
+                        신고 목록
+                    </a>
+
+                    <a href="/admin"
+                       class="btn btn-primary">
+                        관리자 홈
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div th:if="${report.status == 'WAITING'}"
+                 class="alert alert-warning">
+                <span>
+                    아직 처리되지 않은 신고입니다.
+                </span>
+            </div>
+
+            <div th:if="${report.status == 'DONE'}"
+                 class="alert alert-success">
+                <span>
+                    처리 완료된 신고입니다.
+                </span>
+            </div>
+
+            <div class="overflow-x-auto mt-5">
+
+                <table class="table table-zebra">
+
+                    <tbody>
+
+                    <tr>
+                        <th class="w-40">신고 번호</th>
+                        <td th:text="${report.no}"></td>
+                    </tr>
+
+                    <tr>
+                        <th>신고자</th>
+                        <td>
+                            <span th:text="${report.reporterId}"></span>
+                            /
+                            <span th:text="${report.reporterName}"></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>신고 대상</th>
+                        <td>
+                            <span th:if="${report.targetType == 'BOARD'}"
+                                  class="badge badge-primary">
+                                게시글
+                            </span>
+
+                            <span th:if="${report.targetType == 'COMMENT'}"
+                                  class="badge badge-secondary">
+                                댓글
+                            </span>
+
+                            <span class="ml-2">
+                                대상번호 :
+                            </span>
+
+                            <span th:text="${report.targetNo}"></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>신고 사유</th>
+                        <td>
+                            <span th:switch="${report.reason}">
+                                <span th:case="'ABUSE'">욕설/비방</span>
+                                <span th:case="'SPAM'">도배/스팸</span>
+                                <span th:case="'AD'">광고</span>
+                                <span th:case="'PORN'">음란물</span>
+                                <span th:case="'PERSONAL'">개인정보 노출</span>
+                                <span th:case="'ETC'">기타</span>
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>처리 상태</th>
+                        <td>
+                            <span th:if="${report.status == 'WAITING'}"
+                                  class="badge badge-error">
+                                처리대기
+                            </span>
+
+                            <span th:if="${report.status == 'DONE'}"
+                                  class="badge badge-success">
+                                처리완료
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th>신고일</th>
+                        <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+
+                    <tr th:if="${report.updateDate != null}">
+                        <th>처리일</th>
+                        <td th:text="${#temporals.format(report.updateDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <h2 class="text-2xl font-bold">
+                신고 내용
+            </h2>
+
+            <div class="border rounded-lg p-5 whitespace-pre-wrap min-h-24 bg-base-100 mt-4"
+                 th:text="${report.content != null and report.content != '' ? report.content : '상세 신고 내용이 없습니다.'}">
+            </div>
+
+            <div class="divider"></div>
+
+            <h2 class="text-2xl font-bold">
+                신고 대상 내용
+            </h2>
+
+            <div class="card bg-base-200 mt-4">
+
+                <div class="card-body">
+
+                    <div th:if="${report.targetTitle != null}">
+                        <div class="text-sm text-gray-500 mb-2">
+                            게시글 제목
+                        </div>
+
+                        <div class="text-xl font-bold"
+                             th:text="${report.targetTitle}">
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="text-sm text-gray-500 mb-2">
+                            대상 내용
+                        </div>
+
+                        <div class="border rounded-lg p-5 whitespace-pre-wrap min-h-32 bg-base-100"
+                             th:text="${report.targetContent != null ? report.targetContent : '대상 내용을 불러올 수 없습니다.'}">
+                        </div>
+                    </div>
+
+                    <div class="mt-4"
+                         th:if="${report.targetType == 'BOARD'}">
+
+                        <a th:href="@{/admin/board-detail(no=${report.targetNo})}"
+                           class="btn btn-outline btn-primary">
+                            신고 게시글 확인
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="flex gap-3">
+
+                <a href="/admin/report-list"
+                   class="btn btn-outline">
+                    목록으로
+                </a>
+
+                <form action="/admin/report-done"
+                      method="post"
+                      th:if="${report.status == 'WAITING'}"
+                      onsubmit="return confirm('이 신고를 처리 완료로 변경하시겠습니까?');">
+
+                    <input type="hidden"
+                           name="no"
+                           th:value="${report.no}">
+
+                    <button type="submit"
+                            class="btn btn-success">
+                        처리 완료
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

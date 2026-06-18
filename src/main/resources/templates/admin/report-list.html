@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고 관리</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+
+        <div class="card-body">
+
+            <div class="flex justify-between items-center">
+
+                <h1 class="text-4xl font-bold">
+                    신고 관리
+                </h1>
+
+                <a href="/admin"
+                   class="btn btn-primary">
+                    관리자 홈
+                </a>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="alert alert-warning">
+                <span>
+                    회원이 신고한 게시글과 댓글을 확인하고 처리할 수 있습니다.
+                </span>
+            </div>
+
+            <form action="/admin/report-list"
+                  method="get"
+                  class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-3 mt-5">
+
+                <select name="searchStatus"
+                        class="select select-bordered w-full">
+
+                    <option value="">전체상태</option>
+
+                    <option value="WAITING"
+                            th:selected="${search != null and search.searchStatus == 'WAITING'}">
+                        처리대기
+                    </option>
+
+                    <option value="DONE"
+                            th:selected="${search != null and search.searchStatus == 'DONE'}">
+                        처리완료
+                    </option>
+
+                </select>
+
+                <select name="searchTargetType"
+                        class="select select-bordered w-full">
+
+                    <option value="">전체대상</option>
+
+                    <option value="BOARD"
+                            th:selected="${search != null and search.searchTargetType == 'BOARD'}">
+                        게시글
+                    </option>
+
+                    <option value="COMMENT"
+                            th:selected="${search != null and search.searchTargetType == 'COMMENT'}">
+                        댓글
+                    </option>
+
+                </select>
+
+                <select name="searchType"
+                        class="select select-bordered w-full">
+
+                    <option value="">검색조건</option>
+
+                    <option value="reporterId"
+                            th:selected="${search != null and search.searchType == 'reporterId'}">
+                        신고자 ID
+                    </option>
+
+                    <option value="targetTitle"
+                            th:selected="${search != null and search.searchType == 'targetTitle'}">
+                        게시글 제목
+                    </option>
+
+                </select>
+
+                <input type="text"
+                       name="keyword"
+                       th:value="${search != null ? search.keyword : ''}"
+                       class="input input-bordered w-full"
+                       placeholder="검색어 입력">
+
+                <div class="flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary flex-1">
+                        검색
+                    </button>
+
+                    <a href="/admin/report-list"
+                       class="btn btn-outline flex-1">
+                        초기화
+                    </a>
+
+                </div>
+
+            </form>
+
+            <div class="mt-4 text-sm text-gray-500">
+                총 신고 수 :
+                <span th:text="${totalCount}"></span>
+                건
+            </div>
+
+            <div class="overflow-x-auto mt-5">
+
+                <table class="table table-zebra whitespace-nowrap">
+
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>신고자</th>
+                        <th>대상</th>
+                        <th>대상번호</th>
+                        <th>대상제목</th>
+                        <th>사유</th>
+                        <th>상태</th>
+                        <th>신고일</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:if="${#lists.isEmpty(reportList)}">
+                        <td colspan="9"
+                            class="text-center py-10">
+                            조회된 신고가 없습니다.
+                        </td>
+                    </tr>
+
+                    <tr th:each="report : ${reportList}">
+
+                        <td th:text="${report.no}"></td>
+
+                        <td>
+                            <div th:text="${report.reporterId}"></div>
+                            <div class="text-xs text-gray-500"
+                                 th:text="${report.reporterName}">
+                            </div>
+                        </td>
+
+                        <td>
+                            <span th:if="${report.targetType == 'BOARD'}"
+                                  class="badge badge-primary">
+                                게시글
+                            </span>
+
+                            <span th:if="${report.targetType == 'COMMENT'}"
+                                  class="badge badge-secondary">
+                                댓글
+                            </span>
+                        </td>
+
+                        <td th:text="${report.targetNo}"></td>
+
+                        <td>
+                            <span th:if="${report.targetTitle != null}"
+                                  th:text="${#strings.abbreviate(report.targetTitle, 25)}">
+                            </span>
+
+                            <span th:if="${report.targetTitle == null}"
+                                  class="text-gray-400">
+                                댓글 신고
+                            </span>
+                        </td>
+
+                        <td>
+                            <span th:switch="${report.reason}">
+
+                                <span th:case="'ABUSE'">욕설/비방</span>
+                                <span th:case="'SPAM'">도배/스팸</span>
+                                <span th:case="'AD'">광고</span>
+                                <span th:case="'PORN'">음란물</span>
+                                <span th:case="'PERSONAL'">개인정보 노출</span>
+                                <span th:case="'ETC'">기타</span>
+
+                            </span>
+                        </td>
+
+                        <td>
+                            <span th:if="${report.status == 'WAITING'}"
+                                  class="badge badge-error">
+                                처리대기
+                            </span>
+
+                            <span th:if="${report.status == 'DONE'}"
+                                  class="badge badge-success">
+                                처리완료
+                            </span>
+                        </td>
+
+                        <td th:text="${#temporals.format(report.regDate, 'yyyy-MM-dd HH:mm')}"></td>
+
+                        <td>
+                            <a th:href="@{/admin/report-detail(no=${report.no})}"
+                               class="btn btn-sm btn-outline btn-primary">
+                                상세
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="flex justify-center mt-6"
+                 th:if="${totalPage > 0}">
+
+                <div class="join">
+
+                    <a class="join-item btn"
+                       th:classappend="${currentPage == 1} ? ' btn-disabled'"
+                       th:href="@{/admin/report-list(
+                            page=${currentPage - 1},
+                            searchStatus=${search.searchStatus},
+                            searchTargetType=${search.searchTargetType},
+                            searchType=${search.searchType},
+                            keyword=${search.keyword}
+                       )}">
+                        이전
+                    </a>
+
+                    <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                       class="join-item btn"
+                       th:classappend="${i == currentPage} ? ' btn-active'"
+                       th:text="${i}"
+                       th:href="@{/admin/report-list(
+                            page=${i},
+                            searchStatus=${search.searchStatus},
+                            searchTargetType=${search.searchTargetType},
+                            searchType=${search.searchType},
+                            keyword=${search.keyword}
+                       )}">
+                    </a>
+
+                    <a class="join-item btn"
+                       th:classappend="${currentPage == totalPage} ? ' btn-disabled'"
+                       th:href="@{/admin/report-list(
+                            page=${currentPage + 1},
+                            searchStatus=${search.searchStatus},
+                            searchTargetType=${search.searchTargetType},
+                            searchType=${search.searchType},
+                            keyword=${search.keyword}
+                       )}">
+                        다음
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
