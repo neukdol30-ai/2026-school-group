@@ -114,5 +114,63 @@
         ORDER BY c.no ASC
 
     </select>
+    <select id="searchAdminPhotoCommentList"
+            parameterType="CommentDto"
+            resultType="CommentDto">
+
+        SELECT c.no,
+        c.board_no,
+        b.title AS board_title,
+        c.member_no,
+        c.content,
+        TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
+        c.is_deleted,
+        m.name,
+        m.member_id
+        FROM board_comment c
+        JOIN board b ON c.board_no = b.no
+        JOIN member m ON c.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND c.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'content' and keyword != null and keyword != ''">
+            AND c.content LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+        ORDER BY c.no DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countAdminPhotoCommentList"
+            parameterType="CommentDto"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM board_comment c
+        JOIN board b ON c.board_no = b.no
+        JOIN member m ON c.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND c.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'content' and keyword != null and keyword != ''">
+            AND c.content LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+    </select>
 
 </mapper>

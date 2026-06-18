@@ -76,4 +76,29 @@ public class PhotoBoardService {
     public void adminDeleteComment(int commentNo) {
         photoBoardDao.adminDeleteComment(commentNo);
     }
+    public List<PhotoBoardDto> searchAdminPhotoBoardList(PhotoBoardDto photoBoardDto) {
+
+        if (photoBoardDto.getPage() == null || photoBoardDto.getPage() < 1) {
+            photoBoardDto.setPage(1);
+        }
+
+        if (photoBoardDto.getSize() == null || photoBoardDto.getSize() < 1) {
+            photoBoardDto.setSize(10);
+        }
+
+        int offset =
+                (photoBoardDto.getPage() - 1) * photoBoardDto.getSize();
+
+        photoBoardDto.setOffset(offset);
+
+        return photoBoardDao.searchAdminPhotoBoardList(photoBoardDto);
+    }
+
+    public int countAdminPhotoBoardList(PhotoBoardDto photoBoardDto) {
+        return photoBoardDao.countAdminPhotoBoardList(photoBoardDto);
+    }
+
+    public PhotoBoardDto findAdminPhotoBoardByNo(Integer no) {
+        return photoBoardDao.findAdminPhotoBoardByNo(no);
+    }
 }

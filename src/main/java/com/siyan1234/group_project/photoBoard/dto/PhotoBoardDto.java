@@ -36,4 +36,12 @@ public class PhotoBoardDto {
 
     private String memberId;
     private String memberName;
+
+    private String searchDeleted;
+    private String searchType;
+    private String keyword;
+
+    private Integer page;
+    private Integer size;
+    private Integer offset;
 }

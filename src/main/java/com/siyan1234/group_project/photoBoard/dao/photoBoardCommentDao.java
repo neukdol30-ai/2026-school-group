@@ -80,4 +80,7 @@ public class photoBoardCommentDao {
 
         jdbcTemplate.update(sql, no, memberNo);
     }
+    List<CommentDto> searchAdminPhotoCommentList(CommentDto commentDto);
+
+    int countAdminPhotoCommentList(CommentDto commentDto);
 }

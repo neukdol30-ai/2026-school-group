@@ -252,5 +252,69 @@
         AND is_deleted = 'N'
 
     </update>
+    <select id="searchAdminPhotoBoardList"
+            parameterType="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto"
+            resultMap="photoBoardResultMap">
+
+        SELECT b.*,
+        m.member_id,
+        m.name AS member_name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND b.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'title' and keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+        ORDER BY b.no DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countAdminPhotoBoardList"
+            parameterType="com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND b.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'title' and keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+    </select>
+
+    <select id="findAdminPhotoBoardByNo"
+            parameterType="int"
+            resultMap="photoBoardResultMap">
+
+        SELECT b.*,
+        m.member_id,
+        m.name AS member_name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.no = #{no}
+        AND b.board_type = 'REVIEW'
+
+    </select>
 
 </mapper>

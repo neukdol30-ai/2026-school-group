@@ -5,6 +5,9 @@ import com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto;
 import com.siyan1234.group_project.photoBoard.dto.photoBoardCommentDto;
 import com.siyan1234.group_project.photoBoard.service.PhotoBoardService;
 import com.siyan1234.group_project.photoBoard.service.photoBoardCommentService;
+import com.siyan1234.group_project.report.dto.ReportDto;
+import com.siyan1234.group_project.report.service.ReportService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,7 @@ public class PhotoBoardController {
 
     private final PhotoBoardService photoBoardService;
     private final photoBoardCommentService commentService;
+    private final ReportService reportService;
 
     private boolean isAdmin(MemberDto loginUser) {
         return loginUser != null
@@ -267,5 +271,81 @@ public class PhotoBoardController {
         return "redirect:/photoBoard/view?no="
                 + boardNo
                 + "&countHit=false";
+    }
+    @PostMapping("/report/board")
+    public String reportBoard(@RequestParam int boardNo,
+                              @RequestParam String reason,
+                              @RequestParam(required = false) String content,
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        ReportDto reportDto = new ReportDto();
+        reportDto.setReporterNo(loginUser.getNo());
+        reportDto.setTargetType("BOARD");
+        reportDto.setTargetNo(boardNo);
+        reportDto.setReason(reason);
+        reportDto.setContent(content);
+
+        int result = reportService.insertReport(reportDto);
+
+        if (result == -1) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "이미 신고한 게시글입니다."
+            );
+        } else if (result > 0) {
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "게시글 신고가 접수되었습니다."
+            );
+        }
+
+        return "redirect:/photoBoard/view?no=" + boardNo;
+    }
+
+    @PostMapping("/report/comment")
+    public String reportComment(@RequestParam int boardNo,
+                                @RequestParam int commentNo,
+                                @RequestParam String reason,
+                                @RequestParam(required = false) String content,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
+
+        if (loginUser == null) {
+            return "redirect:/member/login";
+        }
+
+        ReportDto reportDto = new ReportDto();
+        reportDto.setReporterNo(loginUser.getNo());
+        reportDto.setTargetType("COMMENT");
+        reportDto.setTargetNo(commentNo);
+        reportDto.setReason(reason);
+        reportDto.setContent(content);
+
+        int result = reportService.insertReport(reportDto);
+
+        if (result == -1) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    "이미 신고한 댓글입니다."
+            );
+        } else if (result > 0) {
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "댓글 신고가 접수되었습니다."
+            );
+        }
+
+        return "redirect:/photoBoard/view?no=" + boardNo;
     }
 }

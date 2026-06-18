@@ -43,4 +43,9 @@ public interface PhotoBoardDao {
     void decreaseLikeCount(@Param("boardNo") int boardNo);
 
     void adminDeleteComment(@Param("commentNo") int commentNo);
+    List<PhotoBoardDto> searchAdminPhotoBoardList(PhotoBoardDto photoBoardDto);
+
+    int countAdminPhotoBoardList(PhotoBoardDto photoBoardDto);
+
+    PhotoBoardDto findAdminPhotoBoardByNo(@Param("no") Integer no);
 }

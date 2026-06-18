@@ -24,4 +24,25 @@ public class photoBoardCommentService {
     public void delete(int no, int memberNo) {
         commentDao.delete(no, memberNo);
     }
+    public List<CommentDto> searchAdminPhotoCommentList(CommentDto commentDto) {
+
+        if (commentDto.getPage() == null || commentDto.getPage() < 1) {
+            commentDto.setPage(1);
+        }
+
+        if (commentDto.getSize() == null || commentDto.getSize() < 1) {
+            commentDto.setSize(10);
+        }
+
+        int offset =
+                (commentDto.getPage() - 1) * commentDto.getSize();
+
+        commentDto.setOffset(offset);
+
+        return commentDao.searchAdminPhotoCommentList(commentDto);
+    }
+
+    public int countAdminPhotoCommentList(CommentDto commentDto) {
+        return commentDao.countAdminPhotoCommentList(commentDto);
+    }
 }
