@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siyan1234.group_project.notice.dao.NoticeDao">
+
+    <!-- 공지 목록 -->
+    <select id="findAll"
+            resultType="com.siyan1234.group_project.notice.dto.NoticeDto">
+
+        SELECT *
+        FROM NOTICE
+        WHERE IS_DELETED = 'N'
+        ORDER BY NO DESC
+
+    </select>
+
+    <!-- 공지 상세 -->
+    <select id="findByNo"
+            parameterType="int"
+            resultType="com.siyan1234.group_project.notice.dto.NoticeDto">
+
+        SELECT *
+        FROM NOTICE
+        WHERE NO = #{no}
+        AND IS_DELETED = 'N'
+
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="increaseHit"
+            parameterType="int">
+
+        UPDATE NOTICE
+        SET HIT = HIT + 1
+        WHERE NO = #{no}
+
+    </update>
+
+    <!-- 공지 등록 -->
+    <insert id="write"
+            parameterType="com.siyan1234.group_project.notice.dto.NoticeDto">
+
+        INSERT INTO NOTICE
+        (
+        NO,
+        MEMBER_NO,
+        TITLE,
+        CONTENT,
+        HIT,
+        REGDATE,
+        IS_DELETED
+        )
+        VALUES
+        (
+        NOTICE_SEQ.NEXTVAL,
+        #{memberNo},
+        #{title},
+        #{content},
+        0,
+        SYSDATE,
+        'N'
+        )
+
+    </insert>
+
+    <!-- 공지 수정 -->
+    <update id="update"
+            parameterType="com.siyan1234.group_project.notice.dto.NoticeDto">
+
+        UPDATE NOTICE
+        SET TITLE = #{title},
+        CONTENT = #{content},
+        UPDATE_DATE = SYSDATE
+        WHERE NO = #{no}
+
+    </update>
+
+    <!-- 공지 삭제 -->
+    <update id="delete"
+            parameterType="int">
+
+        UPDATE NOTICE
+        SET IS_DELETED = 'Y'
+        WHERE NO = #{no}
+
+    </update>
+
+</mapper>

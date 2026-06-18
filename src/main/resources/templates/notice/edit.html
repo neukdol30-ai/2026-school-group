@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 수정</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#f3f4f6;
+            font-family:Arial,"Noto Sans KR",sans-serif;
+        }
+
+        main{
+            max-width:1000px;
+            margin:40px auto;
+            padding:0 20px;
+        }
+
+        .edit-box{
+            background:white;
+            border-radius:12px;
+            border:1px solid #ddd;
+            padding:40px;
+        }
+
+        h1{
+            margin-bottom:30px;
+        }
+
+        .form-row{
+            margin-bottom:20px;
+        }
+
+        .form-row label{
+            display:block;
+            margin-bottom:10px;
+            font-weight:800;
+        }
+
+        input,
+        textarea{
+            width:100%;
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:15px;
+            font-size:15px;
+        }
+
+        textarea{
+            height:300px;
+            resize:none;
+        }
+
+        .btn-area{
+            display:flex;
+            justify-content:flex-end;
+            gap:10px;
+            margin-top:20px;
+        }
+
+        .btn{
+            height:45px;
+            padding:0 20px;
+            border:none;
+            border-radius:999px;
+            cursor:pointer;
+            font-weight:800;
+        }
+
+        .save-btn{
+            background:#2563eb;
+            color:white;
+        }
+
+        .cancel-btn{
+            background:#e5e7eb;
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <section class="edit-box">
+
+        <h1>공지사항 수정</h1>
+
+        <form th:action="@{/notice/edit}" method="post">
+
+            <input type="hidden"
+                   name="no"
+                   th:value="${notice.no}">
+
+            <div class="form-row">
+                <label>제목</label>
+
+                <input type="text"
+                       name="title"
+                       th:value="${notice.title}"
+                       required>
+            </div>
+
+            <div class="form-row">
+                <label>내용</label>
+
+                <textarea name="content"
+                          required
+                          th:text="${notice.content}"></textarea>
+            </div>
+
+            <div class="btn-area">
+
+                <a th:href="@{/notice/view(no=${notice.no})}">
+                    <button type="button"
+                            class="btn cancel-btn">
+                        취소
+                    </button>
+                </a>
+
+                <button type="submit"
+                        class="btn save-btn">
+                    수정완료
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</main>
+
+</body>
+</html>

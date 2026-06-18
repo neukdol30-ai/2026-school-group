@@ -11,4 +11,13 @@ public class CommentDto {
     private String regDate;
     private String name;
     private String memberId; // 댓글 작성자 ID
+
+    // 관리자 게시글 관리용 추가 필드
+    private String isDeleted;
+    private String searchType;
+    private String keyword;
+    private String searchDeleted;
+    private Integer page;
+    private Integer size;
+    private Integer offset;
 }

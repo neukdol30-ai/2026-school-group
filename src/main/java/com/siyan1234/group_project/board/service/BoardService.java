@@ -70,4 +70,25 @@ public class BoardService {
     public List<BoardDto> recentPosts() {
         return boardDao.recentPosts();
     }
+
+    // admin 계정 관리자 페이지 추가
+    public List<BoardDto> searchAdminBoardList(BoardDto boardDto) {
+        if (boardDto.getPage() == null || boardDto.getPage() < 1) {
+            boardDto.setPage(1);
+        }
+        if (boardDto.getSize() == null || boardDto.getSize() < 1) {
+            boardDto.setSize(10);
+        }
+        int offset = (boardDto.getPage() - 1) * boardDto.getSize();
+        boardDto.setOffset(offset);
+        return boardDao.searchAdminBoardList(boardDto);
+    }
+
+    public int countAdminBoardList(BoardDto boardDto) {
+        return boardDao.countAdminBoardList(boardDto);
+    }
+
+    public int adminDeletedBoard(Integer no) {
+        return boardDao.adminDeleteBoard(no);
+    }
 }

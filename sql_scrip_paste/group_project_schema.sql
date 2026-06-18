@@ -160,3 +160,10 @@ DROP SEQUENCE board_image_seq;
 DROP SEQUENCE board_comment_seq;
 DROP SEQUENCE inquiry_seq;
 DROP SEQUENCE inquiry_answer_seq;
+
+
+-- admin 계정으로 회원 가입 후 아래 SQL 진행
+UPDATE MEMBER
+SET ROLE = 'ADMIN'
+WHERE MEMBER_ID = 'admin';
+COMMIT;
