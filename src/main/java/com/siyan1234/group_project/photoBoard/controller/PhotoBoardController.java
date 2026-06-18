@@ -105,16 +105,23 @@ public class PhotoBoardController {
     }
 
     @GetMapping("/view")
-    public String view(@RequestParam int no, Model model, HttpSession session) {
+    public String view(@RequestParam int no,
+                      @RequestParam(defaultValue = "true") boolean countHit,
+                      Model model,
+                       HttpSession session) {
         model.addAttribute("menu","photo");
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
         }
 
-        photoBoardService.increaseHit(no);
+        if (countHit) {
+            photoBoardService.increaseHit(no);
+        }
+
 
         PhotoBoardDto board = photoBoardService.getBoard(no);
 
@@ -178,7 +185,9 @@ public class PhotoBoardController {
 
         photoBoardService.update(photoBoardDto);
 
-        return "redirect:/photoBoard/view?no=" + photoBoardDto.getNo();
+        return "redirect:/photoBoard/view?no="
+                + photoBoardDto.getNo()
+                + "&countHit=false";
     }
 
     @PostMapping("/delete")
@@ -206,9 +215,11 @@ public class PhotoBoardController {
     }
 
     @GetMapping("/like")
-    public String like(@RequestParam int no, HttpSession session) {
+    public String like(@RequestParam int no,
+                       HttpSession session) {
 
-        MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
+        MemberDto loginUser =
+                (MemberDto) session.getAttribute("loginUser");
 
         if (loginUser == null) {
             return "redirect:/member/login";
@@ -216,7 +227,7 @@ public class PhotoBoardController {
 
         photoBoardService.like(no, loginUser.getNo());
 
-        return "redirect:/photoBoard/view?no=" + no;
+        return "redirect:/photoBoard/view?no=" + no + "&countHit=false";
     }
 
     @PostMapping("/comment/write")
@@ -231,7 +242,9 @@ public class PhotoBoardController {
         commentDto.setMemberNo(loginUser.getNo());
         commentService.write(commentDto);
 
-        return "redirect:/photoBoard/view?no=" + commentDto.getBoardNo();
+        return "redirect:/photoBoard/view?no="
+                + commentDto.getBoardNo()
+                + "&countHit=false";
     }
 
     @GetMapping("/comment/delete")
@@ -251,6 +264,8 @@ public class PhotoBoardController {
             commentService.delete(no, loginUser.getNo());
         }
 
-        return "redirect:/photoBoard/view?no=" + boardNo;
+        return "redirect:/photoBoard/view?no="
+                + boardNo
+                + "&countHit=false";
     }
 }
