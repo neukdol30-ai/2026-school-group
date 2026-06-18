@@ -46,10 +46,35 @@
             <div class="nav-inner">
 
                 <ul class="main-menu">
-                    <li><a href="/" class="active">🏠</a></li>
-                    <li><a href="/board/list">자유게시판</a></li>
-                    <li><a href="/photoBoard/list">인증게시판</a></li>
-                    <li><a href="/member/mypage">내정보</a></li>
+
+                    <li>
+                        <a href="/"
+                           th:classappend="${menu == 'home'} ? 'active'">
+                            🏠
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/board/list"
+                           th:classappend="${menu == 'board'} ? 'active'">
+                            자유게시판
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/photoBoard/list"
+                           th:classappend="${menu == 'photo'} ? 'active'">
+                            인증게시판
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/member/mypage"
+                           th:classappend="${menu == 'mypage'} ? 'active'">
+                            내정보
+                        </a>
+                    </li>
+
                 </ul>
 
             </div>

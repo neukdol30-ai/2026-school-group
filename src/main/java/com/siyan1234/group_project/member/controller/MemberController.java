@@ -144,6 +144,7 @@ public class MemberController {
         if (loginUser == null){
             return "redirect:/member/login";
         }
+        model.addAttribute("menu","mypage");
         model.addAttribute("member",loginUser);
         model.addAttribute("error",error);
         model.addAttribute("success", success);

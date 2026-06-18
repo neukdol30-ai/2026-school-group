@@ -35,6 +35,7 @@ public class PhotoBoardController {
     public String list(@RequestParam(required = false) String keyword,
                        Model model,
                        HttpSession session) {
+        model.addAttribute("menu","photo");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -51,7 +52,9 @@ public class PhotoBoardController {
     }
 
     @GetMapping("/write")
-    public String write(HttpSession session) {
+    public String write(HttpSession session, Model model) {
+
+        model.addAttribute("menu","photo");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -102,6 +105,7 @@ public class PhotoBoardController {
 
     @GetMapping("/view")
     public String view(@RequestParam int no, Model model, HttpSession session) {
+        model.addAttribute("menu","photo");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
@@ -129,6 +133,7 @@ public class PhotoBoardController {
 
     @GetMapping("/update")
     public String update(@RequestParam int no, Model model, HttpSession session) {
+        model.addAttribute("menu","photo");
 
         MemberDto loginUser = (MemberDto) session.getAttribute("loginUser");
 
