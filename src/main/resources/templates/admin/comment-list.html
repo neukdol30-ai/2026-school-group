@@ -105,7 +105,7 @@
                     <thead>
                     <tr>
                         <th>댓글번호</th>
-                        <th>게시글번호</th>
+                        <th>게시글제목</th>
                         <th>작성자ID</th>
                         <th>작성자명</th>
                         <th>내용</th>
@@ -129,9 +129,9 @@
                         <td th:text="${comment.no}"></td>
 
                         <td>
-                            <a class="link link-primary"
-                               th:href="@{/board/view(no=${comment.boardNo})}"
-                               th:text="${comment.boardNo}">
+                            <a class="link link-primary font-semibold"
+                               th:href="@{/admin/board-detail(no=${comment.boardNo})}"
+                               th:text="${comment.boardTitle}">
                             </a>
                         </td>
 

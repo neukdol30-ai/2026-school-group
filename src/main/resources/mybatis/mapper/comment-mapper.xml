@@ -38,6 +38,7 @@
     <select id="searchAdminCommentList" parameterType="CommentDto" resultType="CommentDto">
         SELECT c.no,
         c.board_no,
+        b.title AS board_title,
         c.member_no,
         c.content,
         TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
@@ -45,6 +46,7 @@
         m.name,
         m.member_id
         FROM board_comment c
+        JOIN board b ON c.board_no = b.no
         JOIN member m ON c.member_no = m.no
         WHERE 1 = 1
 
@@ -91,5 +93,26 @@
         update_date = SYSDATE
         WHERE no = #{no}
     </update>
+
+    <select id="findAdminCommentListByBoardNo"
+            parameterType="int"
+            resultType="CommentDto">
+
+        SELECT c.no,
+        c.board_no,
+        b.title AS board_title,
+        c.member_no,
+        c.content,
+        TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
+        c.is_deleted,
+        m.name,
+        m.member_id
+        FROM board_comment c
+        JOIN board b ON c.board_no = b.no
+        JOIN member m ON c.member_no = m.no
+        WHERE c.board_no = #{boardNo}
+        ORDER BY c.no ASC
+
+    </select>
 
 </mapper>

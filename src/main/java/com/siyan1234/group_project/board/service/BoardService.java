@@ -89,6 +89,13 @@ public class BoardService {
     }
 
     public int adminDeleteBoard(Integer no) {
+
+        boardDao.adminDeleteBoardComments(no);
+
         return boardDao.adminDeleteBoard(no);
+    }
+
+    public BoardDto findAdminBoardByNo(Integer no) {
+        return boardDao.findAdminBoardByNo(no);
     }
 }

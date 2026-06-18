@@ -137,10 +137,30 @@
         </if>
     </select>
 
+    <update id="adminDeleteBoardComments" parameterType="int">
+        UPDATE board_comment
+        SET is_deleted = 'Y',
+        update_date = SYSDATE
+        WHERE board_no = #{boardNo}
+    </update>
+
     <update id="adminDeleteBoard" parameterType="int">
         UPDATE board
         SET is_deleted = 'Y',
-            update_date = SYSDATE
+        update_date = SYSDATE
         WHERE no = #{no}
     </update>
+
+    <select id="findAdminBoardByNo"
+            parameterType="int"
+            resultType="BoardDto">
+
+        SELECT b.*,
+        m.member_id,
+        m.name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.no = #{no}
+
+    </select>
 </mapper>

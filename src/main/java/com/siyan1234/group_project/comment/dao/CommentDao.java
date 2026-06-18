@@ -17,6 +17,7 @@ public interface CommentDao {
     List<CommentDto> searchAdminCommentList(CommentDto commentDto);
     int countAdminCommentList(CommentDto commentDto);
     int adminDeleteComment(Integer no);
+    List<CommentDto> findAdminCommentListByBoardNo(Integer boardNo);
 }
 
 

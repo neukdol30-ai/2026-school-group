@@ -285,12 +285,39 @@ public class AdminController {
 
     @GetMapping("/board-detail")
     public String boardDetail(
-            @RequestParam Integer no,
+            @RequestParam(required = false) Integer no,
             Model model) {
 
-//        model.addAttribute("board", boardService.findAdminBoardByNo(no));
-//        model.addAttribute("commentList", commentService.findAdminCommentListByBoardNo(no));
+        if (no == null) {
+            return "redirect:/admin/board-list";
+        }
+
+        BoardDto board = boardService.findAdminBoardByNo(no);
+
+        if (board == null) {
+            return "redirect:/admin/board-list";
+        }
+
+        model.addAttribute("board", board);
+        model.addAttribute(
+                "commentList",
+                commentService.findAdminCommentListByBoardNo(no)
+        );
 
         return "admin/board-detail";
+    }
+
+    @PostMapping("/board-detail-comment-delete")
+    public String boardDetailCommentDelete(
+            Integer no,
+            Integer boardNo){
+
+        if(no == null || boardNo == null){
+            return "redirect:/admin/board-list";
+        }
+
+        commentService.adminDeleteComment(no);
+
+        return "redirect:/admin/board-detail?no=" + boardNo;
     }
 }

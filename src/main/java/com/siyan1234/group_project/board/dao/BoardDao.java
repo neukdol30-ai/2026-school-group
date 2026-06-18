@@ -32,7 +32,12 @@ public interface BoardDao {
     // admin 계정 관리자 페이지 추가
     List<BoardDto> searchAdminBoardList(BoardDto boardDto);
     int countAdminBoardList(BoardDto boardDto);
+
     int adminDeleteBoard(Integer no);
+
+    int adminDeleteBoardComments(Integer boardNo);
+
+    BoardDto findAdminBoardByNo(Integer no);
 
 }
 
