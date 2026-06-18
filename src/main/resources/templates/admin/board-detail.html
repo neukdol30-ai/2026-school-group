@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 게시글 상세</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold">관리자 게시글 상세</h1>
+
+                <div class="flex gap-2">
+                    <a href="/admin/board-list" class="btn btn-outline">
+                        게시글 목록
+                    </a>
+
+                    <a href="/admin" class="btn btn-primary">
+                        관리자 홈
+                    </a>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div>
+                    <div class="text-sm text-gray-500">게시글 번호</div>
+                    <div th:text="${board.no}"></div>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">게시판 유형</div>
+                    <div th:text="${board.boardType}"></div>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">작성자 ID</div>
+                    <div th:text="${board.memberId}"></div>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">작성자명</div>
+                    <div th:text="${board.name}"></div>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">조회수</div>
+                    <div th:text="${board.hit}"></div>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">좋아요</div>
+                    <div th:text="${board.likeCount}"></div>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">삭제 여부</div>
+
+                    <span th:if="${board.isDeleted == 'N'}"
+                          class="badge badge-success">
+                        정상
+                    </span>
+
+                    <span th:if="${board.isDeleted == 'Y'}"
+                          class="badge badge-error">
+                        삭제됨
+                    </span>
+                </div>
+
+                <div>
+                    <div class="text-sm text-gray-500">작성일</div>
+                    <div th:text="${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div>
+                <div class="text-sm text-gray-500 mb-2">제목</div>
+                <div class="text-xl font-bold"
+                     th:text="${board.title}">
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <div class="text-sm text-gray-500 mb-2">내용</div>
+                <div class="border rounded-lg p-5 whitespace-pre-wrap min-h-40"
+                     th:text="${board.content}">
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl font-bold">댓글 목록</h2>
+
+                <form action="/admin/board-delete"
+                      method="post"
+                      th:if="${board.isDeleted == 'N'}"
+                      onsubmit="return confirm('게시글을 삭제하시겠습니까? 댓글도 함께 삭제됩니다.');">
+
+                    <input type="hidden"
+                           name="no"
+                           th:value="${board.no}">
+
+                    <button type="submit"
+                            class="btn btn-error">
+                        게시글 삭제
+                    </button>
+                </form>
+            </div>
+
+            <div class="overflow-x-auto mt-4">
+
+                <table class="table table-zebra whitespace-nowrap">
+
+                    <thead>
+                    <tr>
+                        <th>댓글번호</th>
+                        <th>작성자ID</th>
+                        <th>작성자명</th>
+                        <th>내용</th>
+                        <th>삭제여부</th>
+                        <th>작성일</th>
+                        <th>관리</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:if="${#lists.isEmpty(commentList)}">
+                        <td colspan="7"
+                            class="text-center py-8">
+                            댓글이 없습니다.
+                        </td>
+                    </tr>
+
+                    <tr th:each="comment : ${commentList}">
+                        <td th:text="${comment.no}"></td>
+                        <td th:text="${comment.memberId}"></td>
+                        <td th:text="${comment.name}"></td>
+                        <td th:text="${comment.content}"></td>
+
+                        <td>
+                            <span th:if="${comment.isDeleted == 'N'}">
+                                정상
+                            </span>
+
+                            <span th:if="${comment.isDeleted == 'Y'}"
+                                  class="text-error">
+                                삭제됨
+                            </span>
+                        </td>
+
+                        <td th:text="${comment.regDate}"></td>
+
+                        <td>
+                            <form action="/admin/board-detail-comment-delete"
+                                  method="post"
+                                  th:if="${comment.isDeleted == 'N'}"
+                                  onsubmit="return confirm('댓글을 삭제하시겠습니까?');">
+
+                                <input type="hidden"
+                                       name="no"
+                                       th:value="${comment.no}">
+
+                                <input type="hidden"
+                                       name="boardNo"
+                                       th:value="${board.no}">
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-error">
+                                    댓글 삭제
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
