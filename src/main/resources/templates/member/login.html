@@ -30,14 +30,10 @@
                 로그인
             </h2>
 
-            <div th:if="${errorMessage}"
-                 class="alert alert-error mb-4">
-                <span th:text="${errorMessage}"></span>
-            </div>
+            <div th:if="${errorMessage != null}"
+                 class="alert alert-error mt-3 mb-3">
 
-                <span th:text="${errorMessage}">
-                    아이디 또는 비밀번호를 다시 확인해주세요.
-                </span>
+                <span th:text="${errorMessage}"></span>
 
             </div>
 
