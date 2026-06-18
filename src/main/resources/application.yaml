@@ -35,7 +35,8 @@ mybatis:
     com.siyan1234.group_project.member.dto,
     com.siyan1234.group_project.board.dto,
     com.siyan1234.group_project.comment.dto,
-    com.siyan1234.group_project.inquiry.dto
+    com.siyan1234.group_project.inquiry.dto,
+    com.siyan1234.group_project.report.dto
 
   configuration:
     map-underscore-to-camel-case: true

@@ -29,13 +29,11 @@
     </select>
 
     <!-- 조회수 증가 -->
-    <update id="increaseHit"
-            parameterType="int">
-
+    <update id="increaseHit" parameterType="int">
         UPDATE NOTICE
         SET HIT = HIT + 1
         WHERE NO = #{no}
-
+        AND IS_DELETED = 'N'
     </update>
 
     <!-- 공지 등록 -->
@@ -74,6 +72,7 @@
         CONTENT = #{content},
         UPDATE_DATE = SYSDATE
         WHERE NO = #{no}
+        AND IS_DELETED = 'N'
 
     </update>
 
@@ -84,6 +83,7 @@
         UPDATE NOTICE
         SET IS_DELETED = 'Y'
         WHERE NO = #{no}
+        AND IS_DELETED = 'N'
 
     </update>
 

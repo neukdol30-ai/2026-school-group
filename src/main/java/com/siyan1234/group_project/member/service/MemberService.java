@@ -132,14 +132,33 @@ public class MemberService {
         return "FAIL";
     }
 
-///보드 연동후 사용할 코드
-//    public List<MemberAdminDto> memberStatistics(){
-//        return memberDao.memberStatistics();
-//    }
+    public List<MemberAdminDto> searchMemberStatistics(
+            MemberAdminDto memberAdminDto){
 
-    /// 보드 연동전 사용할 코드
-    public List<MemberDto> findAllMembers() {
-        return memberDao.findAllMembers();
+        if(memberAdminDto.getPage() == null
+                || memberAdminDto.getPage() < 1){
+
+            memberAdminDto.setPage(1);
+        }
+
+        if(memberAdminDto.getSize() == null
+                || memberAdminDto.getSize() < 1){
+
+            memberAdminDto.setSize(10);
+        }
+
+        int offset =
+                (memberAdminDto.getPage() - 1)
+                        * memberAdminDto.getSize();
+
+        memberAdminDto.setOffset(offset);
+
+        return memberDao.searchMemberStatistics(memberAdminDto);
     }
 
+    public int countMemberStatistics(
+            MemberAdminDto memberAdminDto){
+
+        return memberDao.countMemberStatistics(memberAdminDto);
+    }
 }

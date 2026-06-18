@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siyan1234.group_project.report.dao.ReportDao">
+
+    <insert id="insertReport"
+            parameterType="ReportDto">
+
+        INSERT INTO REPORT
+        (
+        NO,
+        REPORTER_NO,
+        TARGET_TYPE,
+        TARGET_NO,
+        REASON,
+        CONTENT,
+        STATUS,
+        REGDATE
+        )
+        VALUES
+        (
+        REPORT_SEQ.NEXTVAL,
+        #{reporterNo},
+        #{targetType},
+        #{targetNo},
+        #{reason},
+        #{content},
+        'WAITING',
+        SYSDATE
+        )
+
+    </insert>
+
+    <select id="countDuplicateReport"
+            parameterType="ReportDto"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM REPORT
+        WHERE REPORTER_NO = #{reporterNo}
+        AND TARGET_TYPE = #{targetType}
+        AND TARGET_NO = #{targetNo}
+
+    </select>
+
+    <select id="searchAdminReportList"
+            parameterType="ReportDto"
+            resultType="ReportDto">
+
+        SELECT r.NO,
+        r.REPORTER_NO,
+        r.TARGET_TYPE,
+        r.TARGET_NO,
+        r.REASON,
+        r.CONTENT,
+        r.STATUS,
+        r.REGDATE AS reg_date,
+        r.UPDATE_DATE AS update_date,
+        m.MEMBER_ID AS reporter_id,
+        m.NAME AS reporter_name,
+        b.TITLE AS target_title
+        FROM REPORT r
+        JOIN MEMBER m ON r.REPORTER_NO = m.NO
+        LEFT JOIN BOARD b
+        ON r.TARGET_TYPE = 'BOARD'
+        AND r.TARGET_NO = b.NO
+        WHERE 1 = 1
+
+        <if test="searchStatus != null and searchStatus != ''">
+            AND r.STATUS = #{searchStatus}
+        </if>
+
+        <if test="searchTargetType != null and searchTargetType != ''">
+            AND r.TARGET_TYPE = #{searchTargetType}
+        </if>
+
+        <if test="searchType == 'reporterId'
+              and keyword != null
+              and keyword != ''">
+            AND m.MEMBER_ID = #{keyword}
+        </if>
+
+        <if test="searchType == 'targetTitle'
+              and keyword != null
+              and keyword != ''">
+            AND b.TITLE LIKE '%' || #{keyword} || '%'
+        </if>
+
+        ORDER BY r.NO DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countAdminReportList"
+            parameterType="ReportDto"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM REPORT r
+        JOIN MEMBER m ON r.REPORTER_NO = m.NO
+        LEFT JOIN BOARD b
+        ON r.TARGET_TYPE = 'BOARD'
+        AND r.TARGET_NO = b.NO
+        WHERE 1 = 1
+
+        <if test="searchStatus != null and searchStatus != ''">
+            AND r.STATUS = #{searchStatus}
+        </if>
+
+        <if test="searchTargetType != null and searchTargetType != ''">
+            AND r.TARGET_TYPE = #{searchTargetType}
+        </if>
+
+        <if test="searchType == 'reporterId'
+              and keyword != null
+              and keyword != ''">
+            AND m.MEMBER_ID = #{keyword}
+        </if>
+
+        <if test="searchType == 'targetTitle'
+              and keyword != null
+              and keyword != ''">
+            AND b.TITLE LIKE '%' || #{keyword} || '%'
+        </if>
+
+    </select>
+
+    <select id="findAdminReportByNo"
+            parameterType="int"
+            resultType="ReportDto">
+
+        SELECT r.NO,
+        r.REPORTER_NO,
+        r.TARGET_TYPE,
+        r.TARGET_NO,
+        r.REASON,
+        r.CONTENT,
+        r.STATUS,
+        r.REGDATE AS reg_date,
+        r.UPDATE_DATE AS update_date,
+        m.MEMBER_ID AS reporter_id,
+        m.NAME AS reporter_name,
+        b.TITLE AS target_title,
+        b.CONTENT AS target_content
+        FROM REPORT r
+        JOIN MEMBER m ON r.REPORTER_NO = m.NO
+        LEFT JOIN BOARD b
+        ON r.TARGET_TYPE = 'BOARD'
+        AND r.TARGET_NO = b.NO
+        WHERE r.NO = #{no}
+
+    </select>
+
+    <update id="updateReportDone"
+            parameterType="int">
+
+        UPDATE REPORT
+        SET STATUS = 'DONE',
+        UPDATE_DATE = SYSDATE
+        WHERE NO = #{no}
+        AND STATUS = 'WAITING'
+
+    </update>
+
+</mapper>

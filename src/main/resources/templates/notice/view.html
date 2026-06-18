@@ -353,7 +353,8 @@
                 공지 내용입니다.
             </div>
 
-            <div class="button-area">
+            <div class="button-area"
+                 th:if="${session.loginUser != null and session.loginUser.role == 'ADMIN'}">
                 <a th:href="@{/notice/edit(no=${notice.no})}">
                     <button type="button" class="btn edit-btn">수정</button>
                 </a>

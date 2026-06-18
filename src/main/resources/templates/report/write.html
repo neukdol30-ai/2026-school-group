@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>신고하기</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet"/>
+</head>
+
+<body class="bg-base-200 min-h-screen">
+
+<div class="container mx-auto py-10">
+
+    <div class="card bg-base-100 shadow-xl max-w-3xl mx-auto">
+
+        <div class="card-body">
+
+            <h1 class="text-3xl font-bold">
+                신고하기
+            </h1>
+
+            <div class="divider"></div>
+
+            <div class="alert alert-warning">
+                <span>
+                    부적절한 게시글 또는 댓글을 신고할 수 있습니다.
+                </span>
+            </div>
+
+            <form action="/report/write"
+                  method="post"
+                  class="mt-5">
+
+                <input type="hidden"
+                       name="targetType"
+                       th:value="${targetType}">
+
+                <input type="hidden"
+                       name="targetNo"
+                       th:value="${targetNo}">
+
+                <input type="hidden"
+                       name="returnUrl"
+                       th:value="${returnUrl}">
+
+                <div class="form-control mb-4">
+
+                    <label class="label">
+                        <span class="label-text font-bold">
+                            신고 대상
+                        </span>
+                    </label>
+
+                    <div class="input input-bordered flex items-center">
+
+                        <span th:if="${targetType == 'BOARD'}">
+                            게시글 신고
+                        </span>
+
+                        <span th:if="${targetType == 'COMMENT'}">
+                            댓글 신고
+                        </span>
+
+                        <span class="ml-2 text-gray-500">
+                            번호 :
+                        </span>
+
+                        <span th:text="${targetNo}">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="form-control mb-4">
+
+                    <label class="label">
+                        <span class="label-text font-bold">
+                            신고 사유
+                        </span>
+                    </label>
+
+                    <select name="reason"
+                            class="select select-bordered w-full"
+                            required>
+
+                        <option value="">
+                            신고 사유를 선택하세요
+                        </option>
+
+                        <option value="ABUSE">
+                            욕설/비방
+                        </option>
+
+                        <option value="SPAM">
+                            도배/스팸
+                        </option>
+
+                        <option value="AD">
+                            광고
+                        </option>
+
+                        <option value="PORN">
+                            음란물
+                        </option>
+
+                        <option value="PERSONAL">
+                            개인정보 노출
+                        </option>
+
+                        <option value="ETC">
+                            기타
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-control mb-6">
+
+                    <label class="label">
+                        <span class="label-text font-bold">
+                            상세 내용
+                        </span>
+                    </label>
+
+                    <textarea name="content"
+                              rows="8"
+                              class="textarea textarea-bordered w-full"
+                              placeholder="신고 상세 내용을 입력하세요."></textarea>
+
+                </div>
+
+                <div class="flex justify-end gap-3">
+
+                    <button type="button"
+                            class="btn btn-outline"
+                            onclick="history.back();">
+                        취소
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-error"
+                            onclick="return confirm('신고를 접수하시겠습니까?');">
+                        신고 접수
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

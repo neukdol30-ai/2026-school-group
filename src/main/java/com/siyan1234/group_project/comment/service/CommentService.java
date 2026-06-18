@@ -48,4 +48,8 @@ public class CommentService {
     public int adminDeleteComment(Integer no) {
         return commentDao.adminDeleteComment(no);
     }
+
+    public List<CommentDto> findAdminCommentListByBoardNo(Integer boardNo) {
+        return commentDao.findAdminCommentListByBoardNo(boardNo);
+    }
 }
