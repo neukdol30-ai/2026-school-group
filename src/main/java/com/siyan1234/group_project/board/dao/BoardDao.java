@@ -35,7 +35,7 @@ public interface BoardDao {
 
     int adminDeleteBoard(Integer no);
 
-    int adminDeleteBoardComments(Integer boardNo);
+    int deleteBoardComments(Integer boardNo);
 
     BoardDto findAdminBoardByNo(Integer no);
 

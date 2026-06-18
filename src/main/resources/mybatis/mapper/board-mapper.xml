@@ -58,11 +58,14 @@
             AND member_no = #{memberNo}
     </update>
     <!-- 글 삭제 -->
-    <delete id="deleteBoard">
-        DELETE FROM board
+    <update id="deleteBoard">
+        UPDATE board
+        SET is_deleted = 'Y',
+        update_date = SYSDATE
         WHERE no = #{no}
-            AND member_no = #{memberNo}
-    </delete>
+        AND member_no = #{memberNo}
+        AND is_deleted = 'N'
+    </update>
     <!-- 전체 글 수 -->
     <select id="countBoard" parameterType="PageDto" resultType="int">
         SELECT COUNT(*)
@@ -137,7 +140,7 @@
         </if>
     </select>
 
-    <update id="adminDeleteBoardComments" parameterType="int">
+    <update id="deleteBoardComments" parameterType="int">
         UPDATE board_comment
         SET is_deleted = 'Y',
         update_date = SYSDATE

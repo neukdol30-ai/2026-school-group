@@ -49,6 +49,7 @@ public class BoardService {
 
     // 글 삭제
     public void deleteBoard(int no, int memberNo) {
+        boardDao.deleteBoardComments(no);
         boardDao.deleteBoard(no, memberNo);
     }
 
@@ -90,7 +91,7 @@ public class BoardService {
 
     public int adminDeleteBoard(Integer no) {
 
-        boardDao.adminDeleteBoardComments(no);
+        boardDao.deleteBoardComments(no);
 
         return boardDao.adminDeleteBoard(no);
     }
