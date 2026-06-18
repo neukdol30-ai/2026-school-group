@@ -99,7 +99,7 @@ public class NoticeController {
 
     @GetMapping("/edit")
     public String editForm(
-            @RequestParam("no") int no,
+            @RequestParam(required = false) Integer no,
             Model model,
             HttpSession session) {
 
@@ -107,6 +107,10 @@ public class NoticeController {
                 (MemberDto) session.getAttribute("loginUser");
 
         if (!isAdmin(loginUser)) {
+            return "redirect:/notice/list";
+        }
+
+        if (no == null) {
             return "redirect:/notice/list";
         }
 

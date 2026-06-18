@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface InquiryDao {
+
     int insertInquiry(InquiryDto inquiryDto);
 
     List<InquiryDto> findMyInquiryList(Integer memberNo);
@@ -22,7 +23,6 @@ public interface InquiryDao {
 
     List<InquiryDto> findAllInquiry();
 
-    // 관리자 문의 검색
     List<InquiryDto> searchInquiryList(InquiryDto inquiryDto);
 
     int countSearchInquiryList(InquiryDto inquiryDto);
@@ -38,4 +38,8 @@ public interface InquiryDao {
     int countMyInquiryList(Integer memberNo);
 
     int updateAnswer(InquiryAnswerDto answerDto);
+
+    int adminDeleteInquiry(Integer no);
+
+    int adminDeleteAnswerByInquiryNo(Integer inquiryNo);
 }

@@ -320,4 +320,16 @@ public class AdminController {
 
         return "redirect:/admin/board-detail?no=" + boardNo;
     }
+
+    @PostMapping("/inquiry-delete")
+    public String inquiryDelete(Integer no) {
+
+        if (no == null) {
+            return "redirect:/admin/inquiry-list";
+        }
+
+        inquiryService.adminDeleteInquiry(no);
+
+        return "redirect:/admin/inquiry-list";
+    }
 }

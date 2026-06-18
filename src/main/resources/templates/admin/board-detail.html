@@ -32,26 +32,47 @@
 
             <div class="divider"></div>
 
+            <div th:if="${board.isDeleted == 'Y'}"
+                 class="alert alert-error mb-4">
+                <span>
+                    삭제된 게시글입니다. 관리자만 확인할 수 있습니다.
+                </span>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 <div>
                     <div class="text-sm text-gray-500">게시글 번호</div>
-                    <div th:text="${board.no}"></div>
+                    <div class="font-semibold" th:text="${board.no}"></div>
                 </div>
 
                 <div>
                     <div class="text-sm text-gray-500">게시판 유형</div>
-                    <div th:text="${board.boardType}"></div>
+
+                    <span th:if="${board.boardType == 'FREE'}"
+                          class="badge badge-primary">
+                        자유게시판
+                    </span>
+
+                    <span th:if="${board.boardType == 'REVIEW'}"
+                          class="badge badge-success">
+                        리뷰게시판
+                    </span>
+
+                    <span th:if="${board.boardType != 'FREE' and board.boardType != 'REVIEW'}"
+                          class="badge badge-neutral"
+                          th:text="${board.boardType}">
+                    </span>
                 </div>
 
                 <div>
                     <div class="text-sm text-gray-500">작성자 ID</div>
-                    <div th:text="${board.memberId}"></div>
+                    <div class="font-semibold" th:text="${board.memberId}"></div>
                 </div>
 
                 <div>
                     <div class="text-sm text-gray-500">작성자명</div>
-                    <div th:text="${board.name}"></div>
+                    <div class="font-semibold" th:text="${board.name}"></div>
                 </div>
 
                 <div>
@@ -65,7 +86,7 @@
                 </div>
 
                 <div>
-                    <div class="text-sm text-gray-500">삭제 여부</div>
+                    <div class="text-sm text-gray-500">게시글 상태</div>
 
                     <span th:if="${board.isDeleted == 'N'}"
                           class="badge badge-success">
@@ -83,6 +104,11 @@
                     <div th:text="${#temporals.format(board.regDate, 'yyyy-MM-dd HH:mm')}"></div>
                 </div>
 
+                <div th:if="${board.updateDate != null}">
+                    <div class="text-sm text-gray-500">수정일</div>
+                    <div th:text="${#temporals.format(board.updateDate, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+
             </div>
 
             <div class="divider"></div>
@@ -96,7 +122,7 @@
 
             <div class="mt-5">
                 <div class="text-sm text-gray-500 mb-2">내용</div>
-                <div class="border rounded-lg p-5 whitespace-pre-wrap min-h-40"
+                <div class="border rounded-lg p-5 whitespace-pre-wrap min-h-40 bg-base-100"
                      th:text="${board.content}">
                 </div>
             </div>
@@ -132,7 +158,7 @@
                         <th>작성자ID</th>
                         <th>작성자명</th>
                         <th>내용</th>
-                        <th>삭제여부</th>
+                        <th>상태</th>
                         <th>작성일</th>
                         <th>관리</th>
                     </tr>
@@ -147,19 +173,29 @@
                         </td>
                     </tr>
 
-                    <tr th:each="comment : ${commentList}">
+                    <tr th:each="comment : ${commentList}"
+                        th:classappend="${comment.isDeleted == 'Y'} ? ' opacity-50'">
+
                         <td th:text="${comment.no}"></td>
+
                         <td th:text="${comment.memberId}"></td>
+
                         <td th:text="${comment.name}"></td>
-                        <td th:text="${comment.content}"></td>
 
                         <td>
-                            <span th:if="${comment.isDeleted == 'N'}">
+                            <span class="whitespace-pre-wrap"
+                                  th:text="${comment.content}">
+                            </span>
+                        </td>
+
+                        <td>
+                            <span th:if="${comment.isDeleted == 'N'}"
+                                  class="badge badge-success">
                                 정상
                             </span>
 
                             <span th:if="${comment.isDeleted == 'Y'}"
-                                  class="text-error">
+                                  class="badge badge-error">
                                 삭제됨
                             </span>
                         </td>
@@ -185,6 +221,11 @@
                                     댓글 삭제
                                 </button>
                             </form>
+
+                            <span th:if="${comment.isDeleted == 'Y'}"
+                                  class="text-sm text-gray-400">
+                                처리완료
+                            </span>
                         </td>
                     </tr>
 

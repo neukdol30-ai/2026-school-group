@@ -222,6 +222,27 @@
         AND IS_DELETED = 'N'
 
     </select>
+    <update id="adminDeleteInquiry"
+            parameterType="int">
+
+        UPDATE INQUIRY
+        SET IS_DELETED = 'Y',
+        UPDATE_DATE = SYSDATE
+        WHERE NO = #{no}
+        AND IS_DELETED = 'N'
+
+    </update>
+
+    <update id="adminDeleteAnswerByInquiryNo"
+            parameterType="int">
+
+        UPDATE INQUIRY_ANSWER
+        SET IS_DELETED = 'Y',
+        UPDATE_DATE = SYSDATE
+        WHERE INQUIRY_NO = #{inquiryNo}
+        AND IS_DELETED = 'N'
+
+    </update>
 
 
 </mapper>
