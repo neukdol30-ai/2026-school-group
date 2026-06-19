@@ -21,25 +21,41 @@ public class MemberService {
 
     /// 비밀번호 암호화 ///
     public int signup(MemberDto memberDto) {
-        if (idCheck(memberDto.getMemberId())){
+
+        if (idCheck(memberDto.getMemberId())) {
             return 0;
         }
-        if (memberDto.getPhone() == null ||!memberDto.getPhone().matches(
-                "^01[0-9]-?[0-9]{3,4}-?[0-9]{4}$"
-        )){
+
+        String phone = memberDto.getPhone();
+
+        if (phone == null) {
             return -1;
         }
-        if (memberDto.getPassword() == null ||!memberDto.getPassword().matches(
+
+        phone = phone.replaceAll("-", "");
+
+        if (!phone.matches("^010[0-9]{8}$")) {
+            return -1;
+        }
+
+        phone = phone.replaceFirst(
+                "(010)([0-9]{4})([0-9]{4})",
+                "$1-$2-$3"
+        );
+
+        memberDto.setPhone(phone);
+
+        if (memberDto.getPassword() == null
+                || !memberDto.getPassword().matches(
                 "^(?=.*[A-Za-z])(?=.*\\d).{8,}$"
-        )){
+        )) {
             return -2;
         }
 
         memberDto.setPassword(
-                passwordEncoder.encode(
-                        memberDto.getPassword()
-                )
+                passwordEncoder.encode(memberDto.getPassword())
         );
+
         return memberDao.signup(memberDto);
     }
 
