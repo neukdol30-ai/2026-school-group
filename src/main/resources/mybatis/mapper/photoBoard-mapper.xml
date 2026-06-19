@@ -49,6 +49,37 @@
         ORDER BY b.no DESC
 
     </select>
+    <select id="findAllPaging" resultMap="photoBoardResultMap">
+
+        SELECT b.*,
+        m.member_id,
+        m.name AS member_name
+        FROM board b
+        JOIN member m ON b.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+        AND b.is_deleted = 'N'
+
+        <if test="keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+        ORDER BY b.no DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countPhotoBoard" resultType="int">
+
+        SELECT COUNT(*)
+        FROM board b
+        WHERE b.board_type = 'REVIEW'
+        AND b.is_deleted = 'N'
+
+        <if test="keyword != null and keyword != ''">
+            AND b.title LIKE '%' || #{keyword} || '%'
+        </if>
+
+    </select>
 
     <select id="findRestaurantByName" resultType="int">
 

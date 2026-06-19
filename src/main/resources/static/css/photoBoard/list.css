@@ -8,23 +8,21 @@
     border-radius: 12px;
     padding: 30px;
     margin-bottom: 24px;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .page-title h1 {
-    font-size: 30px;
-    margin-bottom: 10px;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 6px;
 }
 
 .page-title p {
     color: #666;
 }
-
-/* =========================
-   Write Button
-========================= */
 
 .write-btn {
     background-color: #2563eb;
@@ -53,10 +51,55 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    gap: 20px;
+
+    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
-.board-top h2 {
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.search-input {
+    width: 190px;
+    height: 44px;
+    padding: 0 14px;
+
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.search-btn {
+    width: 70px;
+    height: 44px;
+
+    border: none;
+    border-radius: 22px;
+    background: #2563eb;
+    color: white;
+
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-btn:hover {
+    background: #1d4ed8;
+}
+
+.board-summary {
+    text-align: right;
+}
+
+.board-summary h2 {
     font-size: 24px;
     font-weight: 800;
 }
@@ -66,46 +109,50 @@
     font-size: 14px;
 }
 
-/* =========================
-   Board Table
-========================= */
-
 .board-table {
     width: 100%;
     border-top: 2px solid #111827;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .board-head,
 .board-row {
     display: grid;
-    grid-template-columns: 90px minmax(260px, 1fr) 110px 110px 110px 160px;
+    grid-template-columns: 80px 1fr 100px 100px 100px 180px;
     text-align: center;
     align-items: center;
 }
 
 .board-head {
     min-height: 54px;
-    border-bottom: 1px solid #d1d5db;
-    background-color: #f8fafc;
+    background: #f8fafc;
     color: #111827;
     font-size: 15px;
     font-weight: 800;
+    border-bottom: 1px solid #d1d5db;
 }
 
 .board-row {
     min-height: 70px;
-    border-bottom: 1px solid #e5e7eb;
     color: #374151;
     font-size: 15px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .board-row:hover {
     background-color: #f9fafb;
 }
 
+.board-head div,
+.board-row div {
+    padding: 14px;
+}
+
 .board-no {
     color: #64748b;
     font-size: 14px;
+    text-align: center;
 }
 
 .board-title {
@@ -113,6 +160,10 @@
     padding: 0 32px;
     font-weight: 700;
     color: #111827;
+}
+
+.board-title a {
+    font-weight: 600;
 }
 
 .board-title a:hover {
@@ -123,14 +174,11 @@
 .board-data {
     color: #475569;
     font-size: 14px;
+    text-align: center;
 }
 
-/* =========================
-   Empty
-========================= */
-
 .empty-box {
-    padding: 80px 20px;
+    padding: 60px 20px;
     text-align: center;
     color: #555;
     border-bottom: 1px solid #e5e7eb;
@@ -142,29 +190,28 @@
     color: #111827;
 }
 
-/* =========================
-   Paging
-========================= */
-
 .paging {
+    margin-top: 24px;
+
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-top: 32px;
+    gap: 6px;
 }
 
 .paging button {
-    min-width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
+
     border: 1px solid #ddd;
-    background-color: white;
+    background: white;
     border-radius: 8px;
+
     cursor: pointer;
     font-weight: 700;
 }
 
 .paging button.active {
-    background-color: #2563eb;
+    background: #2563eb;
     color: white;
     border-color: #2563eb;
 }

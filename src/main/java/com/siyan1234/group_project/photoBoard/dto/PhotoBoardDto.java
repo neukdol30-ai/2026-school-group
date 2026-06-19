@@ -37,10 +37,13 @@ public class PhotoBoardDto {
     private String memberId;
     private String memberName;
 
-    private String searchDeleted;
+
+    // 관리자 검색 조건
     private String searchType;
     private String keyword;
+    private String searchDeleted;
 
+    // 관리자 페이징 조건
     private Integer page;
     private Integer size;
     private Integer offset;
