@@ -23,4 +23,7 @@ public class CommentDto {
     private Integer page;
     private Integer size;
     private Integer offset;
+
+    private String boardType;
+    private String searchBoardType;
 }

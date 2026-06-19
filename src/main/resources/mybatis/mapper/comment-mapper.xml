@@ -35,43 +35,22 @@
     </update>
 
     <!-- 관리자용 댓글 목록 조회 -->
-    <select id="searchAdminCommentList" parameterType="CommentDto" resultType="CommentDto">
-        SELECT c.no,
-        c.board_no,
-        b.title AS board_title,
-        c.member_no,
-        c.content,
-        TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
-        c.is_deleted,
-        m.name,
-        m.member_id
+
+
+    <!-- 관리자용 댓글 검색 결과 전체 건수 -->
+    <select id="countAdminCommentList"
+            parameterType="com.siyan1234.group_project.comment.dto.CommentDto"
+            resultType="int">
+
+        SELECT COUNT(*)
         FROM board_comment c
         JOIN board b ON c.board_no = b.no
         JOIN member m ON c.member_no = m.no
         WHERE 1 = 1
 
-        <if test="searchDeleted != null and searchDeleted != ''">
-            AND c.is_deleted = #{searchDeleted}
+        <if test="searchBoardType != null and searchBoardType != ''">
+            AND b.board_type = #{searchBoardType}
         </if>
-
-        <if test="searchType == 'content' and keyword != null and keyword != ''">
-            AND c.content LIKE '%' || #{keyword} || '%'
-        </if>
-
-        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
-            AND m.member_id = #{keyword}
-        </if>
-
-        ORDER BY c.no DESC
-        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-    </select>
-
-    <!-- 관리자용 댓글 검색 결과 전체 건수 -->
-    <select id="countAdminCommentList" parameterType="CommentDto" resultType="int">
-        SELECT COUNT(*)
-        FROM board_comment c
-        JOIN member m ON c.member_no = m.no
-        WHERE 1 = 1
 
         <if test="searchDeleted != null and searchDeleted != ''">
             AND c.is_deleted = #{searchDeleted}
@@ -112,15 +91,15 @@
         JOIN member m ON c.member_no = m.no
         WHERE c.board_no = #{boardNo}
         ORDER BY c.no ASC
-
     </select>
-    <select id="searchAdminPhotoCommentList"
-            parameterType="CommentDto"
-            resultType="CommentDto">
+    <select id="searchAdminCommentList"
+            parameterType="com.siyan1234.group_project.comment.dto.CommentDto"
+            resultType="com.siyan1234.group_project.comment.dto.CommentDto">
 
         SELECT c.no,
         c.board_no,
         b.title AS board_title,
+        b.board_type,
         c.member_no,
         c.content,
         TO_CHAR(c.regdate, 'YYYY-MM-DD HH24:MI') AS reg_date,
@@ -130,7 +109,11 @@
         FROM board_comment c
         JOIN board b ON c.board_no = b.no
         JOIN member m ON c.member_no = m.no
-        WHERE b.board_type = 'REVIEW'
+        WHERE 1 = 1
+
+        <if test="searchBoardType != null and searchBoardType != ''">
+            AND b.board_type = #{searchBoardType}
+        </if>
 
         <if test="searchDeleted != null and searchDeleted != ''">
             AND c.is_deleted = #{searchDeleted}
@@ -146,31 +129,5 @@
 
         ORDER BY c.no DESC
         OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
-
     </select>
-
-    <select id="countAdminPhotoCommentList"
-            parameterType="CommentDto"
-            resultType="int">
-
-        SELECT COUNT(*)
-        FROM board_comment c
-        JOIN board b ON c.board_no = b.no
-        JOIN member m ON c.member_no = m.no
-        WHERE b.board_type = 'REVIEW'
-
-        <if test="searchDeleted != null and searchDeleted != ''">
-            AND c.is_deleted = #{searchDeleted}
-        </if>
-
-        <if test="searchType == 'content' and keyword != null and keyword != ''">
-            AND c.content LIKE '%' || #{keyword} || '%'
-        </if>
-
-        <if test="searchType == 'memberId' and keyword != null and keyword != ''">
-            AND m.member_id = #{keyword}
-        </if>
-
-    </select>
-
 </mapper>

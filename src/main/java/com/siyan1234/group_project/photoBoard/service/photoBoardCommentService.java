@@ -1,5 +1,6 @@
 package com.siyan1234.group_project.photoBoard.service;
 
+import com.siyan1234.group_project.comment.dto.CommentDto;
 import com.siyan1234.group_project.photoBoard.dao.photoBoardCommentDao;
 import com.siyan1234.group_project.photoBoard.dto.photoBoardCommentDto;
 import lombok.RequiredArgsConstructor;

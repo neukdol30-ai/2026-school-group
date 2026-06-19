@@ -23,6 +23,12 @@
         <result property="imageUrl" column="IMAGE_URL"/>
         <result property="memberId" column="MEMBER_ID"/>
         <result property="memberName" column="MEMBER_NAME"/>
+        <result property="restaurantName" column="RESTAURANT_NAME"/>
+        <result property="region" column="REGION"/>
+        <result property="category" column="CATEGORY"/>
+        <result property="address" column="ADDRESS"/>
+        <result property="phone" column="PHONE"/>
+        <result property="description" column="DESCRIPTION"/>
 
     </resultMap>
 
@@ -309,9 +315,16 @@
 
         SELECT b.*,
         m.member_id,
-        m.name AS member_name
+        m.name AS member_name,
+        r.name AS restaurant_name,
+        r.region,
+        r.category,
+        r.address,
+        r.phone,
+        r.description
         FROM board b
         JOIN member m ON b.member_no = m.no
+        LEFT JOIN restaurant r ON b.restaurant_no = r.no
         WHERE b.no = #{no}
         AND b.board_type = 'REVIEW'
 

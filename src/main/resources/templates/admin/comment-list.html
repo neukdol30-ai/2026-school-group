@@ -34,7 +34,24 @@
 
             <form action="/admin/comment-list"
                   method="get"
-                  class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                  class="grid grid-cols-1 md:grid-cols-5 gap-3">
+
+                <select name="searchBoardType"
+                        class="select select-bordered w-full">
+
+                    <option value="">전체게시판</option>
+
+                    <option value="FREE"
+                            th:selected="${search != null and search.searchBoardType == 'FREE'}">
+                        자유게시판
+                    </option>
+
+                    <option value="REVIEW"
+                            th:selected="${search != null and search.searchBoardType == 'REVIEW'}">
+                        리뷰게시판
+                    </option>
+
+                </select>
 
                 <select name="searchDeleted"
                         class="select select-bordered w-full">
@@ -104,6 +121,7 @@
 
                     <thead>
                     <tr>
+                        <th>유형</th>
                         <th>댓글번호</th>
                         <th>게시글제목</th>
                         <th>작성자ID</th>
@@ -118,13 +136,25 @@
                     <tbody>
 
                     <tr th:if="${#lists.isEmpty(commentList)}">
-                        <td colspan="8"
+                        <td colspan="9"
                             class="text-center py-10">
                             조회된 댓글이 없습니다.
                         </td>
                     </tr>
 
                     <tr th:each="comment : ${commentList}">
+
+                        <td>
+                            <span class="badge badge-primary"
+                                  th:if="${comment.boardType == 'FREE'}">
+                                FREE
+                            </span>
+
+                            <span class="badge badge-success"
+                                  th:if="${comment.boardType == 'REVIEW'}">
+                                REVIEW
+                            </span>
+                        </td>
 
                         <td th:text="${comment.no}"></td>
 
@@ -191,6 +221,7 @@
                        th:classappend="${currentPage == 1} ? ' btn-disabled'"
                        th:href="@{/admin/comment-list(
                             page=${currentPage - 1},
+                            searchBoardType=${search.searchBoardType},
                             searchDeleted=${search.searchDeleted},
                             searchType=${search.searchType},
                             keyword=${search.keyword}
@@ -204,6 +235,7 @@
                        th:text="${i}"
                        th:href="@{/admin/comment-list(
                             page=${i},
+                            searchBoardType=${search.searchBoardType},
                             searchDeleted=${search.searchDeleted},
                             searchType=${search.searchType},
                             keyword=${search.keyword}
@@ -214,6 +246,7 @@
                        th:classappend="${currentPage == totalPage} ? ' btn-disabled'"
                        th:href="@{/admin/comment-list(
                             page=${currentPage + 1},
+                            searchBoardType=${search.searchBoardType},
                             searchDeleted=${search.searchDeleted},
                             searchType=${search.searchType},
                             keyword=${search.keyword}

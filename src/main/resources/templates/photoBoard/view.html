@@ -50,6 +50,15 @@
                    class="like-badge">
                     추천 <span th:text="${board.likeCount}">0</span>
                 </a>
+                <a th:href="@{/report/write(
+        targetType='BOARD',
+        targetNo=${board.no},
+        returnUrl=${'/photoBoard/view?no=' + board.no + '&countHit=false'}
+   )}"
+                   class="btn btn-delete"
+                   style="margin-left:10px;">
+                    게시글 신고
+                </a>
             </div>
 
             <div class="photo-box" th:if="${board.imageUrl != null}">
@@ -79,6 +88,15 @@
                                    th:href="@{/photoBoard/comment/delete(no=${comment.no}, boardNo=${board.no})}"
                                    onclick="return confirm('댓글을 삭제하시겠습니까?')">
                                     삭제
+                                </a>
+                                <a class="comment-delete"
+                                   th:href="@{/report/write(
+        targetType='COMMENT',
+        targetNo=${comment.no},
+        returnUrl=${'/photoBoard/view?no=' + board.no + '&countHit=false'}
+   )}"
+                                   style="margin-left:8px;">
+                                    신고
                                 </a>
                             </div>
                         </div>

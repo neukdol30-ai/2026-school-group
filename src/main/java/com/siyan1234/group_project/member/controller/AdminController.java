@@ -12,8 +12,6 @@ import com.siyan1234.group_project.member.dto.MemberDto;
 import com.siyan1234.group_project.member.service.MemberService;
 import com.siyan1234.group_project.report.dto.ReportDto;
 import com.siyan1234.group_project.report.service.ReportService;
-import com.siyan1234.group_project.photoBoard.dto.PhotoBoardDto;
-import com.siyan1234.group_project.photoBoard.service.PhotoBoardService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -33,7 +31,6 @@ public class AdminController {
     private final BoardService boardService;
     private final CommentService commentService;
     private final ReportService reportService;
-    private final PhotoBoardService photoBoardService;
 
     @GetMapping("")
     public String adminPage() {
@@ -411,108 +408,5 @@ public class AdminController {
         memberService.adminDeleteMember(no);
 
         return "redirect:/admin/member-list";
-    }
-    @GetMapping("/photo-board-list")
-    public String photoBoardList(PhotoBoardDto photoBoardDto, Model model) {
-
-        if (photoBoardDto.getPage() == null || photoBoardDto.getPage() < 1) {
-            photoBoardDto.setPage(1);
-        }
-
-        photoBoardDto.setSize(10);
-
-        int totalCount =
-                photoBoardService.countAdminPhotoBoardList(photoBoardDto);
-
-        int totalPage =
-                (int) Math.ceil((double) totalCount / photoBoardDto.getSize());
-
-        model.addAttribute(
-                "photoBoardList",
-                photoBoardService.searchAdminPhotoBoardList(photoBoardDto)
-        );
-
-        model.addAttribute("search", photoBoardDto);
-        model.addAttribute("currentPage", photoBoardDto.getPage());
-        model.addAttribute("totalPage", totalPage);
-        model.addAttribute("totalCount", totalCount);
-
-        return "admin/photo-board-list";
-    }
-
-    @GetMapping("/photo-board-detail")
-    public String photoBoardDetail(@RequestParam(required = false) Integer no,
-                                   Model model) {
-
-        if (no == null) {
-            return "redirect:/admin/photo-board-list";
-        }
-
-        PhotoBoardDto board =
-                photoBoardService.findAdminPhotoBoardByNo(no);
-
-        if (board == null) {
-            return "redirect:/admin/photo-board-list";
-        }
-
-        model.addAttribute("board", board);
-        model.addAttribute(
-                "commentList",
-                commentService.findAdminCommentListByBoardNo(no)
-        );
-
-        return "admin/photo-board-detail";
-    }
-
-    @PostMapping("/photo-board-delete")
-    public String photoBoardDelete(Integer no) {
-
-        if (no == null) {
-            return "redirect:/admin/photo-board-list";
-        }
-
-        photoBoardService.adminDeleteBoard(no);
-
-        return "redirect:/admin/photo-board-list";
-    }
-
-    @GetMapping("/photo-comment-list")
-    public String photoCommentList(CommentDto commentDto, Model model) {
-
-        if (commentDto.getPage() == null || commentDto.getPage() < 1) {
-            commentDto.setPage(1);
-        }
-
-        commentDto.setSize(10);
-
-        int totalCount =
-                commentService.countAdminPhotoCommentList(commentDto);
-
-        int totalPage =
-                (int) Math.ceil((double) totalCount / commentDto.getSize());
-
-        model.addAttribute(
-                "commentList",
-                commentService.searchAdminPhotoCommentList(commentDto)
-        );
-
-        model.addAttribute("search", commentDto);
-        model.addAttribute("currentPage", commentDto.getPage());
-        model.addAttribute("totalPage", totalPage);
-        model.addAttribute("totalCount", totalCount);
-
-        return "admin/photo-comment-list";
-    }
-
-    @PostMapping("/photo-comment-delete")
-    public String photoCommentDelete(Integer no) {
-
-        if (no == null) {
-            return "redirect:/admin/photo-comment-list";
-        }
-
-        commentService.adminDeleteComment(no);
-
-        return "redirect:/admin/photo-comment-list";
     }
 }
