@@ -1,0 +1,4 @@
+spring:
+  datasource:
+    username: minipro
+    password: 1234
