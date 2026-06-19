@@ -9,7 +9,16 @@ import java.util.List;
 @Mapper
 public interface PhotoBoardDao {
 
+    // 기존 전체 목록 조회
     List<PhotoBoardDto> findAll(@Param("keyword") String keyword);
+
+    // 인증게시판 목록 페이징 조회
+    List<PhotoBoardDto> findAllPaging(@Param("keyword") String keyword,
+                                      @Param("offset") int offset,
+                                      @Param("size") int size);
+
+    // 인증게시판 전체 게시글 개수 조회
+    int countPhotoBoard(@Param("keyword") String keyword);
 
     Integer findRestaurantByName(@Param("name") String name);
 

@@ -41,22 +41,34 @@
                 <p>방문한 맛집의 사진과 후기를 남겨주세요.</p>
             </div>
 
+            <!-- 컨트롤러에서 redirectAttributes로 넘긴 오류 메시지 표시 -->
+            <div th:if="${errorMessage}" class="server-error">
+                <span th:text="${errorMessage}"></span>
+            </div>
+
             <form action="/photoBoard/write" method="post" enctype="multipart/form-data">
 
                 <div class="form-control">
                     <label>제목</label>
-                    <input type="text" name="title" placeholder="제목을 입력하세요">
+                    <input type="text"
+                           name="title"
+                           placeholder="제목을 입력하세요"
+                           required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-control">
                         <label>맛집명</label>
-                        <input type="text" name="restaurantName" placeholder="맛집명">
+                        <input type="text"
+                               name="restaurantName"
+                               placeholder="맛집명"
+                               required>
                     </div>
 
                     <div class="form-control">
                         <label>카테고리</label>
-                        <select name="category">
+                        <select name="category" required>
+                            <option value="" disabled selected>카테고리를 선택하세요</option>
                             <option value="한식">한식</option>
                             <option value="중식">중식</option>
                             <option value="일식">일식</option>
@@ -69,17 +81,22 @@
 
                 <div class="form-control">
                     <label>주소</label>
-                    <input type="text" name="address" placeholder="주소">
+                    <input type="text"
+                           name="address"
+                           placeholder="주소"
+                           required>
                 </div>
 
                 <div class="form-control">
                     <label>한 줄 설명</label>
-                    <input type="text" name="summary" placeholder="한 줄 설명 예) 분위기 좋은 파스타 맛집">
+                    <input type="text"
+                           name="summary"
+                           placeholder="한 줄 설명 예) 분위기 좋은 파스타 맛집">
                 </div>
 
                 <div class="form-control">
                     <label>평점</label>
-                    <select name="rating">
+                    <select name="rating" required>
                         <option value="5">★★★★★ 5점</option>
                         <option value="4">★★★★☆ 4점</option>
                         <option value="3">★★★☆☆ 3점</option>
@@ -91,12 +108,17 @@
                 <div class="upload-box">
                     <strong>사진 업로드</strong>
                     <p>사진은 1장만 등록 가능합니다.</p>
-                    <input type="file" name="file" accept="image/*">
+                    <input type="file"
+                           name="file"
+                           accept="image/*"
+                           required>
                 </div>
 
                 <div class="form-control">
                     <label>리뷰 내용</label>
-                    <textarea name="content" placeholder="맛집 리뷰를 작성해주세요"></textarea>
+                    <textarea name="content"
+                              placeholder="맛집 리뷰를 작성해주세요"
+                              required></textarea>
                 </div>
 
                 <div class="bottom-actions">

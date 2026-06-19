@@ -35,8 +35,32 @@
 
         <section class="board-box">
             <div class="board-top">
-                <h2>인증 게시글 목록</h2>
-                <span class="board-count" th:text="'전체 ' + ${#lists.size(boardList)} + '건'">전체 0건</span>
+
+                <form action="/photoBoard/list"
+                      method="get"
+                      class="search-form">
+
+                    <input type="text"
+                           name="keyword"
+                           th:value="${keyword}"
+                           placeholder="제목 검색"
+                           class="search-input">
+
+                    <button type="submit"
+                            class="search-btn">
+                        검색
+                    </button>
+                </form>
+
+                <div class="board-summary">
+                    <h2>인증 게시글 목록</h2>
+
+                    <span class="board-count"
+                          th:text="'전체 ' + ${totalCount} + '건'">
+                        전체 0건
+                    </span>
+                </div>
+
             </div>
 
             <div class="board-table">
@@ -75,18 +99,48 @@
                 </div>
             </div>
 
-            <div class="paging">
-                <button>«</button>
-                <button class="active">1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>»</button>
+            <!-- 실제 페이지 이동 -->
+            <div class="paging" th:if="${totalPage > 1}">
+
+                <!-- 이전 페이지 -->
+                <a th:if="${page > 1}"
+                   th:href="@{/photoBoard/list(page=${page - 1}, keyword=${keyword})}">
+                    «
+                </a>
+
+                <span th:if="${page == 1}" class="disabled">
+                    «
+                </span>
+
+                <!-- 페이지 번호 -->
+                <a th:each="i : ${#numbers.sequence(1, totalPage)}"
+                   th:href="@{/photoBoard/list(page=${i}, keyword=${keyword})}"
+                   th:text="${i}"
+                   th:classappend="${i == page} ? ' active' : ''">
+                    1
+                </a>
+
+                <!-- 다음 페이지 -->
+                <a th:if="${page < totalPage}"
+                   th:href="@{/photoBoard/list(page=${page + 1}, keyword=${keyword})}">
+                    »
+                </a>
+
+                <span th:if="${page == totalPage}" class="disabled">
+                    »
+                </span>
+
             </div>
         </section>
     </section>
 </main>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Controller에서 전달한 오류 메시지가 있으면 alert 창으로 보여줌 -->
+<script th:if="${errorMessage != null}" th:inline="javascript">
+    alert(/*[[${errorMessage}]]*/ '오류가 발생했습니다.');
+</script>
 
 </body>
 </html>

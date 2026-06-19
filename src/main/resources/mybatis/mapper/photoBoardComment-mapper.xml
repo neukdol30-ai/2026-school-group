@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siyan1234.group_project.photoBoard.dao.photoBoardCommentDao">
+
+    <select id="findByBoardNo"
+            parameterType="int"
+            resultType="com.siyan1234.group_project.photoBoard.dto.photoBoardCommentDto">
+
+        SELECT
+        c.no,
+        c.board_no,
+        c.member_no,
+        c.content,
+        TO_CHAR(c.regdate,'YYYY-MM-DD HH24:MI') AS regdate,
+        TO_CHAR(c.update_date,'YYYY-MM-DD HH24:MI') AS update_date,
+        c.is_deleted,
+        m.member_id,
+        m.name AS member_name
+        FROM board_comment c
+        JOIN member m
+        ON c.member_no = m.no
+        JOIN board b
+        ON c.board_no = b.no
+        WHERE c.board_no = #{boardNo}
+        AND b.board_type = 'REVIEW'
+        AND c.is_deleted = 'N'
+        ORDER BY c.no ASC
+
+    </select>
+
+    <insert id="write"
+            parameterType="com.siyan1234.group_project.photoBoard.dto.photoBoardCommentDto">
+
+        INSERT INTO board_comment
+        (
+        no,
+        board_no,
+        member_no,
+        content,
+        regdate,
+        is_deleted
+        )
+        VALUES
+        (
+        board_comment_seq.NEXTVAL,
+        #{boardNo},
+        #{memberNo},
+        #{content},
+        SYSDATE,
+        'N'
+        )
+
+    </insert>
+
+    <update id="delete">
+
+        UPDATE board_comment
+        SET
+        is_deleted = 'Y',
+        update_date = SYSDATE
+        WHERE no = #{no}
+        AND member_no = #{memberNo}
+        AND is_deleted = 'N'
+
+    </update>
+
+    <select id="searchAdminPhotoCommentList"
+            parameterType="com.siyan1234.group_project.comment.dto.CommentDto"
+            resultType="com.siyan1234.group_project.comment.dto.CommentDto">
+
+        SELECT
+        c.no,
+        c.board_no,
+        b.title AS board_title,
+        c.member_no,
+        c.content,
+        TO_CHAR(c.regdate,'YYYY-MM-DD HH24:MI') AS reg_date,
+        c.is_deleted,
+        m.name,
+        m.member_id
+        FROM board_comment c
+        JOIN board b
+        ON c.board_no = b.no
+        JOIN member m
+        ON c.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND c.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'content'
+            and keyword != null
+            and keyword != ''">
+            AND c.content LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId'
+            and keyword != null
+            and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+        ORDER BY c.no DESC
+        OFFSET #{offset} ROWS
+        FETCH NEXT #{size} ROWS ONLY
+
+    </select>
+
+    <select id="countAdminPhotoCommentList"
+            parameterType="com.siyan1234.group_project.comment.dto.CommentDto"
+            resultType="int">
+
+        SELECT COUNT(*)
+        FROM board_comment c
+        JOIN board b
+        ON c.board_no = b.no
+        JOIN member m
+        ON c.member_no = m.no
+        WHERE b.board_type = 'REVIEW'
+
+        <if test="searchDeleted != null and searchDeleted != ''">
+            AND c.is_deleted = #{searchDeleted}
+        </if>
+
+        <if test="searchType == 'content'
+            and keyword != null
+            and keyword != ''">
+            AND c.content LIKE '%' || #{keyword} || '%'
+        </if>
+
+        <if test="searchType == 'memberId'
+            and keyword != null
+            and keyword != ''">
+            AND m.member_id = #{keyword}
+        </if>
+
+    </select>
+
+</mapper>

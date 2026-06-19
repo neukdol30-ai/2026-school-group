@@ -17,6 +17,26 @@ public class PhotoBoardService {
     public List<PhotoBoardDto> getList(String keyword) {
         return photoBoardDao.findAll(keyword);
     }
+    // 인증게시판 목록 페이징 조회
+    public List<PhotoBoardDto> getList(String keyword, int page, int size) {
+
+        if (page < 1) {
+            page = 1;
+        }
+
+        if (size < 1) {
+            size = 10;
+        }
+
+        int offset = (page - 1) * size;
+
+        return photoBoardDao.findAllPaging(keyword, offset, size);
+    }
+
+    // 인증게시판 전체 게시글 개수 조회
+    public int getTotalCount(String keyword) {
+        return photoBoardDao.countPhotoBoard(keyword);
+    }
 
     @Transactional
     public void write(PhotoBoardDto photoBoardDto) {
