@@ -238,6 +238,8 @@ DROP TABLE board_comment;
 DROP TABLE board_like;
 DROP TABLE inquiry;
 DROP TABLE inquiry_answer;
+DROP TABLE board_image CASCADE CONSTRAINTS;
+DROP TABLE notice CASCADE CONSTRAINTS;
 
 --테이블 완전삭제 킬스위치--
 DROP TABLE MEMBER CASCADE CONSTRAINTS;
@@ -257,6 +259,3 @@ DROP SEQUENCE board_image_seq;
 DROP SEQUENCE board_comment_seq;
 DROP SEQUENCE inquiry_seq;
 DROP SEQUENCE inquiry_answer_seq;
-
-
-
